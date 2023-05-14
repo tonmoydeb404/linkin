@@ -1,4 +1,3 @@
-import createHttpError from "http-errors";
 import User from "../models/User";
 import { IUser } from "../types/user.type";
 
@@ -20,10 +19,6 @@ export const getAllUsers = () => {
 };
 
 export const updateUserById = async (id: string, updates: Partial<IUser>) => {
-  // find the user
-  let user = await getUserById(id);
-  if (!user) throw createHttpError(404, "requested user not found");
-  // update user
   return User.findByIdAndUpdate(
     id,
     { ...updates },
@@ -32,20 +27,5 @@ export const updateUserById = async (id: string, updates: Partial<IUser>) => {
 };
 
 export const deleteUserById = async (id: string) => {
-  // find the user
-  let user = await getUserById(id);
-  if (!user) throw createHttpError(404, "requested user not found");
-  // delete user
   return User.findByIdAndDelete(id);
 };
-
-const userService = {
-  createUser,
-  getUserById,
-  getAllUsers,
-  updateUserById,
-  deleteUserById,
-  getUserByProperty,
-};
-
-export default userService;

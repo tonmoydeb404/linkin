@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
-import userService from "../services/user";
+import * as userService from "../services/user";
 
 export const getUsers = asyncWrapper(async (_req, res) => {
   const users = await userService.getAllUsers();
@@ -13,7 +13,7 @@ export const getUser = asyncWrapper(async (req, res) => {
 
   const user = await userService.getUserById(user_id);
 
-  if (!user) throw createHttpError(404, "requested user not found");
+  if (!user) throw createHttpError(404, "Requested user not found");
 
   return res.status(200).json({ user: user.toObject() });
 });
@@ -22,7 +22,7 @@ export const postUser = asyncWrapper(async (req, res) => {
   const { email, password, username, roles } = req.body;
 
   if (!email || !password || !username)
-    throw createHttpError(400, "please provide valid input");
+    throw createHttpError(400, "Please provide valid input");
 
   const user = await userService.createUser({
     email,
@@ -50,11 +50,16 @@ export const patchUser = asyncWrapper(async (req, res) => {
   // update user
   const user = await userService.updateUserById(user_id, updates);
 
+  if (!user) throw createHttpError(404, "requested user not found");
+
   return res.status(200).json({ user: user.toObject() });
 });
 
 export const deleteUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
-  await userService.deleteUserById(user_id);
+  const user = await userService.deleteUserById(user_id);
+
+  if (!user) throw createHttpError(404, "requested user not found");
+
   return res.status(200).json({ userId: user_id });
 });
