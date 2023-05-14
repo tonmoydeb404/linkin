@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as authService from "../services/auth";
-import userService from "../services/user";
+import * as userService from "../services/user";
 
 export const postRegister = asyncWrapper(async (req, res) => {
   const { email, password, username } = req.body;
