@@ -2,13 +2,14 @@ export type UserRole = "ADMIN" | "EDITOR" | "USER";
 
 export interface IUser {
   email: string;
-  username: string;
   password: string;
   roles?: UserRole[];
+  username: string;
 }
 
 export interface IUserToken {
+  id: string;
   email: string;
-  username: string;
   roles: UserRole[];
+  username: string;
 }

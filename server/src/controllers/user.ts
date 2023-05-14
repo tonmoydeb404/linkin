@@ -42,12 +42,13 @@ export const patchUser = asyncWrapper(async (req, res) => {
   if (!email && !username && !roles)
     throw createHttpError(400, "you have to update at least one property");
 
+  const updates: Record<string, any> = {};
+  if (email) updates.email = email;
+  if (username) updates.username = username;
+  if (roles) updates.roles = roles;
+
   // update user
-  const user = await userService.updateUserById(user_id, {
-    email,
-    username,
-    roles,
-  });
+  const user = await userService.updateUserById(user_id, updates);
 
   return res.status(200).json({ user: user.toObject() });
 });

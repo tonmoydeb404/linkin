@@ -10,7 +10,6 @@ export interface IUserMethods {
 
 const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
   {
-    username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     roles: {
       type: [
@@ -26,6 +25,11 @@ const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
       required: true,
       select: false,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
   },
   { timestamps: true }
 );
@@ -39,11 +43,12 @@ UserSchema.pre("save", async function () {
 // generating token
 UserSchema.methods.generateToken = function () {
   const payload: IUserToken = {
-    username: this.username,
+    id: this._id,
     email: this.email,
     roles: this.roles,
+    username: this.username,
   };
-  return generateToken(payload, 30);
+  return generateToken(payload, "1d");
 };
 
 // compare password
@@ -51,6 +56,6 @@ UserSchema.methods.comparePassword = function (password: string) {
   return compareHash(password, this.password);
 };
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("user", UserSchema);
 
 export default User;

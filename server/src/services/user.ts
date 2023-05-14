@@ -35,7 +35,7 @@ export const deleteUserById = async (id: string) => {
   // find the user
   let user = await getUserById(id);
   if (!user) throw createHttpError(404, "requested user not found");
-  // update user
+  // delete user
   return User.findByIdAndDelete(id);
 };
 
