@@ -47,7 +47,7 @@ export const postUser = asyncWrapper(async (req, res) => {
 
 export const patchUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
-  const { email, username, role } = req.body;
+  const { email, username } = req.body;
 
   let user = await userService.getUserByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
@@ -55,13 +55,12 @@ export const patchUser = asyncWrapper(async (req, res) => {
   if (!userPermission.canUpdate(req.user, user))
     throw createHttpError(401, "You don't have access to update this resource");
 
-  if (!email && !username && !role)
+  if (!email && !username)
     throw createHttpError(400, "You have to update at least one property");
 
   const updates: Record<string, any> = {};
   if (email) updates.email = email;
   if (username) updates.username = username;
-  if (role) updates.roles = role;
 
   // update user
   user = await userService.updateUserById(user_id, updates);
