@@ -6,10 +6,3 @@ export interface IUser {
   roles?: UserRole[];
   username: string;
 }
-
-export interface IUserToken {
-  id: string;
-  email: string;
-  roles: UserRole[];
-  username: string;
-}

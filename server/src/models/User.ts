@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { compareHash, generateHash } from "../helpers/hash";
 import { generateToken } from "../helpers/token";
-import { IUser, IUserToken } from "../types/user.type";
+import { AuthPayload } from "../types/auth.type";
+import { IUser } from "../types/user.type";
 
 export interface IUserMethods {
-  generateToken: () => Promise<string>;
+  generateToken(): Promise<{ token: string; payload: AuthPayload }>;
   comparePassword: (password: string) => Promise<boolean>;
 }
 
@@ -41,14 +42,16 @@ UserSchema.pre("save", async function () {
 });
 
 // generating token
-UserSchema.methods.generateToken = function () {
-  const payload: IUserToken = {
+UserSchema.methods.generateToken = async function () {
+  const payload: AuthPayload = {
     id: this._id,
     email: this.email,
     roles: this.roles,
     username: this.username,
   };
-  return generateToken(payload, "1d");
+
+  const token = await generateToken(payload, "1d");
+  return { token, payload };
 };
 
 // compare password
