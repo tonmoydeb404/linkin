@@ -6,11 +6,10 @@ export const createUser = ({ email, password, username }: IUser) => {
   return user.save();
 };
 
-export const getUserById = (id: string) => {
-  return User.findById(id);
-};
-
-export const getUserByProperty = (property: string, value: string) => {
+export const getUserByProperty = (property: keyof IUser, value: string) => {
+  if (property === "_id") {
+    return User.findById(value);
+  }
   return User.findOne({ [property]: value });
 };
 

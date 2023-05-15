@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { IUser } from "./user.type";
 
 export interface ILink {
-  _id?: Types.ObjectId;
+  _id?: string | Types.ObjectId;
   title: string;
   url: string;
   icon?: string | null;

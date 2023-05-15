@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import roles from "../config/roles";
 import { compareHash, generateHash } from "../helpers/hash";
 import { generateToken } from "../helpers/token";
 import { AuthPayload } from "../types/auth.type";
@@ -12,14 +13,10 @@ export interface IUserMethods {
 const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
   {
     email: { type: String, required: true, unique: true },
-    roles: {
-      type: [
-        {
-          type: String,
-          enum: ["ADMIN", "EDITOR", "USER"],
-        },
-      ],
-      default: ["USER"],
+    role: {
+      type: String,
+      enum: roles,
+      default: "USER",
     },
     password: {
       type: String,
@@ -46,7 +43,7 @@ UserSchema.methods.generateToken = async function () {
   const payload: AuthPayload = {
     id: this._id,
     email: this.email,
-    roles: this.roles,
+    role: this.role,
     username: this.username,
   };
 

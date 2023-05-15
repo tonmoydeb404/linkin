@@ -13,7 +13,7 @@ const authenticate = asyncWrapper(async (req, _res, next) => {
     const payload = verifyToken(token);
     const isValidPayload = verifyPayloadObject<AuthPayload>(payload, [
       "username",
-      "roles",
+      "role",
       "email",
     ]);
     // verify that token have all properties

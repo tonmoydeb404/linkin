@@ -1,8 +1,11 @@
-export type UserRole = "ADMIN" | "EDITOR" | "USER";
+import { Types } from "mongoose";
+
+export type UserRole = "ADMIN" | "USER";
 
 export interface IUser {
+  _id?: string | Types.ObjectId;
   email: string;
   password: string;
-  roles?: UserRole[];
+  role?: UserRole;
   username: string;
 }

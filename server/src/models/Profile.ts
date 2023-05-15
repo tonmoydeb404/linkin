@@ -15,9 +15,11 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
   },
   avatar: {
     type: String,
+    default: null,
   },
   bio: {
     type: String,
+    default: null,
   },
   user: {
     type: mongoose.Types.ObjectId,

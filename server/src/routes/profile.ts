@@ -1,16 +1,18 @@
 import { Router } from "express";
 import * as profileController from "../controllers/profile";
+import authenticate from "../middlewares/authenticate";
 
 const profileRouter = Router();
 
 profileRouter
   .route("/")
-  .get(profileController.getProfiles)
-  .post(profileController.postProfile);
+  .get(authenticate, profileController.getProfiles)
+  .post(authenticate, profileController.postProfile);
+
 profileRouter
   .route("/:profile_id")
   .get(profileController.getProfile)
-  .patch(profileController.patchProfile)
-  .delete(profileController.deleteProfile);
+  .patch(authenticate, profileController.patchProfile)
+  .delete(authenticate, profileController.deleteProfile);
 
 export default profileRouter;

@@ -2,15 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import { UserRole } from "../types/user.type";
 
-const allowAuth =
+const authorize =
   (allowedRoles: UserRole[]) =>
   (req: Request, _res: Response, next: NextFunction) => {
     try {
-      const { roles } = req?.user;
-      if (!roles) throw createHttpError(401, "Unauthorized access");
+      const { role } = req?.user;
+      if (!role) throw createHttpError(401, "Unauthorized access");
 
-      const isAllowed =
-        roles.findIndex((role) => allowedRoles.includes(role)) !== -1;
+      const isAllowed = allowedRoles.includes(role);
 
       if (!isAllowed)
         throw createHttpError(
@@ -24,4 +23,4 @@ const allowAuth =
     }
   };
 
-export default allowAuth;
+export default authorize;

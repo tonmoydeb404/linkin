@@ -1,4 +1,5 @@
 import { Schema, Types, model } from "mongoose";
+import { generate } from "shortid";
 import { ILink } from "../types/link.type";
 import User from "./User";
 
@@ -21,6 +22,7 @@ const LinkSchema = new Schema<ILink>({
     type: String,
     required: true,
     unique: true,
+    default: generate,
   },
   url: {
     type: String,

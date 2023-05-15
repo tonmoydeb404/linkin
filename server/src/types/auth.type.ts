@@ -4,7 +4,7 @@ import { IUser, UserRole } from "./user.type";
 export type AuthPayload = {
   id: string;
   email: string;
-  roles: UserRole[];
+  role: UserRole;
   username: string;
 };
 
