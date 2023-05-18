@@ -1,8 +1,8 @@
+import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as linkPermission from "../permissions/links";
 import * as linkService from "../services/link";
-import { ILink } from "../types/link.type";
 
 export const getLinks = asyncWrapper(async (req, res) => {
   const { id } = req.user;
@@ -36,7 +36,7 @@ export const getLink = asyncWrapper(async (req, res) => {
 });
 
 export const postLink = asyncWrapper(async (req, res) => {
-  const { title, slug, url, icon } = req.body as ILink;
+  const { title, slug, url, icon } = matchedData(req);
   const { id: userId } = req.user;
 
   if (!title || !url) throw createHttpError(400, "Please provide valid inputs");
@@ -56,7 +56,7 @@ export const postLink = asyncWrapper(async (req, res) => {
 
 export const patchLink = asyncWrapper(async (req, res) => {
   const { link_id } = req.params;
-  const { title, url, icon } = req.body as ILink;
+  const { title, url, icon } = matchedData(req);
 
   let link = await linkService.getLinkByProperty("_id", link_id);
   if (!link) throw createHttpError(404, "Requested Link not found");
