@@ -2,12 +2,25 @@ import { Menu } from "react-daisyui";
 import {
   HiBriefcase,
   HiExternalLink,
+  HiLogout,
   HiUser,
   HiViewGrid,
 } from "react-icons/hi";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import { useLazyAuthLogoutQuery } from "../../api/authApi";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { authSignout, selectAuth } from "../../features/auth/authSlice";
 
 const DashboardLayout = () => {
+  const [logout] = useLazyAuthLogoutQuery();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(selectAuth);
+
+  const handleSignout = async () => {
+    await logout(undefined);
+    dispatch(authSignout());
+  };
+
   return (
     <div className="flex">
       <aside className="w-[250px] py-10 bg-slate-800 min-h-screen text-white">
@@ -15,11 +28,16 @@ const DashboardLayout = () => {
           <Menu.Item className="mb-5">
             <Link to={"/profile"} target="_blank">
               <img
-                src="https://images.unsplash.com/photo-1628157588553-5eeea00af15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                src={
+                  user?.avatar ||
+                  "https://api.dicebear.com/6.x/fun-emoji/svg?seed=Bailey"
+                }
                 alt="User Image"
                 className="w-[40px] h-[40px] aspect-square rounded-full"
               />
-              <span className="text-xl font-semibold">Jhon Doe</span>
+              <span className="text-xl font-semibold">
+                {user?.firstName} {user?.lastName}
+              </span>
             </Link>
           </Menu.Item>
           <Menu.Item>
@@ -45,6 +63,12 @@ const DashboardLayout = () => {
               <HiExternalLink className="text-lg" />
               Manage Links
             </NavLink>
+          </Menu.Item>
+          <Menu.Item onClick={handleSignout}>
+            <span>
+              <HiLogout className="text-lg" />
+              Logout
+            </span>
           </Menu.Item>
         </Menu>
       </aside>

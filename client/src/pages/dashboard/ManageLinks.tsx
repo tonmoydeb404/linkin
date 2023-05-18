@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Avatar, Button, Input, Modal, Table } from "react-daisyui";
 import { HiPencilAlt, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { useUserLinksQuery } from "../../api/linksApi";
 
 const ManageLinks = () => {
   const [showModal, setShowModal] = useState(false);
+  const { data, isSuccess } = useUserLinksQuery(undefined);
   return (
     <div className="px-8 py-10">
       <div className="flex justify-between mb-10 items-center">
@@ -28,26 +30,30 @@ const ManageLinks = () => {
         </Table.Head>
 
         <Table.Body>
-          <Table.Row>
-            <span>1</span>
-            <Avatar
-              shape="circle"
-              size={"xs"}
-              src="https://images.unsplash.com/photo-1628157588553-5eeea00af15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
-            />
-            <span>Cy Ganderton</span>
-            <span>Quality Control Specialist</span>
-            <span>Blue</span>
-            <span>0</span>
-            <div className="flex items-center gap-1">
-              <Button size="sm" shape="square" color="warning">
-                <HiPencilAlt />
-              </Button>
-              <Button size="sm" shape="square" color="error">
-                <HiTrash />
-              </Button>
-            </div>
-          </Table.Row>
+          {isSuccess
+            ? data.results.map((link, index) => (
+                <Table.Row key={link.id}>
+                  <span>{index}</span>
+                  <Avatar
+                    shape="circle"
+                    size={"xs"}
+                    src="https://images.unsplash.com/photo-1628157588553-5eeea00af15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                  />
+                  <span>{link.title}</span>
+                  <span>{link.slug}</span>
+                  <span>{link.url}</span>
+                  <span>{link.clicks}</span>
+                  <div className="flex items-center gap-1">
+                    <Button size="sm" shape="square" color="warning">
+                      <HiPencilAlt />
+                    </Button>
+                    <Button size="sm" shape="square" color="error">
+                      <HiTrash />
+                    </Button>
+                  </div>
+                </Table.Row>
+              ))
+            : null}
         </Table.Body>
       </Table>
 
