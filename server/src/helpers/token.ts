@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import loadEnv from "./loadEnv";
 
@@ -21,4 +22,15 @@ export const verifyPayloadObject = <T>(
   const objKeys = Object.keys(payload);
 
   return keys.every((key) => objKeys.includes(key as string));
+};
+
+export const getToken = (req: Request) => {
+  const { authorization } = req.headers;
+  const { token } = req.cookies;
+
+  if (token) return token;
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.split(" ")[1];
+  }
+  return false;
 };

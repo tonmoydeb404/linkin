@@ -1,3 +1,4 @@
+import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as userPermission from "../permissions/user";
@@ -9,7 +10,7 @@ export const getUsers = asyncWrapper(async (req, res) => {
   if (!userPermission.canGetAll(req.user))
     throw createHttpError(401, "You don't have access to this resource");
 
-  res.status(200).json({ users, count: users.length });
+  res.status(200).json({ results: users, count: users.length });
 });
 
 export const getUser = asyncWrapper(async (req, res) => {
@@ -21,14 +22,14 @@ export const getUser = asyncWrapper(async (req, res) => {
   if (!userPermission.canGet(req.user, user))
     throw createHttpError(401, "You don't have access to this resource");
 
-  return res.status(200).json({ user: user.toObject() });
+  return res.status(200).json({ results: user.toObject() });
 });
 
 export const postUser = asyncWrapper(async (req, res) => {
   if (!userPermission.canCreate(req.user))
     throw createHttpError(401, "You don't have access to create this resource");
 
-  const { email, password, username, role } = req.body;
+  const { email, password, username, role } = matchedData(req);
 
   if (!email || !password || !username)
     throw createHttpError(400, "Please provide valid input");
@@ -42,12 +43,12 @@ export const postUser = asyncWrapper(async (req, res) => {
 
   return res
     .status(201)
-    .json({ user: { email: user.email, username: user.username } });
+    .json({ results: { email: user.email, username: user.username } });
 });
 
 export const patchUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
-  const { email, username } = req.body;
+  const { email, username } = matchedData(req);
 
   let user = await userService.getUserByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
@@ -65,7 +66,7 @@ export const patchUser = asyncWrapper(async (req, res) => {
   // update user
   user = await userService.updateUserById(user_id, updates);
 
-  return res.status(200).json({ user: user.toObject() });
+  return res.status(200).json({ results: user.toObject() });
 });
 
 export const deleteUser = asyncWrapper(async (req, res) => {
@@ -82,5 +83,5 @@ export const deleteUser = asyncWrapper(async (req, res) => {
 
   user = await userService.deleteUserById(user_id);
 
-  return res.status(200).json({ userId: user_id });
+  return res.status(200).json({ results: user_id });
 });

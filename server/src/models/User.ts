@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import roles from "../config/roles";
 import { compareHash, generateHash } from "../helpers/hash";
 import { generateToken } from "../helpers/token";
+import * as authService from "../services/auth";
 import { AuthPayload } from "../types/auth.type";
 import { IUser } from "../types/user.type";
 
@@ -40,13 +41,7 @@ UserSchema.pre("save", async function () {
 
 // generating token
 UserSchema.methods.generateToken = async function () {
-  const payload: AuthPayload = {
-    id: this._id,
-    email: this.email,
-    role: this.role,
-    username: this.username,
-  };
-
+  const payload = await authService.getAuthPayload(this._id);
   const token = await generateToken(payload, "1d");
   return { token, payload };
 };

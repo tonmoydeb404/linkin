@@ -16,11 +16,14 @@ export const defaultError = (
   _next: NextFunction
 ) => {
   const errorStatus = error?.status || 500;
-  const errorMessage = error?.message || "something wents to wrong";
+  const errorMessage = error?.status
+    ? error.message
+    : "something wents to wrong";
   const errorResponse = {
-    error: true,
+    errors: {
+      common: errorMessage,
+    },
     statusCode: errorStatus,
-    message: errorMessage,
   };
 
   console.log(error);

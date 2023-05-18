@@ -7,6 +7,7 @@ const app = express();
 
 // use middlewares
 app.use(middlewares);
+
 // use router
 app.use(router);
 // handle errors

@@ -18,7 +18,7 @@ export const getProfile = asyncWrapper(async (req, res) => {
 
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
-  res.status(200).json({ profile });
+  res.status(200).json({ results: profile });
 });
 
 export const postProfile = asyncWrapper(async (req, res) => {
@@ -38,7 +38,7 @@ export const postProfile = asyncWrapper(async (req, res) => {
 
   profile = await profile.populate("user");
 
-  return res.status(201).json({ profile });
+  return res.status(201).json({ results: profile });
 });
 
 export const patchProfile = asyncWrapper(async (req, res) => {
@@ -58,7 +58,7 @@ export const patchProfile = asyncWrapper(async (req, res) => {
 
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
-  return res.status(200).json({ profile });
+  return res.status(200).json({ results: profile });
 });
 
 export const deleteProfile = asyncWrapper(async (req, res) => {
@@ -68,5 +68,5 @@ export const deleteProfile = asyncWrapper(async (req, res) => {
 
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
-  res.status(200).json({ profile: profile._id });
+  res.status(200).json({ results: profile._id });
 });

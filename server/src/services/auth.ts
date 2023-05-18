@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import { AuthLogin, AuthRegister } from "../types/auth.type";
+import { AuthLogin, AuthPayload, AuthRegister } from "../types/auth.type";
 import * as profileService from "./profile";
 import * as userService from "./user";
 
@@ -15,6 +15,7 @@ export const register = async ({
     firstName,
     lastName,
     user: user.id,
+    avatar: `https://api.dicebear.com/6.x/bottts-neutral/svg?seed=${user.username}`,
   });
   const { token, payload } = await user.generateToken();
 
@@ -36,4 +37,23 @@ export const loginWithEmail = async ({ email, password }: AuthLogin) => {
   const { token, payload } = await user.generateToken();
 
   return { token, payload, user };
+};
+
+export const getAuthPayload = async (id: string) => {
+  const user = await userService.getUserByProperty("_id", id);
+  const profile = await profileService.getProfileByProperty("user", id);
+
+  if (!user || !profile) throw createHttpError(400, "User not found");
+
+  const payload: AuthPayload = {
+    avatar: profile.avatar,
+    email: user.email,
+    firstName: profile.firstName,
+    id: user.id,
+    lastName: profile.lastName,
+    role: user.role,
+    username: user.username,
+  };
+
+  return payload;
 };

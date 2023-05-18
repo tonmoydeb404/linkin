@@ -6,6 +6,9 @@ export type AuthPayload = {
   email: string;
   role: UserRole;
   username: string;
+  firstName: string;
+  lastName: string;
+  avatar: string | null;
 };
 
 export type AuthRegister = Pick<IUser, "email" | "password" | "username"> &

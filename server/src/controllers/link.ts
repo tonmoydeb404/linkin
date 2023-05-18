@@ -20,7 +20,7 @@ export const getLinks = asyncWrapper(async (req, res) => {
     links = await linkService.getLinksByProperty("user", id);
   }
 
-  res.status(200).json({ links, count: links.length });
+  res.status(200).json({ results: links, count: links.length });
 });
 
 export const getLink = asyncWrapper(async (req, res) => {
@@ -32,7 +32,7 @@ export const getLink = asyncWrapper(async (req, res) => {
 
   if (!link) throw createHttpError(404, "Requested profile not found");
 
-  res.status(200).json({ link });
+  res.status(200).json({ results: link });
 });
 
 export const postLink = asyncWrapper(async (req, res) => {
@@ -51,7 +51,7 @@ export const postLink = asyncWrapper(async (req, res) => {
 
   link = await link.populate("user");
 
-  return res.status(201).json({ link });
+  return res.status(201).json({ results: link });
 });
 
 export const patchLink = asyncWrapper(async (req, res) => {
@@ -74,7 +74,7 @@ export const patchLink = asyncWrapper(async (req, res) => {
 
   link = await linkService.updateLinkById(link_id, updates);
 
-  return res.status(200).json({ link });
+  return res.status(200).json({ results: link });
 });
 
 export const deleteLink = asyncWrapper(async (req, res) => {
@@ -88,5 +88,5 @@ export const deleteLink = asyncWrapper(async (req, res) => {
 
   link = await linkService.deleteLinkById(link_id);
 
-  res.status(200).json({ link: link._id });
+  res.status(200).json({ results: link._id });
 });
