@@ -15,8 +15,8 @@ const FormInput = ({ labelText, id, errorText, ...props }: FormInputProps) => {
       </label>
       <Input id={id} {...props} />
       {errorText ? (
-        <label htmlFor={id} className="label">
-          <span className="label-text text-error flex items-center gap-1">
+        <label htmlFor={id} className="label p-0 mt-1.5">
+          <span className="label-text text-xs text-error flex items-center gap-1">
             <HiExclamationCircle /> {errorText}
           </span>
         </label>
