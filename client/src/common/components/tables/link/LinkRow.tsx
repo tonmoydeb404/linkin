@@ -1,5 +1,6 @@
 import { Avatar, Button, Table } from "react-daisyui";
 import { HiPencilAlt, HiTrash } from "react-icons/hi";
+import { Link } from "react-router-dom";
 import { ILink } from "../../../../types/link.type";
 
 type Props = {
@@ -11,15 +12,18 @@ type Props = {
 const LinkRow = ({ link, onDelete, onUpdate }: Props) => {
   return (
     <Table.Row>
-      <span>#</span>
       {link.icon ? (
         <Avatar shape="circle" size={"xs"} src={link.icon} />
       ) : (
         <span></span>
       )}
       <span>{link.title}</span>
-      <span>{link.slug}</span>
-      <span>{link.url}</span>
+      <Link target="_blank" to={`/l/${link.slug}`} className="link link-hover">
+        {link.slug}
+      </Link>
+      <Link target="_blank" to={`${link.url}`} className="link link-hover">
+        {link.url}
+      </Link>
       <span>{link.clicks}</span>
       <div className="flex items-center gap-1">
         <Button size="sm" shape="square" color="warning" onClick={onUpdate}>

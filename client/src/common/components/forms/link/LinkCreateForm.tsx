@@ -2,7 +2,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { Button } from "react-daisyui";
 import { HiPlus, HiX } from "react-icons/hi";
 import * as Yup from "yup";
-import { useCreateLinkMutation } from "../../../../api/linksApi";
+import { useCreateLinkMutation } from "../../../../api/linkApi";
 import { LinkCreate } from "../../../../types/link.type";
 import FormInput from "../FormInput";
 
@@ -32,7 +32,7 @@ const LinkCreateForm = ({
 
   const handleSubmit = async (
     values: LinkCreate,
-    { setStatus, resetForm }: FormikHelpers<LinkCreate>
+    { setStatus, resetForm }: FormikHelpers<any>
   ) => {
     try {
       await createLink(values).unwrap();

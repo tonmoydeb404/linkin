@@ -19,5 +19,6 @@ linkRouter
     linkController.patchLink
   )
   .delete(linkValidator.getLink, validate, linkController.deleteLink);
+linkRouter.get("/s/:link_slug", linkController.getLinkBySlug);
 
 export default linkRouter;

@@ -15,7 +15,6 @@ export const register = async ({
     firstName,
     lastName,
     user: user.id,
-    avatar: `https://api.dicebear.com/6.x/bottts-neutral/svg?seed=${user.username}`,
   });
   const { token, payload } = await user.generateToken();
 

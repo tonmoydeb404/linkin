@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import {
   useDeleteLinkMutation,
   useUserLinksQuery,
-} from "../../../../api/linksApi";
+} from "../../../../api/linkApi";
 import { ILink } from "../../../../types/link.type";
 import LinkUpdateForm from "../../forms/link/LinkUpdateForm";
 import ModalWrapper from "../../modals/ModalWrapper";
@@ -14,7 +14,7 @@ const LinkTable = () => {
   const { data, isSuccess } = useUserLinksQuery(undefined);
   const [deleteLink] = useDeleteLinkMutation();
 
-  const [updateForm, setUpdateForm] = useState<ILink | false>(false);
+  const [updateForm, setUpdateForm] = useState<ILink | null>(null);
 
   const handleDeleteLink = async (id: string) => {
     try {
@@ -36,7 +36,6 @@ const LinkTable = () => {
     <>
       <Table className="w-full">
         <Table.Head>
-          <span />
           <span>Icon</span>
           <span>Title</span>
           <span>Slug</span>
@@ -60,13 +59,13 @@ const LinkTable = () => {
       </Table>
       <ModalWrapper
         show={!!updateForm}
-        hide={() => setUpdateForm(false)}
+        hide={() => setUpdateForm(null)}
         title="Update Link"
       >
         <LinkUpdateForm
           link={updateForm}
-          onSubmit={() => setUpdateForm(false)}
-          onCancel={() => setUpdateForm(false)}
+          onSubmit={() => setUpdateForm(null)}
+          onCancel={() => setUpdateForm(null)}
         />
       </ModalWrapper>
     </>

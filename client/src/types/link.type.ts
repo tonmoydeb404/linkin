@@ -4,24 +4,18 @@ import {
 } from "./linkinApi.type";
 import { IUser } from "./user.type";
 
-export interface ILink {
+export interface ILink<T = string | IUser> {
   _id: string;
   title: string;
   url: string;
-  icon: string | null;
+  icon?: string;
   slug: string;
-  user: string | IUser;
+  user: T;
   clicks?: number;
 }
 
 export type LinkCollectionResponse = LinkinApiCollectionResponse<ILink>;
-export type LinkResponse = LinkinApiResponse<ILink>;
+export type LinkResponse = LinkinApiResponse<ILink<IUser>>;
 
-export type LinkCreate = Pick<ILink, "slug" | "title" | "url"> & {
-  icon: string;
-};
-export type LinkUpdate = Partial<
-  Pick<ILink, "title" | "url"> & {
-    icon: string;
-  }
->;
+export type LinkCreate = Pick<ILink, "slug" | "title" | "url" | "icon">;
+export type LinkUpdate = Partial<Pick<ILink, "title" | "url" | "icon">>;

@@ -26,9 +26,7 @@ export const getLinks = asyncWrapper(async (req, res) => {
 export const getLink = asyncWrapper(async (req, res) => {
   const { link_id } = req.params;
 
-  const link = await linkService
-    .getLinkByProperty("_id", link_id)
-    .populate("user");
+  const link = await linkService.getLinkByProperty("_id", link_id);
 
   if (!link) throw createHttpError(404, "Requested profile not found");
 
@@ -89,4 +87,16 @@ export const deleteLink = asyncWrapper(async (req, res) => {
   link = await linkService.deleteLinkById(link_id);
 
   res.status(200).json({ results: link._id });
+});
+
+export const getLinkBySlug = asyncWrapper(async (req, res) => {
+  const { link_slug } = req.params;
+
+  const link = await linkService.getLinkByProperty("slug", link_slug);
+  if (!link) throw createHttpError(404, "Requested profile not found");
+
+  link.$inc("clicks", 1);
+  await link.save();
+
+  res.status(200).json({ results: link });
 });

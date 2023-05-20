@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+import { PROFILE_AVATAR } from "../config/default";
 import { IProfile } from "../types/profile.type";
+import Link from "./Link";
 import User from "./User";
 
 const ProfileSchema = new mongoose.Schema<IProfile>({
@@ -15,7 +17,8 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
   },
   avatar: {
     type: String,
-    default: null,
+    default: PROFILE_AVATAR,
+    required: true,
   },
   bio: {
     type: String,
@@ -26,6 +29,12 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
     ref: User.modelName,
     unique: true,
   },
+});
+
+ProfileSchema.virtual("links", {
+  ref: Link.modelName,
+  localField: "user",
+  foreignField: "user",
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);

@@ -3,6 +3,7 @@ import DashboardLayout from "../common/layouts/DashboardLayout";
 import PrivateOutlet from "../common/outlet/PrivateOutlet";
 import PublicOutlet from "../common/outlet/PublicOutlet";
 import Profile from "../pages/Profile";
+import ShortLink from "../pages/ShortLink";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Dashboard from "../pages/dashboard";
@@ -12,7 +13,7 @@ import ManageSocials from "../pages/dashboard/ManageSocials";
 import NotFound from "../pages/errors/NotFound";
 
 const router = createBrowserRouter([
-  { path: "/profile", element: <Profile /> },
+  { path: "/l/:slug", element: <ShortLink /> },
   {
     element: <PublicOutlet />,
     children: [
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "/:username", element: <Profile /> },
   { path: "*", element: <NotFound /> },
 ]);
 

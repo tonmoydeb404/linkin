@@ -10,8 +10,15 @@ profileRouter
   .post(authenticate, profileController.postProfile);
 
 profileRouter
+  .route("/authorized")
+  .get(authenticate, profileController.getAuthorizedProfile)
+  .patch(authenticate, profileController.patchAuthorizedProfile);
+
+profileRouter.get("/u/:username", profileController.getUserProfile);
+
+profileRouter
   .route("/:profile_id")
-  .get(profileController.getProfile)
+  .get(authenticate, profileController.getProfile)
   .patch(authenticate, profileController.patchProfile)
   .delete(authenticate, profileController.deleteProfile);
 

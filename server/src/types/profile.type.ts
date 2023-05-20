@@ -5,7 +5,7 @@ export interface IProfile {
   _id?: string | Types.ObjectId;
   firstName: string;
   lastName: string;
-  avatar?: string | null;
+  avatar?: string;
   bio?: string | null;
   user: IUser | string;
 }

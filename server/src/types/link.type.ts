@@ -5,7 +5,7 @@ export interface ILink {
   _id?: string | Types.ObjectId;
   title: string;
   url: string;
-  icon?: string | null;
+  icon?: string;
   slug: string;
   user: string | IUser;
   clicks?: number;

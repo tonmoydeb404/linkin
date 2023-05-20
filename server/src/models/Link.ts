@@ -1,5 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 import { generate } from "shortid";
+import { LINK_ICON } from "../config/default";
 import { ILink } from "../types/link.type";
 import User from "./User";
 
@@ -16,7 +17,8 @@ const LinkSchema = new Schema<ILink>({
   },
   icon: {
     type: String,
-    default: null,
+    default: LINK_ICON,
+    required: true,
   },
   slug: {
     type: String,

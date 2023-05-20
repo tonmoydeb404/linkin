@@ -8,9 +8,9 @@ import {
 } from "../types/link.type";
 import { LinkinApiResponse } from "../types/linkinApi.type";
 
-export const linksApi = createApi({
-  reducerPath: "linksApi",
-  baseQuery: linkinBaseQuery("links"),
+export const linkApi = createApi({
+  reducerPath: "linkApi",
+  baseQuery: linkinBaseQuery("link"),
   tagTypes: ["LINKS"],
   endpoints: (builder) => ({
     userLinks: builder.query<LinkCollectionResponse, any>({
@@ -19,9 +19,9 @@ export const linksApi = createApi({
       }),
       providesTags: ["LINKS"],
     }),
-    userLink: builder.query<LinkResponse, string>({
-      query: (id) => ({
-        url: `/${id}`,
+    getLink: builder.query<LinkResponse, string>({
+      query: (slug) => ({
+        url: `/s/${slug}`,
       }),
     }),
     createLink: builder.mutation<LinkResponse, LinkCreate>({
@@ -55,7 +55,9 @@ export const linksApi = createApi({
 
 export const {
   useUserLinksQuery,
+  useGetLinkQuery,
+  useLazyGetLinkQuery,
   useCreateLinkMutation,
   useDeleteLinkMutation,
   useUpdateLinkMutation,
-} = linksApi;
+} = linkApi;

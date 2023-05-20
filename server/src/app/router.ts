@@ -7,9 +7,9 @@ import userRouter from "../routes/user";
 
 const router = Router();
 
-router.use("/api/v1/users", authenticate, userRouter);
-router.use("/api/v1/profiles", profileRouter);
-router.use("/api/v1/links", authenticate, linkRouter);
+router.use("/api/v1/user", authenticate, userRouter);
+router.use("/api/v1/profile", profileRouter);
+router.use("/api/v1/link", authenticate, linkRouter);
 router.use("/api/v1/auth", authRouter);
 
 export default router;

@@ -3,7 +3,7 @@ import { Button } from "react-daisyui";
 import { HiPlus, HiX } from "react-icons/hi";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { useUpdateLinkMutation } from "../../../../api/linksApi";
+import { useUpdateLinkMutation } from "../../../../api/linkApi";
 import { ILink, LinkUpdate } from "../../../../types/link.type";
 import FormInput from "../FormInput";
 
@@ -19,7 +19,7 @@ const linkSchema = Yup.object().shape({
 type Props = {
   onSubmit?: () => any;
   onCancel?: () => any;
-  link: ILink | false;
+  link: ILink | null;
 };
 
 const LinkUpdateForm = ({
@@ -29,12 +29,11 @@ const LinkUpdateForm = ({
 }: Props) => {
   const [updateLink] = useUpdateLinkMutation();
 
-  if (link === false) return null;
-
   const handleSubmit = async (
     values: LinkUpdate,
     { setStatus, resetForm }: FormikHelpers<any>
   ) => {
+    if (!link?._id) return;
     try {
       await toast.promise(updateLink({ id: link._id, body: values }).unwrap(), {
         error: "Error in updating link!",
@@ -53,12 +52,13 @@ const LinkUpdateForm = ({
   return (
     <Formik
       initialValues={{
-        title: link.title,
-        icon: link.icon || "",
-        url: link.url,
+        title: link?.title || "",
+        icon: link?.icon || "",
+        url: link?.url || "",
       }}
       validationSchema={linkSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       {({ values, handleBlur, handleChange, errors, status }) => (
         <>
