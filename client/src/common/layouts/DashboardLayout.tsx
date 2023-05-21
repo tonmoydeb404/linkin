@@ -26,7 +26,7 @@ const DashboardLayout = () => {
       <aside className="w-[250px] py-10 bg-slate-800 min-h-screen text-white">
         <Menu className="bg-slate-800">
           <Menu.Item className="mb-5">
-            <Link to={"/profile"} target="_blank">
+            <Link to={`/${user?.username}`} target="_blank">
               <img
                 src={
                   user?.avatar ||

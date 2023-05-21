@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { PROFILE_AVATAR } from "../config/default";
 import { IProfile } from "../types/profile.type";
 import Link from "./Link";
+import Social from "./Social";
 import User from "./User";
 
 const ProfileSchema = new mongoose.Schema<IProfile>({
@@ -33,6 +34,12 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
 
 ProfileSchema.virtual("links", {
   ref: Link.modelName,
+  localField: "user",
+  foreignField: "user",
+});
+
+ProfileSchema.virtual("socials", {
+  ref: Social.modelName,
   localField: "user",
   foreignField: "user",
 });

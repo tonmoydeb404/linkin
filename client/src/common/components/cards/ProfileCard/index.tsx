@@ -26,7 +26,7 @@ const ProfileCard = ({ profile, className = "" }: Props) => {
 
         <p className="text-center mt-5 max-w-md">{profile.bio}</p>
       </div>
-      <ProfileSocials />
+      {profile?.socials ? <ProfileSocials socials={profile.socials} /> : null}
     </div>
   );
 };

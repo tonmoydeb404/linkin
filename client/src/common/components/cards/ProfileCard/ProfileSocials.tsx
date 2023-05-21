@@ -1,36 +1,25 @@
-import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import SocialIcon from "../../../../config/SocialIcon";
+import { ISocial } from "../../../../types/social.type";
 
-const ProfileSocials = () => {
+type Props = {
+  socials: ISocial[];
+};
+const ProfileSocials = ({ socials = [] }: Props) => {
   return (
-    <div className="flex items-center justify-center flex-wrap text-2xl gap-2">
-      <a
-        href="#"
-        target="_blank"
-        className="p-2 hover:bg-black/10 inline-block rounded-full duration-200"
-      >
-        <FaFacebook />
-      </a>
-      <a
-        href="#"
-        target="_blank"
-        className="p-2 hover:bg-black/10 inline-block rounded-full duration-200"
-      >
-        <FaTwitter />
-      </a>
-      <a
-        href="#"
-        target="_blank"
-        className="p-2 hover:bg-black/10 inline-block rounded-full duration-200"
-      >
-        <FaInstagram />
-      </a>
-      <a
-        href="#"
-        target="_blank"
-        className="p-2 hover:bg-black/10 inline-block rounded-full duration-200"
-      >
-        <FaWhatsapp />
-      </a>
+    <div className="flex items-center justify-center flex-wrap gap-2">
+      {socials.map((social) => {
+        const Icon = SocialIcon[social.site];
+        return (
+          <a
+            key={social._id}
+            href={social.url}
+            target="_blank"
+            className="p-2 hover:bg-black/10 inline-block rounded-full duration-200 text-[28px]"
+          >
+            <Icon />
+          </a>
+        );
+      })}
     </div>
   );
 };

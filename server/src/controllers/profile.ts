@@ -75,7 +75,7 @@ export const getUserProfile = asyncWrapper(async (req, res) => {
   const { username } = req.params;
   const profile = await (
     await profileService.getProfileByUsername(username)
-  ).populate(["links", "user"]);
+  ).populate(["links", "socials", "user"]);
 
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
