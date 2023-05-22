@@ -67,7 +67,15 @@ const RegisterForm = () => {
       validationSchema={registerSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, handleBlur, handleChange, errors, status }) => {
+      {({
+        values,
+        handleBlur,
+        handleChange,
+        errors,
+        status,
+        isValid,
+        isSubmitting,
+      }) => {
         return (
           <Form className="flex flex-col gap-2">
             {status?.common ? (
@@ -127,7 +135,12 @@ const RegisterForm = () => {
               errorText={errors.password || status?.password}
             />
             <div className="flex items-center gap-2 mt-5">
-              <Button endIcon={<HiUserAdd />} color="primary" type="submit">
+              <Button
+                endIcon={<HiUserAdd />}
+                color="primary"
+                type="submit"
+                disabled={!isValid || isSubmitting}
+              >
                 Register
               </Button>
               <Link to={"/login"}>

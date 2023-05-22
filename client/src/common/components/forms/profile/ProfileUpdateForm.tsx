@@ -64,7 +64,15 @@ const ProfileUpdateForm = ({
       onSubmit={handleUpdate}
       enableReinitialize
     >
-      {({ values, handleBlur, handleChange, errors, status }) => (
+      {({
+        values,
+        handleBlur,
+        handleChange,
+        errors,
+        status,
+        isValid,
+        isSubmitting,
+      }) => (
         <>
           <Form className={className}>
             <FormInput
@@ -108,7 +116,12 @@ const ProfileUpdateForm = ({
             />
 
             <div className="flex items-center gap-2 mt-10">
-              <Button endIcon={<HiPencilAlt />} color="success" type="submit">
+              <Button
+                endIcon={<HiPencilAlt />}
+                color="success"
+                type="submit"
+                disabled={!isValid || isSubmitting}
+              >
                 Update
               </Button>
               <Button

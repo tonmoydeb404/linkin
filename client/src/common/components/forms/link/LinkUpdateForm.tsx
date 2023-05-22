@@ -60,7 +60,15 @@ const LinkUpdateForm = ({
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      {({ values, handleBlur, handleChange, errors, status }) => (
+      {({
+        values,
+        handleBlur,
+        handleChange,
+        errors,
+        status,
+        isValid,
+        isSubmitting,
+      }) => (
         <>
           <Form className="flex flex-col gap-2">
             <FormInput
@@ -99,8 +107,9 @@ const LinkUpdateForm = ({
                 color="success"
                 size="sm"
                 type="submit"
+                disabled={!isValid || isSubmitting}
               >
-                Add
+                Update
               </Button>
               <Button
                 endIcon={<HiX />}

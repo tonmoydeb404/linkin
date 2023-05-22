@@ -61,7 +61,15 @@ const SocialCreateForm = ({
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      {({ values, handleBlur, handleChange, errors, status }) => (
+      {({
+        values,
+        handleBlur,
+        handleChange,
+        errors,
+        status,
+        isValid,
+        isSubmitting,
+      }) => (
         <>
           <Form className={className}>
             <FormSelect
@@ -101,6 +109,7 @@ const SocialCreateForm = ({
                 color="success"
                 size="sm"
                 type="submit"
+                disabled={!isValid || isSubmitting}
               >
                 Add
               </Button>

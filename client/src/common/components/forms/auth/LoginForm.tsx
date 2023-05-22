@@ -42,7 +42,15 @@ const LoginForm = () => {
       validationSchema={loginSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, handleBlur, handleChange, errors, status }) => (
+      {({
+        values,
+        handleBlur,
+        handleChange,
+        errors,
+        status,
+        isValid,
+        isSubmitting,
+      }) => (
         <Form className="flex flex-col gap-2">
           {status?.common ? (
             <Alert status="error">{status.common}</Alert>
@@ -70,7 +78,12 @@ const LoginForm = () => {
             errorText={errors.password}
           />
           <div className="flex items-center gap-2 mt-5">
-            <Button endIcon={<HiLogin />} color="primary" type="submit">
+            <Button
+              endIcon={<HiLogin />}
+              color="primary"
+              type="submit"
+              disabled={!isValid || isSubmitting}
+            >
               Login
             </Button>
             <Link to={"/register"}>

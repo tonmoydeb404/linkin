@@ -56,7 +56,15 @@ const LinkCreateForm = ({
       validationSchema={linkSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, handleBlur, handleChange, errors, status }) => (
+      {({
+        values,
+        handleBlur,
+        handleChange,
+        errors,
+        status,
+        isValid,
+        isSubmitting,
+      }) => (
         <>
           <Form className="flex flex-col gap-2">
             <FormInput
@@ -105,6 +113,7 @@ const LinkCreateForm = ({
                 color="success"
                 size="sm"
                 type="submit"
+                disabled={!isValid || isSubmitting}
               >
                 Add
               </Button>
