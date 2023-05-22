@@ -6,20 +6,9 @@ const profileRouter = Router();
 
 profileRouter
   .route("/")
-  .get(authenticate, profileController.getProfiles)
-  .post(authenticate, profileController.postProfile);
-
-profileRouter
-  .route("/authorized")
-  .get(authenticate, profileController.getAuthorizedProfile)
-  .patch(authenticate, profileController.patchAuthorizedProfile);
-
-profileRouter.get("/u/:username", profileController.getUserProfile);
-
-profileRouter
-  .route("/:profile_id")
   .get(authenticate, profileController.getProfile)
-  .patch(authenticate, profileController.patchProfile)
-  .delete(authenticate, profileController.deleteProfile);
+  .patch(authenticate, profileController.patchProfile);
+
+profileRouter.get("/:username", profileController.getUserProfile);
 
 export default profileRouter;

@@ -15,13 +15,13 @@ export const profileApi = createApi({
     }),
     getOwnProfile: builder.query<ProfileResponse, undefined>({
       query: () => ({
-        url: `/authorized`,
+        url: `/`,
       }),
       providesTags: ["PROFILE"],
     }),
     updateOwnProfile: builder.mutation<ProfileResponse, ProfileUpdate>({
       query: ({ ...body }) => ({
-        url: `/authorized`,
+        url: `/`,
         method: "PATCH",
         body,
       }),
