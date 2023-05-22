@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useGetOwnProfileQuery } from "../../api/profileApi";
 import { useAppDispatch } from "../../app/hooks";

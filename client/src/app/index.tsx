@@ -1,4 +1,5 @@
 import { CookiesProvider } from "react-cookie";
+import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -9,14 +10,16 @@ import store from "./store";
 
 const App = () => {
   return (
-    <CookiesProvider>
-      <Provider store={store}>
-        <AuthHandler>
-          <RouterProvider router={router} />
-        </AuthHandler>
-        <ToastContainer position="bottom-right" />
-      </Provider>
-    </CookiesProvider>
+    <HelmetProvider>
+      <CookiesProvider>
+        <Provider store={store}>
+          <AuthHandler>
+            <RouterProvider router={router} />
+          </AuthHandler>
+          <ToastContainer position="bottom-right" />
+        </Provider>
+      </CookiesProvider>
+    </HelmetProvider>
   );
 };
 

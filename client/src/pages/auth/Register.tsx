@@ -1,7 +1,7 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { HiOutlineHome } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import RegisterForm from "../../common/components/forms/RegisterForm";
+import RegisterForm from "../../common/components/forms/auth/RegisterForm";
 
 const Register = () => {
   return (

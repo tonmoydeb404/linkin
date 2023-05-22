@@ -23,7 +23,7 @@ const AuthHandler = ({ children }: { children: ReactElement }) => {
 
     fetchStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookies]);
+  }, [cookies.logged_in]);
 
   return children;
 };

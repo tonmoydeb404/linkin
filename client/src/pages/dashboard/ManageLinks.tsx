@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "react-daisyui";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { HiPlus } from "react-icons/hi";
 import LinkCreateForm from "../../common/components/forms/link/LinkCreateForm";
 import ModalWrapper from "../../common/components/modals/ModalWrapper";

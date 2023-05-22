@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import DashboardLayout from "../common/layouts/DashboardLayout";
 import PrivateOutlet from "../common/outlet/PrivateOutlet";
 import PublicOutlet from "../common/outlet/PublicOutlet";
+import UniOutlet from "../common/outlet/UniOutlet";
+import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import ShortLink from "../pages/ShortLink";
 import Login from "../pages/auth/Login";
@@ -13,7 +15,6 @@ import ManageSocials from "../pages/dashboard/ManageSocials";
 import NotFound from "../pages/errors/NotFound";
 
 const router = createBrowserRouter([
-  { path: "/l/:slug", element: <ShortLink /> },
   {
     element: <PublicOutlet />,
     children: [
@@ -36,8 +37,15 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: "/:username", element: <Profile /> },
-  { path: "*", element: <NotFound /> },
+  {
+    element: <UniOutlet />,
+    children: [
+      { path: "/l/:slug", element: <ShortLink /> },
+      { path: "/:username", element: <Profile /> },
+      { path: "/", element: <Home /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
 ]);
 
 export default router;

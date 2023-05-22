@@ -1,7 +1,7 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { HiOutlineHome } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import LoginForm from "../../common/components/forms/LoginForm";
+import LoginForm from "../../common/components/forms/auth/LoginForm";
 
 const Login = () => {
   return (

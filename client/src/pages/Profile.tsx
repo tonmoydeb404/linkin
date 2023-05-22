@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
 import { useLazyGetProfileQuery } from "../api/profileApi";
 import LinkCard from "../common/components/cards/LinkCard";

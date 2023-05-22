@@ -5,9 +5,33 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LinkIn - The link that links them all</title>
+    <!-- Pre LOADING STYLE -->
+    <link rel="stylesheet" href="/styles/loader.css" />
+    <style>
+      .preloader {
+        width: 100%;
+        min-height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #1e293b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="preloader" class="preloader">
+      <div class="lds-ellipsis">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
