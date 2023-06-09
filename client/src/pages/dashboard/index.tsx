@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import Construction from "../../common/components/errors/Construction";
 
 const Dashboard = () => {
   return (
@@ -6,7 +7,9 @@ const Dashboard = () => {
       <Helmet>
         <title>Dashboard - LinkIn</title>
       </Helmet>
-      <div>Dashboard</div>
+      <div className="relative">
+        <Construction />
+      </div>
     </>
   );
 };

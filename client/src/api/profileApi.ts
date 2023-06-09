@@ -9,7 +9,7 @@ export const profileApi = createApi({
   endpoints: (builder) => ({
     getProfile: builder.query<ProfileResponse, string>({
       query: (username) => ({
-        url: `/u/${username}`,
+        url: `/${username}`,
       }),
       providesTags: ["PROFILE"],
     }),

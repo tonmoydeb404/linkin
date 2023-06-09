@@ -33,7 +33,10 @@ const Profile = () => {
     return (
       <>
         <Helmet>
-          <title>Profile - LinkIn</title>
+          <title>
+            {profile.data.results.firstName} {profile.data.results.lastName} -
+            LinkIn
+          </title>
         </Helmet>
         <div className="w-full min-h-screen bg-slate-200 text-slate-800">
           <div className="max-w-lg mx-auto py-16">

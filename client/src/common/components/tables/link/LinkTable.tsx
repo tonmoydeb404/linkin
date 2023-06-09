@@ -34,29 +34,31 @@ const LinkTable = () => {
 
   return (
     <>
-      <Table className="w-full">
-        <Table.Head>
-          <span>Icon</span>
-          <span>Title</span>
-          <span>Slug</span>
-          <span>URL</span>
-          <span>Clicks</span>
-          <span>Manage</span>
-        </Table.Head>
+      <div className="overflow-x-auto w-full">
+        <Table className="w-full">
+          <Table.Head>
+            <span>Icon</span>
+            <span>Title</span>
+            <span>Slug</span>
+            <span>URL</span>
+            <span>Clicks</span>
+            <span>Manage</span>
+          </Table.Head>
 
-        <Table.Body>
-          {isSuccess
-            ? data.results.map((link) => (
-                <LinkRow
-                  link={link}
-                  onDelete={async () => await handleDeleteLink(link._id)}
-                  onUpdate={() => handleUpdateLink(link)}
-                  key={link._id}
-                />
-              ))
-            : null}
-        </Table.Body>
-      </Table>
+          <Table.Body>
+            {isSuccess
+              ? data.results.map((link) => (
+                  <LinkRow
+                    link={link}
+                    onDelete={async () => await handleDeleteLink(link._id)}
+                    onUpdate={() => handleUpdateLink(link)}
+                    key={link._id}
+                  />
+                ))
+              : null}
+          </Table.Body>
+        </Table>
+      </div>
       <ModalWrapper
         show={!!updateForm}
         hide={() => setUpdateForm(null)}
