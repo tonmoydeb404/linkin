@@ -21,7 +21,7 @@ const Sidebar = ({ className = "" }: Props) => {
   };
   return (
     <aside className={`py-10 bg-slate-800 text-white ${className}`}>
-      <Menu className="bg-slate-800">
+      <Menu className="menu-md">
         <Menu.Item className="mb-5">
           <Link to={`/${user?.username}`} target="_blank">
             <img
@@ -39,7 +39,7 @@ const Sidebar = ({ className = "" }: Props) => {
         </Menu.Item>
         {dashboardRoutes.map((route) => (
           <Menu.Item>
-            <NavLink end to={route.path}>
+            <NavLink end to={route.path} className={"active:bg-primary"}>
               <route.Icon className="text-lg" />
               {route.title}
             </NavLink>
