@@ -17,8 +17,16 @@ export const postRegister = asyncWrapper(async (req, res) => {
     lastName,
   });
 
-  res.cookie("token", token, { httpOnly: true });
-  res.cookie("logged_in", true, { httpOnly: false });
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+  res.cookie("logged_in", true, {
+    httpOnly: false,
+    sameSite: "none",
+    secure: true,
+  });
 
   return res.status(201).json({ payload, token });
 });
@@ -34,8 +42,16 @@ export const postLogin = asyncWrapper(async (req, res) => {
     password,
   });
 
-  res.cookie("token", token, { httpOnly: true });
-  res.cookie("logged_in", true, { httpOnly: false });
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+  res.cookie("logged_in", true, {
+    httpOnly: false,
+    sameSite: "none",
+    secure: true,
+  });
 
   return res.status(200).json({ token, payload });
 });
@@ -46,7 +62,11 @@ export const getRefresh = asyncWrapper(async (req, res) => {
 
 export const getLogout = asyncWrapper(async (req, res) => {
   res.clearCookie("token");
-  res.cookie("logged_in", false, { httpOnly: false });
+  res.cookie("logged_in", false, {
+    httpOnly: false,
+    sameSite: "none",
+    secure: true,
+  });
 
   return res.sendStatus(200);
 });
