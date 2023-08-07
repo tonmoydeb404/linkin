@@ -10,6 +10,7 @@ const cookieOptions: CookieOptions = {
   sameSite: loadEnv.NODE_ENV === "production" ? "none" : "lax",
   secure: loadEnv.NODE_ENV === "production",
   maxAge: 24 * 60 * 60 * 1000,
+  domain: loadEnv.DOMAIN,
 };
 
 export const postRegister = asyncWrapper(async (req, res) => {
@@ -34,7 +35,6 @@ export const postRegister = asyncWrapper(async (req, res) => {
 
 export const postLogin = asyncWrapper(async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password)
     throw createHttpError(400, "email and password is required");
 

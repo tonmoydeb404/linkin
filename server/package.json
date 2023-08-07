@@ -23,7 +23,7 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "dev": "NODE_ENV=dev npx nodemon",
+    "dev": "NODE_ENV=production npx nodemon",
     "build": "tsc",
     "start": "NODE_ENV=production node ./dist/index.js"
   },
