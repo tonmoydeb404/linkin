@@ -45,12 +45,12 @@ export const postLogin = asyncWrapper(async (req, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     sameSite: "none",
-    secure: true,
+    // secure: true,
   });
   res.cookie("logged_in", true, {
     httpOnly: false,
     sameSite: "none",
-    secure: true,
+    // secure: true,
   });
 
   return res.status(200).json({ token, payload });
@@ -65,7 +65,7 @@ export const getLogout = asyncWrapper(async (req, res) => {
   res.cookie("logged_in", false, {
     httpOnly: false,
     sameSite: "none",
-    secure: true,
+    // secure: true,
   });
 
   return res.sendStatus(200);
