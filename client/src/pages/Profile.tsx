@@ -40,7 +40,7 @@ const Profile = () => {
           </title>
         </Helmet>
         <div className="w-full min-h-screen bg-slate-200 text-slate-800">
-          <div className="max-w-lg mx-auto py-16">
+          <div className="max-w-lg mx-auto px-6 sm:px-0 py-16">
             <ProfileCard profile={profile.data.results} className="mb-10" />
             {profile.data.results.links ? (
               <div className="flex flex-col gap-2 mb-10">
