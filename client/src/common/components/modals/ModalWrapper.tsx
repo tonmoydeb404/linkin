@@ -11,7 +11,7 @@ type Props = {
 
 const ModalWrapper = ({ hide, show, title, children }: Props) => {
   return (
-    <Modal open={show} onClickBackdrop={hide}>
+    <Modal.Legacy open={show} onClickBackdrop={hide}>
       <Modal.Header className="flex items-center justify-between">
         <h4 className="font-bold">{title}</h4>
 
@@ -27,7 +27,7 @@ const ModalWrapper = ({ hide, show, title, children }: Props) => {
       </Modal.Header>
 
       <Modal.Body>{children}</Modal.Body>
-    </Modal>
+    </Modal.Legacy>
   );
 };
 

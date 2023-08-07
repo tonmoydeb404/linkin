@@ -17,16 +17,16 @@ const MobileNav = ({ className = "" }: Props) => {
     dispatch(authSignout());
   };
   return (
-    <BottomNavigation className={className}>
+    <BottomNavigation className={`${className}`}>
       {dashboardRoutes.map((route) => (
-        <NavLink end to={route.path}>
+        <NavLink end to={route.path} key={route.path}>
           <route.Icon className="text-lg" />
-          <BottomNavigation.Label>{route.title}</BottomNavigation.Label>
+          {/* <BottomNavigation.Label>{route.title}</BottomNavigation.Label> */}
         </NavLink>
       ))}
       <button onClick={handleSignout}>
         <HiLogout className="text-lg" />
-        <BottomNavigation.Label>Logout</BottomNavigation.Label>
+        {/* <BottomNavigation.Label>Logout</BottomNavigation.Label> */}
       </button>
     </BottomNavigation>
   );

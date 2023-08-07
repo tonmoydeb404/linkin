@@ -20,8 +20,8 @@ const Sidebar = ({ className = "" }: Props) => {
     dispatch(authSignout());
   };
   return (
-    <aside className={`py-10 bg-slate-800 text-white ${className}`}>
-      <Menu className="menu-md">
+    <aside className={`py-10 bg-base-200 text-white ${className}`}>
+      <Menu className="gap-y-2">
         <Menu.Item className="mb-5">
           <Link to={`/${user?.username}`} target="_blank">
             <img
@@ -38,7 +38,7 @@ const Sidebar = ({ className = "" }: Props) => {
           </Link>
         </Menu.Item>
         {dashboardRoutes.map((route) => (
-          <Menu.Item>
+          <Menu.Item key={route.path}>
             <NavLink end to={route.path} className={"active:bg-primary"}>
               <route.Icon className="text-lg" />
               {route.title}

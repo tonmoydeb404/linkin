@@ -28,7 +28,7 @@ const Home = () => {
           </Link>
 
           <Link to={"/dashboard"}>
-            <Button color="secondary" endIcon={<HiLink />}>
+            <Button color="warning" endIcon={<HiLink />}>
               Manage Links
             </Button>
           </Link>

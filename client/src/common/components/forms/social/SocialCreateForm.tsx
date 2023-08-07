@@ -32,7 +32,7 @@ const SocialCreateForm = ({
 }: Props) => {
   const [createSocial] = useCreateSocialMutation();
 
-  const handleSubmit = async (
+  const handleSubmitFunc = async (
     values: SocialCreate,
     { setStatus, resetForm }: FormikHelpers<SocialCreate>
   ) => {
@@ -58,7 +58,7 @@ const SocialCreateForm = ({
         url: "",
       }}
       validationSchema={socialSchema}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmitFunc}
       enableReinitialize
     >
       {({
@@ -70,61 +70,59 @@ const SocialCreateForm = ({
         isValid,
         isSubmitting,
       }) => (
-        <>
-          <Form className={className}>
-            <FormSelect
-              id="site"
-              labelText="Social Site"
-              name="site"
-              value={values.site}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.site || status?.site}
+        <Form className={className}>
+          <FormSelect
+            id="site"
+            labelText="Social Site"
+            name="site"
+            value={values.site}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            errorText={errors.site || status?.site}
+          >
+            <option value="DEFAULT" disabled>
+              Select Social Site
+            </option>
+            <>
+              {socialSites.map((site) => (
+                <option value={site} key={site}>
+                  {site}
+                </option>
+              ))}
+            </>
+          </FormSelect>
+
+          <FormInput
+            id="url"
+            labelText="URL"
+            name="url"
+            value={values.url}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            errorText={errors.url || status?.url}
+          />
+
+          <div className="flex items-center gap-2 mt-5">
+            <Button
+              endIcon={<HiPlus />}
+              color="success"
+              size="sm"
+              type="submit"
+              disabled={!isValid || isSubmitting}
             >
-              <option value="DEFAULT" disabled>
-                Select Social Site
-              </option>
-              <>
-                {socialSites.map((site) => (
-                  <option value={site} key={site}>
-                    {site}
-                  </option>
-                ))}
-              </>
-            </FormSelect>
-
-            <FormInput
-              id="url"
-              labelText="URL"
-              name="url"
-              value={values.url}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.url || status?.url}
-            />
-
-            <div className="flex items-center gap-2 mt-5">
-              <Button
-                endIcon={<HiPlus />}
-                color="success"
-                size="sm"
-                type="submit"
-                disabled={!isValid || isSubmitting}
-              >
-                Add
-              </Button>
-              <Button
-                endIcon={<HiX />}
-                color="error"
-                size="sm"
-                onClick={onCancel}
-                type="reset"
-              >
-                Cancel
-              </Button>
-            </div>
-          </Form>
-        </>
+              Add
+            </Button>
+            <Button
+              endIcon={<HiX />}
+              color="error"
+              size="sm"
+              onClick={onCancel}
+              type="reset"
+            >
+              Cancel
+            </Button>
+          </div>
+        </Form>
       )}
     </Formik>
   );
