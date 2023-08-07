@@ -6,7 +6,7 @@ import loadEnv from "../helpers/loadEnv";
 import * as authService from "../services/auth";
 
 const cookieOptions: CookieOptions = {
-  httpOnly: true,
+  httpOnly: false,
   sameSite: loadEnv.NODE_ENV === "production" ? "none" : "lax",
   secure: loadEnv.NODE_ENV === "production",
   maxAge: 24 * 60 * 60 * 1000,
@@ -26,7 +26,7 @@ export const postRegister = asyncWrapper(async (req, res) => {
     lastName,
   });
 
-  res.cookie("token", token, cookieOptions);
+  res.cookie("token", token, { ...cookieOptions, httpOnly: true });
   res.cookie("logged_in", true, cookieOptions);
 
   return res.status(201).json({ payload, token });
@@ -43,7 +43,7 @@ export const postLogin = asyncWrapper(async (req, res) => {
     password,
   });
 
-  res.cookie("token", token, cookieOptions);
+  res.cookie("token", token, { ...cookieOptions, httpOnly: true });
   res.cookie("logged_in", true, cookieOptions);
 
   return res.status(200).json({ token, payload });
