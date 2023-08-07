@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useLazyGetLinkQuery } from "../api/linkApi";
+import PagePreloader from "../common/components/preloader/PagePreloader";
 import NotFound from "./errors/NotFound";
 
 const ShortLink = () => {
@@ -28,7 +29,7 @@ const ShortLink = () => {
   )
     return <NotFound />;
 
-  return <div>loading...</div>;
+  return <PagePreloader />;
 };
 
 export default ShortLink;

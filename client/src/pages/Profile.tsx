@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useLazyGetProfileQuery } from "../api/profileApi";
 import LinkCard from "../common/components/cards/LinkCard";
 import ProfileCard from "../common/components/cards/ProfileCard";
+import PagePreloader from "../common/components/preloader/PagePreloader";
 import NotFound from "./errors/NotFound";
 
 const Profile = () => {
@@ -54,7 +55,7 @@ const Profile = () => {
     );
   }
 
-  return <div>loading...</div>;
+  return <PagePreloader />;
 };
 
 export default Profile;
