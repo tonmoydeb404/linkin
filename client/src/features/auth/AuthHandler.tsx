@@ -10,6 +10,8 @@ const AuthHandler = ({ children }: { children: ReactElement }) => {
   const [{ logged_in }] = useCookies(["logged_in"]);
 
   useEffect(() => {
+    console.log(document.cookie);
+
     const fetchStatus = async () => {
       try {
         dispatch(authLoading());
