@@ -7,13 +7,13 @@ import { authLoading, authSignin, authSignout } from "./authSlice";
 const AuthHandler = ({ children }: { children: ReactElement }) => {
   const [refreshAuth] = useLazyAuthRefreshQuery();
   const dispatch = useAppDispatch();
-  const [cookies] = useCookies(["logged_in"]);
+  const [{ logged_in }] = useCookies(["logged_in"]);
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         dispatch(authLoading());
-        if (cookies.logged_in !== "true") throw new Error("Not logged in");
+        if (logged_in !== "true") throw new Error("Not logged in");
 
         const data = await refreshAuth(undefined).unwrap();
         dispatch(authSignin(data.payload));
@@ -22,11 +22,11 @@ const AuthHandler = ({ children }: { children: ReactElement }) => {
       }
     };
 
-    console.log(cookies);
+    console.log(logged_in);
 
     fetchStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookies.logged_in]);
+  }, [logged_in]);
 
   return children;
 };
