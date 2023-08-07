@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useLazyAuthLogoutQuery } from "../../../api/authApi";
 import { useAppDispatch } from "../../../app/hooks";
 import dashboardRoutes from "../../../config/dashboard-routes";
+import { logInKey } from "../../../config/localstorage";
 import { authSignout } from "../../../features/auth/authSlice";
 
 type Props = { className?: string };
@@ -15,6 +16,7 @@ const MobileNav = ({ className = "" }: Props) => {
   const handleSignout = async () => {
     await logout(undefined);
     dispatch(authSignout());
+    localStorage.setItem(logInKey, "false");
   };
   return (
     <BottomNavigation className={`${className}`}>

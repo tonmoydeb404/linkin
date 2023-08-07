@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useLazyAuthLogoutQuery } from "../../../api/authApi";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import dashboardRoutes from "../../../config/dashboard-routes";
+import { logInKey } from "../../../config/localstorage";
 import { authSignout, selectAuth } from "../../../features/auth/authSlice";
 
 type Props = {
@@ -18,6 +19,7 @@ const Sidebar = ({ className = "" }: Props) => {
   const handleSignout = async () => {
     await logout(undefined);
     dispatch(authSignout());
+    localStorage.setItem(logInKey, "false");
   };
   return (
     <aside className={`py-10 bg-base-200 text-white ${className}`}>

@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { useAuthRegisterMutation } from "../../../../api/authApi";
 import { useAppDispatch } from "../../../../app/hooks";
+import { logInKey } from "../../../../config/localstorage";
 import {
   authLoading,
   authSignin,
@@ -48,10 +49,12 @@ const RegisterForm = () => {
       const data = await authRegister(values).unwrap();
       setStatus({});
       dispatch(authSignin(data.payload));
+      localStorage.setItem(logInKey, "true");
     } catch (error: any) {
       if (error?.data) setStatus(error.data.errors);
       // console.log(error);
       dispatch(authSignout());
+      localStorage.setItem(logInKey, "false");
     }
   };
 

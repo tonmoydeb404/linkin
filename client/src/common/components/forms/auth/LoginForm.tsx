@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useAuthLoginMutation } from "../../../../api/authApi";
 import { useAppDispatch } from "../../../../app/hooks";
+import { logInKey } from "../../../../config/localstorage";
 import { authLoading, authSignin } from "../../../../features/auth/authSlice";
 import { AuthLogin } from "../../../../types/auth.type";
 import FormInput from "../FormInput";
@@ -26,10 +27,12 @@ const LoginForm = () => {
       dispatch(authLoading());
       const data = await authLogin(values).unwrap();
       dispatch(authSignin(data.payload));
+      localStorage.setItem(logInKey, "true");
       setStatus({});
     } catch (error: any) {
       if (error?.data?.errors) setStatus(error.data.errors);
       console.log(error);
+      localStorage.setItem(logInKey, "false");
     }
   };
 
