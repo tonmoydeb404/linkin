@@ -9,7 +9,7 @@ type Props = {
 const ProfileCard = ({ profile, className = "" }: Props) => {
   return (
     <div className={className}>
-      <div className="flex flex-col items-center mb-8">
+      <div className="flex flex-col items-center mb-8 text-center">
         <img
           src={profile.avatar}
           alt={`${profile.firstName} ${profile.lastName}`}
@@ -24,7 +24,7 @@ const ProfileCard = ({ profile, className = "" }: Props) => {
           @{profile.user.username}
         </h2>
 
-        <p className="text-center mt-5 max-w-md">{profile.bio}</p>
+        <p className="mt-5 max-w-md">{profile.bio}</p>
       </div>
       {profile?.socials ? <ProfileSocials socials={profile.socials} /> : null}
     </div>
