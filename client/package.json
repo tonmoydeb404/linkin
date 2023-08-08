@@ -1,5 +1,6 @@
 {
   "name": "linkin-client",
+  "license": "MIT",
   "private": false,
   "description": "The link that links them all",
   "version": "0.0.0",
