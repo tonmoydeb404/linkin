@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 
-config();
+config({ path: ".env.example" });
+config({ path: ".env.local", override: true });
 
 export default {
   PORT: process.env.PORT,
