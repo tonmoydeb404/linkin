@@ -1,103 +1,123 @@
-import { Form, Formik, FormikHelpers } from "formik";
-import { Alert, Button } from "react-daisyui";
 import { HiLogin, HiUserAdd } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import * as Yup from "yup";
+import * as z from "zod";
 import { useAuthLoginMutation } from "../../../../api/authApi";
 import { useAppDispatch } from "../../../../app/hooks";
 import { logInKey } from "../../../../config/localstorage";
 import { authLoading, authSignin } from "../../../../features/auth/authSlice";
-import { AuthLogin } from "../../../../types/auth.type";
-import FormInput from "../FormInput";
 
-const loginSchema = Yup.object().shape({
-  email: Yup.string().email("invalid email").required("email is required"),
-  password: Yup.string().required("password is required"),
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Alert } from "../../ui/alert";
+import { Button } from "../../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+
+const loginSchema = z.object({
+  email: z.string().email("invalid email"),
+  password: z.string(),
 });
 
 const LoginForm = () => {
   const [authLogin] = useAuthLoginMutation();
   const dispatch = useAppDispatch();
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const { control, handleSubmit, setError, clearErrors, formState } = form;
 
-  const handleSubmit = async (
-    values: AuthLogin,
-    { setStatus }: FormikHelpers<AuthLogin>
-  ) => {
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
       dispatch(authLoading());
       const data = await authLogin(values).unwrap();
       dispatch(authSignin(data.payload));
       localStorage.setItem(logInKey, "true");
-      setStatus({});
+      clearErrors();
     } catch (error: any) {
-      if (error?.data?.errors) setStatus(error.data.errors);
+      if (error?.data?.errors) {
+        Object.keys(error.data.errors).forEach((er) => {
+          if (er === "email" || er === "password") {
+            setError(er, { message: error.data.errors[er] });
+          } else {
+            setError("root", { message: error.data.errors[er] });
+          }
+        });
+      }
       console.log(error);
       localStorage.setItem(logInKey, "false");
     }
   };
 
   return (
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-      }}
-      validationSchema={loginSchema}
-      onSubmit={handleSubmit}
-    >
-      {({
-        values,
-        handleBlur,
-        handleChange,
-        errors,
-        status,
-        isValid,
-        isSubmitting,
-      }) => (
-        <Form className="flex flex-col gap-2">
-          {status?.common ? (
-            <Alert status="error">{status.common}</Alert>
-          ) : null}
-          <FormInput
-            id="email"
-            labelText="Email"
-            name="email"
-            placeholder="someone@example.com"
-            type="email"
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            errorText={errors.email}
-          />
-          <FormInput
-            id="password"
-            labelText="Password"
-            name="password"
-            placeholder="***********"
-            type="password"
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            errorText={errors.password}
-          />
-          <div className="flex items-center gap-2 mt-5">
-            <Button
-              endIcon={<HiLogin />}
-              color="primary"
-              type="submit"
-              disabled={!isValid || isSubmitting}
-            >
-              Login
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        {formState.errors.root ? (
+          <Alert variant="destructive">{formState.errors.root.message}</Alert>
+        ) : null}
+        <FormField
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="your@mail.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input placeholder="*******" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex items-center gap-2 mt-5">
+          <Button
+            variant="default"
+            type="submit"
+            disabled={formState.isSubmitting || !formState.isValid}
+          >
+            {formState.isSubmitting ? (
+              <>
+                Signing in... <Loader2 className="ml-2 animate-spin" />
+              </>
+            ) : (
+              <>
+                Login <HiLogin className="ml-2" />
+              </>
+            )}
+          </Button>
+          <Link to={"/register"}>
+            <Button variant="secondary" type="button">
+              Register <HiUserAdd className="ml-2" />
             </Button>
-            <Link to={"/register"}>
-              <Button endIcon={<HiUserAdd />} color="warning" type="button">
-                Register
-              </Button>
-            </Link>
-          </div>
-        </Form>
-      )}
-    </Formik>
+          </Link>
+        </div>
+      </form>
+    </Form>
   );
 };
 

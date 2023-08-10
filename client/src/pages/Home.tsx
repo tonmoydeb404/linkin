@@ -1,4 +1,4 @@
-import { Button } from "react-daisyui";
+import { Button } from "@/common/components/ui/button";
 import { Helmet } from "react-helmet-async";
 import { HiArrowRight, HiLink } from "react-icons/hi";
 import { Link } from "react-router-dom";
@@ -21,17 +21,18 @@ const Home = () => {
         <p className="text-base mb-10">The link that links them all</p>
 
         <div className="flex items-center gap-2">
-          <Link to={"/register"}>
-            <Button color="primary" endIcon={<HiArrowRight />}>
-              Join Now
-            </Button>
-          </Link>
+          <Button size={"lg"} asChild>
+            <Link to={"/register"}>
+              Join Now <HiArrowRight className="ml-1" />
+            </Link>
+          </Button>
 
-          <Link to={"/dashboard"}>
-            <Button color="warning" endIcon={<HiLink />}>
+          <Button size={"lg"} variant="secondary" asChild>
+            <Link to={"/dashboard"}>
               Manage Links
-            </Button>
-          </Link>
+              <HiLink className="ml-1" />
+            </Link>
+          </Button>
         </div>
       </div>
     </>
