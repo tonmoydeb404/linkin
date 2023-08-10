@@ -110,11 +110,11 @@ const LoginForm = () => {
               </>
             )}
           </Button>
-          <Link to={"/register"}>
-            <Button variant="secondary" type="button">
+          <Button asChild variant="secondary" type="button">
+            <Link to={"/register"}>
               Register <HiUserAdd className="ml-2" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </form>
     </Form>

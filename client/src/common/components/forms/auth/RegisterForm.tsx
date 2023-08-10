@@ -1,9 +1,6 @@
-import { Form, Formik, FormikHelpers } from "formik";
-import { Alert, Button } from "react-daisyui";
 import { HiLogin, HiUserAdd } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import * as Yup from "yup";
-import YupPassword from "yup-password";
+
 import { useAuthRegisterMutation } from "../../../../api/authApi";
 import { useAppDispatch } from "../../../../app/hooks";
 import { logInKey } from "../../../../config/localstorage";
@@ -12,46 +9,73 @@ import {
   authSignin,
   authSignout,
 } from "../../../../features/auth/authSlice";
-import { AuthRegister } from "../../../../types/auth.type";
-import FormInput from "../FormInput";
-YupPassword(Yup);
 
-const registerSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, "too short!")
-    .max(50, "too long")
-    .required("first name is required"),
-  lastName: Yup.string()
-    .min(2, "too short!")
-    .max(50, "too long")
-    .required("last name is required"),
-  email: Yup.string().email("invalid email").required("email is required"),
-  password: Yup.string()
-    // .password()
-    .min(6, "too short!")
-    .required("password is required"),
-  username: Yup.string()
-    .required("username is required")
-    .min(3, "too short!")
-    .max(50, "too long!"),
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Alert } from "../../ui/alert";
+import { Button } from "../../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+
+const registerSchema = z.object({
+  firstName: z.string().min(2, "too short!").max(50, "too long"),
+  lastName: z.string().min(2, "too short!").max(50, "too long"),
+  email: z.string().email("invalid email"),
+  password: z.string().min(6, "too short!"),
+  username: z.string().min(3, "too short!").max(50, "too long!"),
 });
 
 const RegisterForm = () => {
   const [authRegister] = useAuthRegisterMutation();
   const dispatch = useAppDispatch();
 
-  const handleSubmit = async (
-    values: AuthRegister,
-    { setStatus }: FormikHelpers<AuthRegister>
-  ) => {
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      username: "",
+    },
+  });
+  const { control, handleSubmit, setError, clearErrors, formState } = form;
+
+  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     try {
       dispatch(authLoading());
       const data = await authRegister(values).unwrap();
-      setStatus({});
       dispatch(authSignin(data.payload));
       localStorage.setItem(logInKey, "true");
+      clearErrors();
     } catch (error: any) {
-      if (error?.data) setStatus(error.data.errors);
+      if (error?.data?.errors) {
+        Object.keys(error.data.errors).forEach((er) => {
+          const prop: (keyof z.infer<typeof registerSchema>)[] = [
+            "firstName",
+            "lastName",
+            "email",
+            "password",
+            "username",
+          ];
+          if (prop.includes(er as keyof z.infer<typeof registerSchema>)) {
+            setError(er as keyof z.infer<typeof registerSchema>, {
+              message: error.data.errors[er],
+            });
+          } else {
+            setError("root", { message: error.data.errors[er] });
+          }
+        });
+      }
       // console.log(error);
       dispatch(authSignout());
       localStorage.setItem(logInKey, "false");
@@ -59,103 +83,107 @@ const RegisterForm = () => {
   };
 
   return (
-    <Formik
-      initialValues={{
-        firstName: "",
-        lastName: "",
-        username: "",
-        email: "",
-        password: "",
-      }}
-      validationSchema={registerSchema}
-      onSubmit={handleSubmit}
-    >
-      {({
-        values,
-        handleBlur,
-        handleChange,
-        errors,
-        status,
-        isValid,
-        isSubmitting,
-      }) => {
-        return (
-          <Form className="flex flex-col gap-2">
-            {status?.common ? (
-              <Alert status="error">{status.common}</Alert>
-            ) : null}
-            <FormInput
-              id="firstName"
-              labelText="First Name"
-              name="firstName"
-              placeholder="Jhon"
-              type="text"
-              value={values.firstName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.firstName || status?.firstName}
-            />
-            <FormInput
-              id="lastName"
-              labelText="Last Name"
-              name="lastName"
-              placeholder="Doe"
-              value={values.lastName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.lastName || status?.lastName}
-            />
-            <FormInput
-              id="username"
-              labelText="Username"
-              name="username"
-              placeholder="jhondoe"
-              value={values.username}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.username || status?.username}
-            />
-            <FormInput
-              id="email"
-              labelText="Email"
-              name="email"
-              placeholder="someone@example.com"
-              type="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.email || status?.email}
-            />
-            <FormInput
-              id="password"
-              labelText="Password"
-              name="password"
-              placeholder="***********"
-              type="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.password || status?.password}
-            />
-            <div className="flex items-center gap-2 mt-5">
-              <Button
-                endIcon={<HiUserAdd />}
-                color="primary"
-                type="submit"
-                disabled={!isValid || isSubmitting}
-              >
+    <Form {...form}>
+      <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+        {formState.errors.root ? (
+          <Alert variant="destructive">{formState.errors.root.message}</Alert>
+        ) : null}
+
+        <FormField
+          control={control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex items-center gap-2 mt-5">
+          <Button
+            type="submit"
+            disabled={formState.isSubmitting || !formState.isValid}
+          >
+            {formState.isSubmitting ? (
+              <>
+                Loading... <Loader2 className="ml-2 animate-spin" />
+              </>
+            ) : (
+              <>
                 Register
-              </Button>
-              <Link to={"/login"}>
-                <Button endIcon={<HiLogin />} color="warning" type="reset">
-                  Login
-                </Button>
-              </Link>
-            </div>
-          </Form>
-        );
-      }}
-    </Formik>
+                <HiUserAdd className="ml-2" />
+              </>
+            )}
+          </Button>
+          <Button asChild variant="secondary" type="reset">
+            <Link to={"/login"}>
+              Login
+              <HiLogin className="ml-2" />
+            </Link>
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 
