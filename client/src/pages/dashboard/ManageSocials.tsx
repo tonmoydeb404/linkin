@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Button } from "react-daisyui";
+
+import DialogWrapper from "@/common/components/dialog/DialogWrapper";
+import { Button } from "@/common/components/ui/button";
 import { Helmet } from "react-helmet-async";
 import { HiPlus } from "react-icons/hi";
 import SocialCreateForm from "../../common/components/forms/social/SocialCreateForm";
-import ModalWrapper from "../../common/components/modals/ModalWrapper";
 import SocialTable from "../../common/components/tables/social/SocialTable";
 
 const ManageSocials = () => {
@@ -16,27 +17,24 @@ const ManageSocials = () => {
       <div className="px-8 py-10">
         <div className="flex justify-between mb-10 items-center">
           <h2 className="text-xl font-semibold">Manage Socials</h2>
-          <Button
-            color="success"
-            endIcon={<HiPlus />}
-            onClick={() => setShowModal(true)}
-          >
+          <Button variant="default" onClick={() => setShowModal(true)}>
             Add New
+            <HiPlus className="ml-2" />
           </Button>
         </div>
         <SocialTable />
 
-        <ModalWrapper
-          show={showModal}
-          hide={() => setShowModal(false)}
-          title="Add External Link"
+        <DialogWrapper
+          open={showModal}
+          onChange={setShowModal}
+          title="Add Social Link"
         >
           <SocialCreateForm
-            onCancel={() => setShowModal(false)}
-            onSubmit={() => setShowModal(false)}
+            cancelCallback={() => setShowModal(false)}
+            submitCallback={() => setShowModal(false)}
             className="flex flex-col gap-2"
           />
-        </ModalWrapper>
+        </DialogWrapper>
       </div>
     </>
   );

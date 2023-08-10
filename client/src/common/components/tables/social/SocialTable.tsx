@@ -1,71 +1,68 @@
 import { useState } from "react";
-import { Table } from "react-daisyui";
 import { toast } from "react-toastify";
 import {
   useDeleteSocialMutation,
   useGetAllSocialsQuery,
 } from "../../../../api/socialApi";
 import { ISocial } from "../../../../types/social.type";
+import ConfirmDialog from "../../dialog/ConfirmDialog";
+import DialogWrapper from "../../dialog/DialogWrapper";
 import SocialUpdateForm from "../../forms/social/SocialUpdateForm";
-import ModalWrapper from "../../modals/ModalWrapper";
-import SocialRow from "./SocialRow";
+import SocialColumns from "./SocialColumns";
+import SocialDataTable from "./SocialDataTable";
 
 const SocialTable = () => {
-  const { data, isSuccess } = useGetAllSocialsQuery(undefined);
+  const { data } = useGetAllSocialsQuery(undefined);
   const [deleteSocial] = useDeleteSocialMutation();
 
   const [updateForm, setUpdateForm] = useState<ISocial | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => setDeleteId(id);
+
+  const handleRemove = async () => {
     try {
-      await toast.promise(deleteSocial(id).unwrap(), {
+      if (!deleteId) throw new Error("id not defined");
+      await toast.promise(deleteSocial(deleteId).unwrap(), {
         error: "Error in deleting social link!",
         pending: "Deleting social link...",
         success: "Social link Deleted!",
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setDeleteId(null);
     }
   };
 
-  const handleUpdate = (social: ISocial) => {
-    setUpdateForm(social);
-  };
+  const handleUpdate = (social: ISocial) => setUpdateForm(social);
 
   return (
     <>
-      <Table className="w-full">
-        <Table.Head>
-          <span>Site</span>
-          <span>URL</span>
-          <span>Manage</span>
-        </Table.Head>
-
-        <Table.Body>
-          {isSuccess
-            ? data.results.map((social) => (
-                <SocialRow
-                  social={social}
-                  onDelete={async () => await handleDelete(social._id)}
-                  onUpdate={() => handleUpdate(social)}
-                  key={social._id}
-                />
-              ))
-            : null}
-        </Table.Body>
-      </Table>
-      <ModalWrapper
-        show={!!updateForm}
-        hide={() => setUpdateForm(null)}
+      <SocialDataTable
+        data={data?.results || []}
+        columns={SocialColumns({ handleDelete, handleUpdate })}
+      />
+      <DialogWrapper
+        open={!!updateForm}
+        onChange={() => setUpdateForm(null)}
         title="Update Link"
       >
         <SocialUpdateForm
           social={updateForm}
-          onSubmit={() => setUpdateForm(null)}
-          onCancel={() => setUpdateForm(null)}
+          submitCallback={() => setUpdateForm(null)}
+          cancelCallback={() => setUpdateForm(null)}
           className="flex flex-col gap-2"
         />
-      </ModalWrapper>
+      </DialogWrapper>
+      <ConfirmDialog
+        title="Are you sure to delete social link?"
+        description="this action cannot be undone."
+        onAction={handleRemove}
+        onCancel={() => setDeleteId(null)}
+        open={!!deleteId}
+        onChange={() => setDeleteId(null)}
+      />
     </>
   );
 };
