@@ -1,38 +1,50 @@
+import { SelectContent } from "@radix-ui/react-select";
 import { ReactNode } from "react";
-import { Select, SelectProps } from "react-daisyui";
-import { HiExclamationCircle } from "react-icons/hi";
+import { useFormContext } from "react-hook-form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Select, SelectItem, SelectTrigger } from "../ui/select";
 
 type FormSelectProps = {
-  id: string;
-  labelText: string;
-  errorText?: string;
+  name: string;
+  label?: string;
+  placeholder: string;
   children?: ReactNode;
-} & SelectProps;
+};
 
 const FormSelect = ({
-  labelText,
-  id,
-  errorText,
+  name,
+  label,
+  placeholder,
   children,
-  ...props
 }: FormSelectProps) => {
+  const { control } = useFormContext();
+
   return (
-    <div className="form-control w-full">
-      <label htmlFor={id} className="label">
-        <span className="label-text">{labelText}</span>
-      </label>
-      <Select id={id} {...props}>
-        {children}
-      </Select>
-      {errorText ? (
-        <label htmlFor={id} className="label p-0 mt-1.5">
-          <span className="label-text text-xs text-error flex items-center gap-1">
-            <HiExclamationCircle /> {errorText}
-          </span>
-        </label>
-      ) : null}
-    </div>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          {label ? <FormLabel>{label}</FormLabel> : null}
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger placeholder={placeholder} />
+            </FormControl>
+            <SelectContent>{children}</SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
+
+export const FormSelectItem = SelectItem;
 
 export default FormSelect;

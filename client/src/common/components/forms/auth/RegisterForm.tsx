@@ -11,20 +11,13 @@ import {
 } from "../../../../features/auth/authSlice";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import LoadingButton from "../../button/LoadingButton";
 import { Alert } from "../../ui/alert";
 import { Button } from "../../ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../../ui/form";
-import { Input } from "../../ui/input";
+import { Form } from "../../ui/form";
+import FormInput from "../FormInput";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "too short!").max(50, "too long"),
@@ -34,11 +27,13 @@ const registerSchema = z.object({
   username: z.string().min(3, "too short!").max(50, "too long!"),
 });
 
+type RegisterSchema = z.infer<typeof registerSchema>;
+
 const RegisterForm = () => {
   const [authRegister] = useAuthRegisterMutation();
   const dispatch = useAppDispatch();
 
-  const form = useForm<z.infer<typeof registerSchema>>({
+  const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       firstName: "",
@@ -48,9 +43,9 @@ const RegisterForm = () => {
       username: "",
     },
   });
-  const { control, handleSubmit, setError, clearErrors, formState } = form;
+  const { handleSubmit, setError, clearErrors, formState } = form;
 
-  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+  const onSubmit = async (values: RegisterSchema) => {
     try {
       dispatch(authLoading());
       const data = await authRegister(values).unwrap();
@@ -58,17 +53,11 @@ const RegisterForm = () => {
       localStorage.setItem(logInKey, "true");
       clearErrors();
     } catch (error: any) {
+      const fields = Object.keys(values);
       if (error?.data?.errors) {
         Object.keys(error.data.errors).forEach((er) => {
-          const prop: (keyof z.infer<typeof registerSchema>)[] = [
-            "firstName",
-            "lastName",
-            "email",
-            "password",
-            "username",
-          ];
-          if (prop.includes(er as keyof z.infer<typeof registerSchema>)) {
-            setError(er as keyof z.infer<typeof registerSchema>, {
+          if (fields.includes(er)) {
+            setError(er as keyof typeof values, {
               message: error.data.errors[er],
             });
           } else {
@@ -89,92 +78,21 @@ const RegisterForm = () => {
           <Alert variant="destructive">{formState.errors.root.message}</Alert>
         ) : null}
 
-        <FormField
-          control={control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>First Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormInput name="firstName" label="First Name" />
+        <FormInput name="lastName" label="Last Name" />
+        <FormInput name="username" label="Username" />
+        <FormInput name="email" label="Email" type="email" />
+        <FormInput name="password" label="Password" type="password" />
 
         <div className="flex items-center gap-2 mt-5">
-          <Button
+          <LoadingButton
             type="submit"
             disabled={formState.isSubmitting || !formState.isValid}
+            isLoading={formState.isSubmitting}
           >
-            {formState.isSubmitting ? (
-              <>
-                Loading... <Loader2 className="ml-2 animate-spin" />
-              </>
-            ) : (
-              <>
-                Register
-                <HiUserAdd className="ml-2" />
-              </>
-            )}
-          </Button>
+            Register
+            <HiUserAdd className="ml-2" />
+          </LoadingButton>
           <Button asChild variant="secondary" type="reset">
             <Link to={"/login"}>
               Login

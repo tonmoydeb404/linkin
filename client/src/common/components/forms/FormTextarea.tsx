@@ -1,32 +1,35 @@
-import { Textarea, TextareaProps } from "react-daisyui";
-import { HiExclamationCircle } from "react-icons/hi";
+import { useFormContext } from "react-hook-form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Textarea, TextareaProps } from "../ui/textarea";
 
 type FormTextareaProps = {
-  id: string;
-  labelText: string;
-  errorText?: string;
-} & TextareaProps;
+  name: string;
+  label?: string;
+} & Omit<TextareaProps, "name">;
 
-const FormTextarea = ({
-  labelText,
-  id,
-  errorText,
-  ...props
-}: FormTextareaProps) => {
+const FormTextarea = ({ name, label, ...rest }: FormTextareaProps) => {
+  const { control } = useFormContext();
+
   return (
-    <div className="form-control w-full">
-      <label htmlFor={id} className="label">
-        <span className="label-text">{labelText}</span>
-      </label>
-      <Textarea id={id} {...props} />
-      {errorText ? (
-        <label htmlFor={id} className="label p-0 mt-1.5">
-          <span className="label-text text-xs text-error flex items-center gap-1">
-            <HiExclamationCircle /> {errorText}
-          </span>
-        </label>
-      ) : null}
-    </div>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          {label ? <FormLabel>{label}</FormLabel> : null}
+          <FormControl>
+            <Textarea {...rest} {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
 

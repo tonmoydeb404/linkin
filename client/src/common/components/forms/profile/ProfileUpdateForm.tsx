@@ -1,41 +1,52 @@
-import { Form, Formik, FormikHelpers } from "formik";
-import { Button } from "react-daisyui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { HiPencilAlt, HiX } from "react-icons/hi";
 import { toast } from "react-toastify";
-import * as Yup from "yup";
+import * as z from "zod";
 import { useUpdateOwnProfileMutation } from "../../../../api/profileApi";
-import { IProfile, ProfileUpdate } from "../../../../types/profile.type";
+import { IProfile } from "../../../../types/profile.type";
+import LoadingButton from "../../button/LoadingButton";
+import { Button } from "../../ui/button";
+import { Form } from "../../ui/form";
 import FormInput from "../FormInput";
 import FormTextarea from "../FormTextarea";
 
-const profileSchema = Yup.object().shape({
-  firstName: Yup.string().trim().required("First Name is required"),
-  lastName: Yup.string().trim().required("Last Name is required"),
-  bio: Yup.string().optional(),
-  avatar: Yup.string()
-    .trim()
-    .url("Avatar URL is not valid")
-    .required("Avatar is required"),
+const profileSchema = z.object({
+  firstName: z.string().trim(),
+  lastName: z.string().trim(),
+  bio: z.string().optional(),
+  avatar: z.string().trim().url("Avatar URL is not valid"),
 });
+
+type ProfileSchema = z.infer<typeof profileSchema>;
 
 type Props = {
   profile: IProfile | null;
   className?: string;
-  onSubmit?: (profile: IProfile) => any;
-  onCancel?: () => any;
+  submitCallback?: (profile: IProfile) => any;
+  cancelCallback?: () => any;
 };
 const ProfileUpdateForm = ({
   profile,
   className = "",
-  onSubmit = () => {},
-  onCancel = () => {},
+  submitCallback = () => {},
+  cancelCallback = () => {},
 }: Props) => {
   const [updateProfile] = useUpdateOwnProfileMutation();
+  const form = useForm<ProfileSchema>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      firstName: profile?.firstName || "",
+      lastName: profile?.lastName || "",
+      avatar: profile?.avatar || "",
+      bio: profile?.bio || "",
+    },
+  });
+  const { handleSubmit, formState, clearErrors, setError, getValues, reset } =
+    form;
 
-  const handleUpdate = async (
-    values: ProfileUpdate,
-    { setStatus }: FormikHelpers<any>
-  ) => {
+  const onSubmit = async (values: ProfileSchema) => {
     try {
       const updatedProfile = await toast.promise(
         updateProfile(values).unwrap(),
@@ -45,98 +56,55 @@ const ProfileUpdateForm = ({
           success: "Profile updated!",
         }
       );
-      setStatus({});
-      onSubmit(updatedProfile.results);
+      clearErrors();
+      submitCallback(updatedProfile.results);
     } catch (error: any) {
-      if (error?.data) setStatus(error.data.errors);
+      const fields = Object.keys(getValues());
+      if (error?.data?.errors) {
+        Object.keys(error.data.errors).forEach((er) => {
+          if (fields.includes(er)) {
+            setError(er as keyof ProfileSchema, {
+              message: error.data.errors[er],
+            });
+          } else {
+            setError("root", { message: error.data.errors[er] });
+          }
+        });
+      }
     }
   };
 
+  useEffect(() => {
+    if (profile) reset(profile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
+
   return (
-    <Formik
-      initialValues={{
-        firstName: profile?.firstName || "",
-        lastName: profile?.lastName || "",
-        bio: profile?.bio || "",
-        avatar: profile?.avatar || "",
-      }}
-      validationSchema={profileSchema}
-      onSubmit={handleUpdate}
-      enableReinitialize
-    >
-      {({
-        values,
-        handleBlur,
-        handleChange,
-        errors,
-        status,
-        isValid,
-        isSubmitting,
-      }) => (
-        <>
-          <Form className={className}>
-            <FormInput
-              id="firstName"
-              labelText="First Name"
-              name="firstName"
-              value={values.firstName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.firstName || status?.firstName}
-            />
+    <Form {...form}>
+      <form className={className} onSubmit={handleSubmit(onSubmit)}>
+        <FormInput label="First Name" name="firstName" />
 
-            <FormInput
-              id="lastName"
-              labelText="Last Name"
-              name="lastName"
-              value={values.lastName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.lastName || status?.lastName}
-            />
+        <FormInput label="Last Name" name="lastName" />
 
-            <FormTextarea
-              id="bio"
-              labelText="Bio"
-              name="bio"
-              value={values.bio}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.bio || status?.bio}
-            />
+        <FormTextarea label="Bio" name="bio" />
 
-            <FormInput
-              id="avatar"
-              labelText="Avatar"
-              name="avatar"
-              value={values.avatar}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.avatar || status?.avatar}
-            />
+        <FormInput label="Avatar" name="avatar" />
 
-            <div className="flex items-center gap-2 mt-10">
-              <Button
-                endIcon={<HiPencilAlt />}
-                color="success"
-                type="submit"
-                disabled={!isValid || isSubmitting}
-              >
-                Update
-              </Button>
-              <Button
-                endIcon={<HiX />}
-                color="error"
-                onClick={onCancel}
-                type="reset"
-              >
-                Cancel
-              </Button>
-            </div>
-          </Form>
-        </>
-      )}
-    </Formik>
+        <div className="flex items-center gap-2 mt-10">
+          <LoadingButton
+            variant="default"
+            type="submit"
+            disabled={formState.isSubmitting || !formState.isValid}
+            isLoading={formState.isSubmitting}
+          >
+            Update <HiPencilAlt className="ml-2" />
+          </LoadingButton>
+          <Button variant="destructive" onClick={cancelCallback} type="reset">
+            Cancel <HiX className="ml-2" />
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

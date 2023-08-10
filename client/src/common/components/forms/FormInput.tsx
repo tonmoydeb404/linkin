@@ -1,27 +1,35 @@
-import { Input, InputProps } from "react-daisyui";
-import { HiExclamationCircle } from "react-icons/hi";
+import { useFormContext } from "react-hook-form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input, InputProps } from "../ui/input";
 
 type FormInputProps = {
-  id: string;
-  labelText: string;
-  errorText?: string;
-} & InputProps;
+  name: string;
+  label?: string;
+} & Omit<InputProps, "name">;
 
-const FormInput = ({ labelText, id, errorText, ...props }: FormInputProps) => {
+const FormInput = ({ name, label, ...rest }: FormInputProps) => {
+  const { control } = useFormContext();
+
   return (
-    <div className="form-control w-full">
-      <label htmlFor={id} className="label">
-        <span className="label-text">{labelText}</span>
-      </label>
-      <Input id={id} {...props} />
-      {errorText ? (
-        <label htmlFor={id} className="label p-0 mt-1.5">
-          <span className="label-text text-xs text-error flex items-center gap-1">
-            <HiExclamationCircle /> {errorText}
-          </span>
-        </label>
-      ) : null}
-    </div>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          {label ? <FormLabel>{label}</FormLabel> : null}
+          <FormControl>
+            <Input {...rest} {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
 

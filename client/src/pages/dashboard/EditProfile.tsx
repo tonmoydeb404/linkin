@@ -24,8 +24,8 @@ const EditProfile = () => {
         <ProfileUpdateForm
           className="flex flex-col gap-y-3 gap-x-5 max-w-lg"
           profile={profile?.data?.results || null}
-          onSubmit={handleUpdate}
-          onCancel={() => navigate("/dashboard")}
+          submitCallback={handleUpdate}
+          cancelCallback={() => navigate("/dashboard")}
         />
       </div>
     </>
