@@ -1,4 +1,5 @@
-import { Menu } from "react-daisyui";
+import getNameInitials from "@/utils/getNameInitials";
+import { cn } from "@/utils/ui-utils";
 import { HiLogout } from "react-icons/hi";
 import { Link, NavLink } from "react-router-dom";
 import { useLazyAuthLogoutQuery } from "../../../api/authApi";
@@ -6,6 +7,8 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import dashboardRoutes from "../../../config/dashboard-routes";
 import { logInKey } from "../../../config/localstorage";
 import { authSignout, selectAuth } from "../../../features/auth/authSlice";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button, buttonVariants } from "../ui/button";
 
 type Props = {
   className?: string;
@@ -22,39 +25,51 @@ const Sidebar = ({ className = "" }: Props) => {
     localStorage.setItem(logInKey, "false");
   };
   return (
-    <aside className={`py-10 bg-base-200 text-white ${className}`}>
-      <Menu className="gap-y-2">
-        <Menu.Item className="mb-5">
-          <Link to={`/${user?.username}`} target="_blank">
-            <img
-              src={
-                user?.avatar ||
-                "https://api.dicebear.com/6.x/fun-emoji/svg?seed=Bailey"
-              }
-              alt="User Image"
-              className="w-[40px] h-[40px] aspect-square rounded-full"
-            />
-            <span className="text-xl font-semibold">
-              {user?.firstName} {user?.lastName}
-            </span>
-          </Link>
-        </Menu.Item>
+    <aside className={`py-10 bg-card px-2 text-white ${className}`}>
+      <nav className="flex flex-col  gap-y-1 w-full">
+        <Link
+          to={`/${user?.username}`}
+          target="_blank"
+          className="flex items-center gap-2 mb-5"
+        >
+          <Avatar>
+            <AvatarImage src={user?.avatar ?? undefined} />
+            <AvatarFallback>
+              {getNameInitials(user?.firstName, user?.lastName)}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-xl font-semibold">
+            {user?.firstName} {user?.lastName}
+          </span>
+        </Link>
+
         {dashboardRoutes.map((route) => (
-          <Menu.Item key={route.path}>
-            <NavLink end to={route.path} className={"active:bg-primary"}>
-              <route.Icon className="text-lg" />
-              {route.title}
-            </NavLink>
-          </Menu.Item>
+          <NavLink
+            end
+            key={route.path}
+            to={route.path}
+            className={({ isActive }) =>
+              cn(
+                buttonVariants({ variant: "ghost" }),
+                "justify-start gap-1",
+                isActive ? "bg-muted hover:bg-muted" : "hover:bg-muted/30"
+              )
+            }
+          >
+            <route.Icon className="text-lg" />
+            {route.title}
+          </NavLink>
         ))}
 
-        <Menu.Item onClick={handleSignout}>
-          <span>
-            <HiLogout className="text-lg" />
-            Logout
-          </span>
-        </Menu.Item>
-      </Menu>
+        <Button
+          variant={"ghost"}
+          onClick={handleSignout}
+          className="w-full justify-start gap-1"
+        >
+          <HiLogout className="text-lg" />
+          Logout
+        </Button>
+      </nav>
     </aside>
   );
 };
