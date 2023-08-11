@@ -1,136 +1,102 @@
-import { Form, Formik, FormikHelpers } from "formik";
-import { Button } from "react-daisyui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { HiPlus, HiX } from "react-icons/hi";
-import * as Yup from "yup";
+import * as z from "zod";
 import { useCreateLinkMutation } from "../../../../api/linkApi";
-import { LinkCreate } from "../../../../types/link.type";
+import LoadingButton from "../../button/LoadingButton";
+import { Button } from "../../ui/button";
+import { Form } from "../../ui/form";
 import FormInput from "../FormInput";
 
-const linkSchema = Yup.object().shape({
-  title: Yup.string().trim().required("Link title is required"),
-  url: Yup.string()
-    .url("URL is not valid")
-    .trim()
-    .required("Link URL is required"),
-  icon: Yup.string().url("Icon URL is not valid").trim().optional(),
-  slug: Yup.string()
+const linkSchema = z.object({
+  title: z.string().trim(),
+  url: z.string().url("URL is not valid").trim(),
+  icon: z.string().url("Icon URL is not valid").trim().optional(),
+  slug: z
+    .string()
     .min(3, "Minimum 3 character is required")
     .max(50, "Maximum 50 character is allowed")
     .optional(),
 });
+type LinkSchema = z.infer<typeof linkSchema>;
 
 type Props = {
-  onSubmit?: () => any;
-  onCancel?: () => any;
+  submitCallback?: () => any;
+  cancelCallback?: () => any;
+  className?: string;
 };
 
 const LinkCreateForm = ({
-  onCancel = () => {},
-  onSubmit = () => {},
+  cancelCallback = () => {},
+  submitCallback = () => {},
+  className = "",
 }: Props) => {
   const [createLink] = useCreateLinkMutation();
+  const form = useForm<LinkSchema>({
+    resolver: zodResolver(linkSchema),
+    defaultValues: {
+      icon: "",
+      slug: "",
+      title: "",
+      url: "",
+    },
+  });
+  const { handleSubmit, formState, clearErrors, setError, reset } = form;
 
-  const handleSubmit = async (
-    values: LinkCreate,
-    { setStatus, resetForm }: FormikHelpers<any>
-  ) => {
+  const onSubmit = async (values: LinkSchema) => {
     try {
       await createLink(values).unwrap();
-      setStatus({});
-      resetForm();
-      onSubmit();
+      clearErrors();
+      reset();
+      submitCallback();
     } catch (error: any) {
-      if (error?.data.errors) setStatus(error.data.errors);
+      const fields = Object.keys(values);
+      if (error?.data?.errors) {
+        Object.keys(error.data.errors).forEach((er) => {
+          if (fields.includes(er)) {
+            setError(er as keyof typeof values, {
+              message: error.data.errors[er],
+            });
+          } else {
+            setError("root", { message: error.data.errors[er] });
+          }
+        });
+      }
       console.log(error);
     }
   };
 
   return (
-    <Formik
-      initialValues={{
-        title: "",
-        slug: "",
-        icon: "",
-        url: "",
-      }}
-      validationSchema={linkSchema}
-      onSubmit={handleSubmit}
-    >
-      {({
-        values,
-        handleBlur,
-        handleChange,
-        errors,
-        status,
-        isValid,
-        isSubmitting,
-      }) => (
-        <>
-          <Form className="flex flex-col gap-2">
-            <FormInput
-              id="title"
-              labelText="Title"
-              name="title"
-              value={values.title}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.title || status?.title}
-            />
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={`flex flex-col gap-2 ${className}`}
+      >
+        <FormInput id="title" label="Title" name="title" />
+        <FormInput id="url" label="URL" name="url" />
+        <FormInput id="slug" label="Slug" name="slug" />
+        <FormInput id="icon" label="Icon" name="icon" />
 
-            <FormInput
-              id="url"
-              labelText="URL"
-              name="url"
-              value={values.url}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.url || status?.url}
-            />
-
-            <FormInput
-              id="slug"
-              labelText="Slug"
-              name="slug"
-              value={values.slug}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.slug || status?.slug}
-            />
-
-            <FormInput
-              id="icon"
-              labelText="Icon"
-              name="icon"
-              value={values.icon}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              errorText={errors.icon || status?.icon}
-            />
-
-            <div className="flex items-center gap-2 mt-5">
-              <Button
-                endIcon={<HiPlus />}
-                color="success"
-                size="sm"
-                type="submit"
-                disabled={!isValid || isSubmitting}
-              >
-                Add
-              </Button>
-              <Button
-                endIcon={<HiX />}
-                color="error"
-                size="sm"
-                onClick={onCancel}
-                type="reset"
-              >
-                Cancel
-              </Button>
-            </div>
-          </Form>
-        </>
-      )}
-    </Formik>
+        <div className="flex items-center gap-2 mt-5">
+          <LoadingButton
+            size="sm"
+            type="submit"
+            disabled={!formState.isValid || formState.isSubmitting}
+            isLoading={formState.isSubmitting}
+          >
+            Add <HiPlus className="ml-2" />
+          </LoadingButton>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={cancelCallback}
+            type="reset"
+          >
+            Cancel <HiX className="ml-2" />
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

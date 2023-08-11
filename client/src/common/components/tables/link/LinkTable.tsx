@@ -1,24 +1,29 @@
 import { useState } from "react";
-import { Table } from "react-daisyui";
 import { toast } from "react-toastify";
 import {
   useDeleteLinkMutation,
   useUserLinksQuery,
 } from "../../../../api/linkApi";
 import { ILink } from "../../../../types/link.type";
+import ConfirmDialog from "../../dialog/ConfirmDialog";
+import DialogWrapper from "../../dialog/DialogWrapper";
 import LinkUpdateForm from "../../forms/link/LinkUpdateForm";
-import ModalWrapper from "../../modals/ModalWrapper";
-import LinkRow from "./LinkRow";
+import LinkColumns from "./LinkColumns";
+import LinkDataTable from "./LinkDataTable";
 
 const LinkTable = () => {
-  const { data, isSuccess } = useUserLinksQuery(undefined);
+  const { data } = useUserLinksQuery(undefined);
   const [deleteLink] = useDeleteLinkMutation();
 
   const [updateForm, setUpdateForm] = useState<ILink | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleDeleteLink = async (id: string) => {
+  const handleDelete = (id: string) => setDeleteId(id);
+
+  const handleRemove = async () => {
     try {
-      await toast.promise(deleteLink(id).unwrap(), {
+      if (!deleteId) throw new Error("id not defined");
+      await toast.promise(deleteLink(deleteId).unwrap(), {
         error: "Error in deleting link!",
         pending: "Deleting link...",
         success: "Link Deleted!",
@@ -28,48 +33,35 @@ const LinkTable = () => {
     }
   };
 
-  const handleUpdateLink = (link: ILink) => {
+  const handleUpdate = (link: ILink) => {
     setUpdateForm(link);
   };
 
   return (
     <>
-      <div className="overflow-x-auto w-full">
-        <Table className="w-full">
-          <Table.Head>
-            <span>Icon</span>
-            <span>Title</span>
-            <span>Slug</span>
-            <span>URL</span>
-            <span>Clicks</span>
-            <span>Manage</span>
-          </Table.Head>
-
-          <Table.Body>
-            {isSuccess
-              ? data.results.map((link) => (
-                  <LinkRow
-                    link={link}
-                    onDelete={async () => await handleDeleteLink(link._id)}
-                    onUpdate={() => handleUpdateLink(link)}
-                    key={link._id}
-                  />
-                ))
-              : null}
-          </Table.Body>
-        </Table>
-      </div>
-      <ModalWrapper
-        show={!!updateForm}
-        hide={() => setUpdateForm(null)}
+      <LinkDataTable
+        data={data?.results || []}
+        columns={LinkColumns({ handleDelete, handleUpdate })}
+      />
+      <DialogWrapper
+        open={!!updateForm}
+        onChange={() => setUpdateForm(null)}
         title="Update Link"
       >
         <LinkUpdateForm
           link={updateForm}
-          onSubmit={() => setUpdateForm(null)}
-          onCancel={() => setUpdateForm(null)}
+          submitCallback={() => setUpdateForm(null)}
+          cancelCallback={() => setUpdateForm(null)}
         />
-      </ModalWrapper>
+      </DialogWrapper>
+      <ConfirmDialog
+        title="Are you sure to delete link?"
+        description="this action cannot be undone."
+        onAction={handleRemove}
+        onCancel={() => setDeleteId(null)}
+        open={!!deleteId}
+        onChange={() => setDeleteId(null)}
+      />
     </>
   );
 };

@@ -99,7 +99,7 @@ const SocialUpdateForm = ({
             disabled={!formState.isValid || formState.isSubmitting}
             isLoading={formState.isSubmitting}
           >
-            Add <HiPencilAlt className="ml-2" />
+            Update <HiPencilAlt className="ml-2" />
           </LoadingButton>
           <Button
             variant="destructive"

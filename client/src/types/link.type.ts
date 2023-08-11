@@ -17,5 +17,7 @@ export interface ILink<T = string | IUser> {
 export type LinkCollectionResponse = LinkinApiCollectionResponse<ILink>;
 export type LinkResponse = LinkinApiResponse<ILink<IUser>>;
 
-export type LinkCreate = Pick<ILink, "slug" | "title" | "url" | "icon">;
+export type LinkCreate = Pick<ILink, "title" | "url" | "icon"> & {
+  slug?: string;
+};
 export type LinkUpdate = Partial<Pick<ILink, "title" | "url" | "icon">>;
