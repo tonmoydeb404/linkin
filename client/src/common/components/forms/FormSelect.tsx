@@ -8,7 +8,13 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Select, SelectItem, SelectTrigger } from "../ui/select";
+import {
+  Select,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type FormSelectProps = {
   name: string;
@@ -34,9 +40,13 @@ const FormSelect = ({
           {label ? <FormLabel>{label}</FormLabel> : null}
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger placeholder={placeholder} />
+              <SelectTrigger>
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
             </FormControl>
-            <SelectContent>{children}</SelectContent>
+            <SelectContent className="bg-background border border-input z-10 rounded-md">
+              <SelectGroup>{children}</SelectGroup>
+            </SelectContent>
           </Select>
           <FormMessage />
         </FormItem>

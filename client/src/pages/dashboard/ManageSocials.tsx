@@ -32,7 +32,6 @@ const ManageSocials = () => {
           <SocialCreateForm
             cancelCallback={() => setShowModal(false)}
             submitCallback={() => setShowModal(false)}
-            className="flex flex-col gap-2"
           />
         </DialogWrapper>
       </div>

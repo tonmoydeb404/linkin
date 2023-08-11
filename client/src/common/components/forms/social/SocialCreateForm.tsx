@@ -68,7 +68,10 @@ const SocialCreateForm = ({
 
   return (
     <Form {...form}>
-      <form className={className} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className={`flex flex-col gap-2 ${className}`}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <FormSelect
           label="Social Site"
           name="site"

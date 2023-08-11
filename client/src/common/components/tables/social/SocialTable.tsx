@@ -52,7 +52,6 @@ const SocialTable = () => {
           social={updateForm}
           submitCallback={() => setUpdateForm(null)}
           cancelCallback={() => setUpdateForm(null)}
-          className="flex flex-col gap-2"
         />
       </DialogWrapper>
       <ConfirmDialog

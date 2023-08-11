@@ -14,11 +14,11 @@ type FormInputProps = {
 } & Omit<InputProps, "name">;
 
 const FormInput = ({ name, label, ...rest }: FormInputProps) => {
-  const { control } = useFormContext();
+  const form = useFormContext();
 
   return (
     <FormField
-      control={control}
+      control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem>
