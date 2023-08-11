@@ -1,3 +1,4 @@
+import { optionalPreprocess } from "@/utils/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -14,7 +15,10 @@ import FormInput from "../FormInput";
 const linkSchema = z.object({
   title: z.string().trim(),
   url: z.string().url("URL is not valid").trim(),
-  icon: z.string().url("Icon URL is not valid").trim().optional(),
+  icon: z.preprocess(
+    optionalPreprocess,
+    z.string().url("Icon URL is not valid").trim().optional()
+  ),
 });
 type LinkSchema = z.infer<typeof linkSchema>;
 

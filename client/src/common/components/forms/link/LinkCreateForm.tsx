@@ -1,3 +1,4 @@
+import { optionalPreprocess } from "@/utils/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { HiPlus, HiX } from "react-icons/hi";
@@ -11,12 +12,18 @@ import FormInput from "../FormInput";
 const linkSchema = z.object({
   title: z.string().trim(),
   url: z.string().url("URL is not valid").trim(),
-  icon: z.string().url("Icon URL is not valid").trim().optional(),
-  slug: z
-    .string()
-    .min(3, "Minimum 3 character is required")
-    .max(50, "Maximum 50 character is allowed")
-    .optional(),
+  icon: z.preprocess(
+    optionalPreprocess,
+    z.string().url("Icon URL is not valid").trim().optional()
+  ),
+  slug: z.preprocess(
+    optionalPreprocess,
+    z
+      .string()
+      .min(3, "Minimum 3 character is required")
+      .max(50, "Maximum 50 character is allowed")
+      .optional()
+  ),
 });
 type LinkSchema = z.infer<typeof linkSchema>;
 

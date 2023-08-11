@@ -10,6 +10,7 @@ import {
 import { ILink } from "@/types/link.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 
 type LinkColumnsProps = {
   handleDelete: (id: string) => any;
@@ -23,6 +24,15 @@ const LinkColumns = ({
   {
     accessorKey: "icon",
     header: "Icon",
+    cell: (info) => {
+      const src = info.getValue<string>();
+      return (
+        <Avatar>
+          <AvatarImage src={src} alt="Icon" />
+          <AvatarFallback>I</AvatarFallback>
+        </Avatar>
+      );
+    },
   },
   {
     accessorKey: "title",
