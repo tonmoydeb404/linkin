@@ -1,13 +1,11 @@
-import getNameInitials from "@/utils/getNameInitials";
 import { cn } from "@/utils/ui-utils";
 import { HiLogout } from "react-icons/hi";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useLazyAuthLogoutQuery } from "../../../api/authApi";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch } from "../../../app/hooks";
 import dashboardRoutes from "../../../config/dashboard-routes";
 import { logInKey } from "../../../config/localstorage";
-import { authSignout, selectAuth } from "../../../features/auth/authSlice";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { authSignout } from "../../../features/auth/authSlice";
 import { Button, buttonVariants } from "../ui/button";
 
 type Props = {
@@ -17,7 +15,6 @@ type Props = {
 const Sidebar = ({ className = "" }: Props) => {
   const [logout] = useLazyAuthLogoutQuery();
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(selectAuth);
 
   const handleSignout = async () => {
     await logout(undefined);
@@ -25,24 +22,8 @@ const Sidebar = ({ className = "" }: Props) => {
     localStorage.setItem(logInKey, "false");
   };
   return (
-    <aside className={`py-10 bg-card px-2 text-white ${className}`}>
-      <nav className="flex flex-col  gap-y-1 w-full">
-        <Link
-          to={`/${user?.username}`}
-          target="_blank"
-          className="flex items-center gap-2 mb-5"
-        >
-          <Avatar>
-            <AvatarImage src={user?.avatar ?? undefined} />
-            <AvatarFallback>
-              {getNameInitials(user?.firstName, user?.lastName)}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-xl font-semibold">
-            {user?.firstName} {user?.lastName}
-          </span>
-        </Link>
-
+    <aside className={`py-10 px-2 ${className}`}>
+      <div className="flex flex-col  gap-y-1 w-full">
         {dashboardRoutes.map((route) => (
           <NavLink
             end
@@ -52,7 +33,9 @@ const Sidebar = ({ className = "" }: Props) => {
               cn(
                 buttonVariants({ variant: "ghost" }),
                 "justify-start gap-1",
-                isActive ? "bg-muted hover:bg-muted" : "hover:bg-muted/30"
+                isActive
+                  ? "bg-secondary-foreground text-secondary hover:bg-secondary-foreground hover:text-secondary dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary"
+                  : "hover:bg-secondary-foreground/10 dark:hover:bg-secondary/30"
               )
             }
           >
@@ -64,12 +47,12 @@ const Sidebar = ({ className = "" }: Props) => {
         <Button
           variant={"ghost"}
           onClick={handleSignout}
-          className="w-full justify-start gap-1"
+          className="w-full justify-start gap-1 hover:bg-secondary-foreground/10 dark:hover:bg-secondary/30"
         >
           <HiLogout className="text-lg" />
           Logout
         </Button>
-      </nav>
+      </div>
     </aside>
   );
 };

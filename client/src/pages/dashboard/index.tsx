@@ -7,9 +7,7 @@ const Dashboard = () => {
       <Helmet>
         <title>Dashboard - LinkIn</title>
       </Helmet>
-      <div className="relative">
-        <Construction />
-      </div>
+      <Construction />
     </>
   );
 };

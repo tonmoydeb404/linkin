@@ -19,15 +19,14 @@ const EditProfile = () => {
       <Helmet>
         <title>Edit Profile - LinkIn</title>
       </Helmet>
-      <div className="px-8 py-10">
-        <h2 className="text-xl font-semibold mb-10">Edit Profile</h2>
-        <ProfileUpdateForm
-          className="flex flex-col gap-y-3 gap-x-5 max-w-lg"
-          profile={profile?.data?.results || null}
-          submitCallback={handleUpdate}
-          cancelCallback={() => navigate("/dashboard")}
-        />
-      </div>
+
+      <h2 className="text-xl font-semibold mb-10">Edit Profile</h2>
+      <ProfileUpdateForm
+        className="flex flex-col gap-y-3 gap-x-5 max-w-lg"
+        profile={profile?.data?.results || null}
+        submitCallback={handleUpdate}
+        cancelCallback={() => navigate("/dashboard")}
+      />
     </>
   );
 };

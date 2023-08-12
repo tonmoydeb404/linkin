@@ -1,3 +1,4 @@
+import ThemeHandler from "@/features/theme/ThemeHandler";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
@@ -11,6 +12,7 @@ const App = () => {
   return (
     <HelmetProvider>
       <Provider store={store}>
+        <ThemeHandler />
         <AuthHandler>
           <RouterProvider router={router} />
         </AuthHandler>

@@ -13,27 +13,26 @@ const ManageLinks = () => {
       <Helmet>
         <title>Manage Links - LinkIn</title>
       </Helmet>
-      <div className="px-8 py-10">
-        <div className="flex justify-between mb-10 items-center">
-          <h2 className="text-xl font-semibold">Manage Links</h2>
-          <Button variant="default" onClick={() => setShowModal(true)}>
-            Add New
-            <HiPlus className="ml-2" />
-          </Button>
-        </div>
-        <LinkTable />
 
-        <DialogWrapper
-          open={showModal}
-          onChange={setShowModal}
-          title="Create Link"
-        >
-          <LinkCreateForm
-            submitCallback={() => setShowModal(false)}
-            cancelCallback={() => setShowModal(false)}
-          />
-        </DialogWrapper>
+      <div className="flex justify-between mb-10 items-center">
+        <h2 className="text-xl font-semibold">Manage Links</h2>
+        <Button variant="default" onClick={() => setShowModal(true)}>
+          Add New
+          <HiPlus className="ml-2" />
+        </Button>
       </div>
+      <LinkTable />
+
+      <DialogWrapper
+        open={showModal}
+        onChange={setShowModal}
+        title="Create Link"
+      >
+        <LinkCreateForm
+          submitCallback={() => setShowModal(false)}
+          cancelCallback={() => setShowModal(false)}
+        />
+      </DialogWrapper>
     </>
   );
 };

@@ -1,3 +1,5 @@
+import { sidebarSlice } from "@/features/sidebar/sidebarSlice";
+import { themeMiddleware, themeSlice } from "@/features/theme/themeSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "../api/authApi";
 import { linkApi } from "../api/linkApi";
@@ -8,6 +10,8 @@ import { authSlice } from "../features/auth/authSlice";
 const store = configureStore({
   reducer: {
     [authSlice.name]: authSlice.reducer,
+    [sidebarSlice.name]: sidebarSlice.reducer,
+    [themeSlice.name]: themeSlice.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [linkApi.reducerPath]: linkApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
@@ -18,7 +22,8 @@ const store = configureStore({
       authApi.middleware,
       linkApi.middleware,
       profileApi.middleware,
-      socialApi.middleware
+      socialApi.middleware,
+      themeMiddleware
     ),
 });
 
