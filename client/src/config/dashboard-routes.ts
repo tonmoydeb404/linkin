@@ -1,15 +1,9 @@
 import { IconType } from "react-icons";
-import {
-  HiBriefcase,
-  HiExternalLink,
-  HiUser,
-  HiViewGrid,
-} from "react-icons/hi";
+import { HiBriefcase, HiExternalLink, HiUser, HiUsers } from "react-icons/hi";
 
 type DashboardRoute = { title: string; path: string; Icon: IconType };
 
-const dashboardRoutes: DashboardRoute[] = [
-  { title: "Dashboard", path: "", Icon: HiViewGrid },
+export const userRoutes: DashboardRoute[] = [
   { title: "Edit Profile", path: "/dashboard/edit-profile", Icon: HiUser },
   {
     title: "Manage Socials",
@@ -23,4 +17,16 @@ const dashboardRoutes: DashboardRoute[] = [
   },
 ];
 
-export default dashboardRoutes;
+export const adminRoutes: DashboardRoute[] = [
+  { title: "All Users", path: "/dashboard/all-users", Icon: HiUsers },
+  {
+    title: "All Links",
+    path: "/dashboard/all-links",
+    Icon: HiExternalLink,
+  },
+  {
+    title: "All Socials",
+    path: "/dashboard/all-socials",
+    Icon: HiBriefcase,
+  },
+];

@@ -1,3 +1,6 @@
+import AllLinks from "@/pages/dashboard/AllLinks";
+import AllSocials from "@/pages/dashboard/AllSocials";
+import AllUsers from "@/pages/dashboard/AllUsers";
 import { createBrowserRouter } from "react-router-dom";
 import DashboardLayout from "../common/layouts/DashboardLayout";
 import PrivateOutlet from "../common/outlet/PrivateOutlet";
@@ -33,6 +36,9 @@ const router = createBrowserRouter([
           { path: "edit-profile", element: <EditProfile /> },
           { path: "manage-links", element: <ManageLinks /> },
           { path: "manage-socials", element: <ManageSocials /> },
+          { path: "all-users", element: <AllUsers /> },
+          { path: "all-links", element: <AllLinks /> },
+          { path: "all-socials", element: <AllSocials /> },
         ],
       },
     ],
