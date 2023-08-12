@@ -9,7 +9,7 @@ const Login = () => {
       <Helmet>
         <title>Login - LinkIn</title>
       </Helmet>
-      <div className="flex flex-col items-center justify-center min-h-screen ">
+      <div className="flex flex-col items-center justify-center min-h-screen px-5 ">
         <div className="max-w-lg w-full flex flex-col gap-3">
           <div className="flex items-center mb-5 justify-between">
             <h2 className="text-2xl font-semibold">Login</h2>

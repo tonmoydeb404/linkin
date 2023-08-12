@@ -1,3 +1,4 @@
+import { sidebarClose } from "@/features/sidebar/sidebarSlice";
 import { cn } from "@/utils/ui-utils";
 import { HiLogout } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
@@ -38,6 +39,7 @@ const Sidebar = ({ className = "" }: Props) => {
                   : "hover:bg-secondary-foreground/10 dark:hover:bg-secondary/30"
               )
             }
+            onClick={() => dispatch(sidebarClose())}
           >
             <route.Icon className="text-lg" />
             {route.title}
@@ -46,7 +48,10 @@ const Sidebar = ({ className = "" }: Props) => {
 
         <Button
           variant={"ghost"}
-          onClick={handleSignout}
+          onClick={() => {
+            handleSignout();
+            dispatch(sidebarClose());
+          }}
           className="w-full justify-start gap-1 hover:bg-secondary-foreground/10 dark:hover:bg-secondary/30"
         >
           <HiLogout className="text-lg" />

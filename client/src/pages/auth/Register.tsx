@@ -9,7 +9,7 @@ const Register = () => {
       <Helmet>
         <title>Register - LinkIn</title>
       </Helmet>
-      <div className="flex flex-col items-center justify-center min-h-screen py-10">
+      <div className="flex flex-col items-center justify-center min-h-screen py-10 px-5">
         <div className="max-w-lg w-full flex flex-col gap-3">
           <div className="flex items-center mb-5 justify-between">
             <h2 className="text-2xl font-semibold">Register Account</h2>

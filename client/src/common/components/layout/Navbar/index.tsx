@@ -9,7 +9,7 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <nav className="flex items-center px-5 py-2 border-b dark:border-b-secondary sticky top-0">
+    <nav className="flex items-center px-5 py-2 border-b dark:border-b-secondary sticky top-0 bg-background z-50">
       <Button
         size={"icon"}
         variant={"ghost"}
