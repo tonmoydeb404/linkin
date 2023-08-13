@@ -7,9 +7,6 @@ import * as userService from "../services/user";
 export const getUsers = asyncWrapper(async (req, res) => {
   const users = await userService.getAllUsers();
 
-  if (!userPermission.canGetAll(req.user))
-    throw createHttpError(401, "You don't have access to this resource");
-
   res.status(200).json({ results: users, count: users.length });
 });
 
@@ -38,7 +35,7 @@ export const postUser = asyncWrapper(async (req, res) => {
     email,
     password,
     username,
-    role,
+    role: userPermission.canChangeRole(req.user) ? role : "USER",
   });
 
   return res
@@ -84,4 +81,41 @@ export const deleteUser = asyncWrapper(async (req, res) => {
   user = await userService.deleteUserById(user_id);
 
   return res.status(200).json({ results: user_id });
+});
+
+export const putBanUser = asyncWrapper(async (req, res) => {
+  const { user_id } = req.params;
+
+  let user = await userService.getUserByProperty("_id", user_id);
+  if (!user) throw createHttpError(404, "Requested user not found");
+
+  // update user
+  user = await userService.updateUserById(user_id, { status: "BANNED" });
+
+  return res.status(200).json({ results: user.toObject() });
+});
+
+export const putUnbanUser = asyncWrapper(async (req, res) => {
+  const { user_id } = req.params;
+
+  let user = await userService.getUserByProperty("_id", user_id);
+  if (!user) throw createHttpError(404, "Requested user not found");
+
+  // update user
+  user = await userService.updateUserById(user_id, { status: "ACTIVE" });
+
+  return res.status(200).json({ results: user.toObject() });
+});
+
+export const putUserRole = asyncWrapper(async (req, res) => {
+  const { user_id } = req.params;
+  const { role } = matchedData(req);
+
+  let user = await userService.getUserByProperty("_id", user_id);
+  if (!user) throw createHttpError(404, "Requested user not found");
+
+  // update user
+  user = await userService.updateUserById(user_id, { role });
+
+  return res.status(200).json({ results: user.toObject() });
 });

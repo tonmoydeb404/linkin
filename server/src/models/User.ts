@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
-import roles from "../config/roles";
 import { compareHash, generateHash } from "../helpers/hash";
 import { generateToken } from "../helpers/token";
 import * as authService from "../services/auth";
 import { AuthPayload } from "../types/auth.type";
-import { IUser } from "../types/user.type";
+import { IUser, UserRole, UserStatus } from "../types/user.type";
+
+export const userStatus: UserStatus[] = ["ACTIVE", "BANNED"];
+export const userRoles: UserRole[] = ["ADMIN", "USER"];
 
 export interface IUserMethods {
   generateToken(): Promise<{ token: string; payload: AuthPayload }>;
@@ -16,7 +18,7 @@ const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
     email: { type: String, required: true, unique: true },
     role: {
       type: String,
-      enum: roles,
+      enum: userRoles,
       default: "USER",
     },
     password: {
@@ -28,6 +30,11 @@ const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
       type: String,
       required: true,
       unique: true,
+    },
+    status: {
+      type: String,
+      enum: userStatus,
+      default: "ACTIVE",
     },
   },
   { timestamps: true }

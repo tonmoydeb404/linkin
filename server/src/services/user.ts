@@ -1,7 +1,11 @@
 import User from "../models/User";
 import { IUser } from "../types/user.type";
 
-export const createUser = ({ email, password, username }: IUser) => {
+export const createUser = ({
+  email,
+  password,
+  username,
+}: Omit<IUser, "status">) => {
   const user = new User({ email, password, username });
   return user.save();
 };

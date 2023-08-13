@@ -1,6 +1,6 @@
 import { checkSchema } from "express-validator";
 import { isValidObjectId } from "mongoose";
-import roles from "../config/roles";
+import { userRoles } from "../models/User";
 import * as userService from "../services/user";
 
 export const getUser = checkSchema(
@@ -56,8 +56,12 @@ export const postUser = checkSchema(
     },
     role: {
       optional: true,
+      isLength: {
+        options: { min: 1 },
+        errorMessage: "User role should be at least 1 character long",
+      },
       isIn: {
-        options: roles,
+        options: [userRoles],
         errorMessage: "Invalid roles",
       },
     },
@@ -94,6 +98,25 @@ export const patchUser = checkSchema(
         },
       },
       optional: true,
+    },
+  },
+  ["body"]
+);
+
+export const putUserRole = checkSchema(
+  {
+    role: {
+      exists: {
+        errorMessage: "user role is required.",
+      },
+      isLength: {
+        options: { min: 1 },
+        errorMessage: "User role should be at least 1 character long",
+      },
+      isIn: {
+        options: [userRoles],
+        errorMessage: "Invalid role",
+      },
     },
   },
   ["body"]
