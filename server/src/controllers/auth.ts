@@ -4,6 +4,7 @@ import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import loadEnv from "../helpers/loadEnv";
 import * as authService from "../services/auth";
+import * as userService from "../services/user";
 
 const cookieOptions: CookieOptions = {
   httpOnly: false,
@@ -50,7 +51,12 @@ export const postLogin = asyncWrapper(async (req, res) => {
 });
 
 export const getRefresh = asyncWrapper(async (req, res) => {
-  return res.status(200).json({ payload: req.user });
+  const user = await userService.getUserByProperty("_id", req.user.id);
+  const { token, payload } = await user.generateToken();
+  res.cookie("token", token, { ...cookieOptions, httpOnly: true });
+  res.cookie("logged_in", true, cookieOptions);
+
+  return res.status(200).json({ token, payload });
 });
 
 export const getLogout = asyncWrapper(async (req, res) => {

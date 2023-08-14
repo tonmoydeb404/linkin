@@ -26,11 +26,15 @@ export const loginWithEmail = async ({ email, password }: AuthLogin) => {
   const user = await userService
     .getUserByProperty("email", email)
     .select("+password");
+
   if (!user) throw createHttpError(404, "requested user not found");
 
   // compare password
   const isMatch = await user.comparePassword(password);
   if (!isMatch) throw createHttpError(401, "Invalid credentials");
+
+  if (user.status === "BANNED")
+    throw createHttpError(410, "Account is banned!");
 
   // generate token
   const { token, payload } = await user.generateToken();

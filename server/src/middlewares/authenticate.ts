@@ -10,12 +10,18 @@ const authenticate = asyncWrapper(async (req, _res, next) => {
   if (!token) throw createHttpError(401, "Authentication failed");
 
   try {
+    // validate this token
     const payload = verifyToken(token);
     if (typeof payload === "string") throw new Error("Invalid payload");
 
+    // refresh payload from database
     const userPayload: AuthPayload = await authService.getAuthPayload(
       payload.id
     );
+
+    // check user banned or not
+    if (userPayload.status === "BANNED")
+      throw createHttpError(410, "Account is banned!");
 
     req.user = userPayload;
     next();
