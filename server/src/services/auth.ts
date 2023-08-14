@@ -52,6 +52,7 @@ export const getAuthPayload = async (id: string) => {
     lastName: profile.lastName,
     role: user.role,
     username: user.username,
+    status: user.status,
   };
 
   return payload;

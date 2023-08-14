@@ -1,5 +1,5 @@
 import { IProfile } from "./profile.type";
-import { IUser, UserRole } from "./user.type";
+import { IUser, UserRole, UserStatus } from "./user.type";
 
 export type AuthPayload = {
   id: string;
@@ -9,6 +9,7 @@ export type AuthPayload = {
   firstName: string;
   lastName: string;
   avatar: string | null;
+  status: UserStatus;
 };
 
 export type AuthRegister = Pick<IUser, "email" | "password" | "username"> &
