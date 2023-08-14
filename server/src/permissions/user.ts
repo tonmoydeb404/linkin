@@ -5,8 +5,8 @@ export const canDelete = (authUser: AuthPayload, user: IUser) => {
   return authUser.id === user._id.toString();
 };
 
-export const canChangeStatus = (authUser: AuthPayload) => {
-  return authUser.role === "ADMIN";
+export const canChangeStatus = (authUser: AuthPayload, userId: string) => {
+  return authUser.role === "ADMIN" && authUser.id !== userId;
 };
 
 export const canChangeRole = (authUser: AuthPayload) => {

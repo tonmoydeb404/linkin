@@ -91,6 +91,12 @@ export const deleteUser = asyncWrapper(async (req, res) => {
 export const putBanUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
 
+  if (!userPermission.canChangeStatus(req.user, user_id))
+    throw createHttpError(
+      400,
+      "You don't have the permission to perform this task"
+    );
+
   let user = await userService.getUserByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
 
@@ -102,6 +108,12 @@ export const putBanUser = asyncWrapper(async (req, res) => {
 
 export const putUnbanUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
+
+  if (!userPermission.canChangeStatus(req.user, user_id))
+    throw createHttpError(
+      400,
+      "You don't have the permission to perform this task"
+    );
 
   let user = await userService.getUserByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
