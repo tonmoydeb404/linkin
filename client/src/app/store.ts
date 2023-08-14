@@ -1,3 +1,4 @@
+import { userApi } from "@/api/userApi";
 import { sidebarSlice } from "@/features/sidebar/sidebarSlice";
 import { themeMiddleware, themeSlice } from "@/features/theme/themeSlice";
 import { configureStore } from "@reduxjs/toolkit";
@@ -16,6 +17,7 @@ const store = configureStore({
     [linkApi.reducerPath]: linkApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
     [socialApi.reducerPath]: socialApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -23,6 +25,7 @@ const store = configureStore({
       linkApi.middleware,
       profileApi.middleware,
       socialApi.middleware,
+      userApi.middleware,
       themeMiddleware
     ),
 });

@@ -10,7 +10,7 @@ import {
 
 export const socialApi = createApi({
   reducerPath: "socialApi",
-  baseQuery: linkinBaseQuery("social"),
+  baseQuery: linkinBaseQuery("socials"),
   tagTypes: ["SOCIALS"],
   endpoints: (builder) => ({
     getAllSocials: builder.query<SocialCollectionResponse, any>({

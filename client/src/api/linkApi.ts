@@ -10,7 +10,7 @@ import { LinkinApiResponse } from "../types/linkinApi.type";
 
 export const linkApi = createApi({
   reducerPath: "linkApi",
-  baseQuery: linkinBaseQuery("link"),
+  baseQuery: linkinBaseQuery("links"),
   tagTypes: ["LINKS"],
   endpoints: (builder) => ({
     userLinks: builder.query<LinkCollectionResponse, any>({
