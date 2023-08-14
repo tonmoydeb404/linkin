@@ -8,7 +8,8 @@ const AdminOutlet = () => {
 
   if (status === "UNAUTHORIZED") return <Navigate to={"/login"} replace />;
 
-  if (user?.role !== "ADMIN") return <Navigate to={"/dashboard"} replace />;
+  if (status === "AUTHORIZED" && user?.role !== "ADMIN")
+    return <Navigate to={"/dashboard"} replace />;
 
   return (
     <AuthPreloader>
