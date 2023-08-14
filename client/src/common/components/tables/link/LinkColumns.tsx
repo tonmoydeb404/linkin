@@ -7,10 +7,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/common/components/ui/dropdown-menu";
-import { ILink } from "@/types/link.type";
+import { ILink, LinkStatus } from "@/types/link.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Badge } from "../../ui/badge";
 
 type LinkUserColumnsProps = {
   handleDelete: (id: string) => any;
@@ -41,14 +43,43 @@ export const LinkUserColumns = ({
   {
     accessorKey: "slug",
     header: "Slug",
+    cell: ({ getValue }) => {
+      const slug = getValue<string>();
+      return (
+        <Link to={`/l/${slug}`} target="_blank" className="text-primary">
+          {slug}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "url",
     header: "Url",
+    cell: ({ getValue }) => {
+      const url = getValue<string>();
+      return (
+        <Link to={`${url}`} target="_blank" className="text-primary">
+          {url}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "clicks",
     header: "Clicks",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<LinkStatus>();
+
+      return (
+        <Badge variant={status === "BANNED" ? "destructive" : "default"}>
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",
@@ -99,14 +130,39 @@ export const LinkAdminColumns = ({
   {
     accessorKey: "slug",
     header: "Slug",
+    cell: ({ getValue }) => {
+      const slug = getValue<string>();
+      return (
+        <Link to={`/l/${slug}`} target="_blank" className="text-primary">
+          {slug}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "url",
     header: "Url",
+    cell: ({ getValue }) => {
+      const url = getValue<string>();
+      return (
+        <Link to={`${url}`} target="_blank" className="text-primary">
+          {url}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<LinkStatus>();
+
+      return (
+        <Badge variant={status === "BANNED" ? "destructive" : "default"}>
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",

@@ -7,9 +7,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/common/components/ui/dropdown-menu";
-import { IUser } from "@/types/user.type";
+import { IUser, UserStatus } from "@/types/user.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Badge } from "../../ui/badge";
 
 type UserColumnsProps = {
   handleBan: (id: string) => any;
@@ -27,6 +29,14 @@ const UserColumns = ({
   {
     accessorKey: "username",
     header: "User Name",
+    cell: ({ getValue }) => {
+      const username = getValue<string>();
+      return (
+        <Link to={`/${username}`} target="_blank" className="text-primary">
+          {username}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "role",
@@ -35,6 +45,15 @@ const UserColumns = ({
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<UserStatus>();
+
+      return (
+        <Badge variant={status === "BANNED" ? "destructive" : "default"}>
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: "email",

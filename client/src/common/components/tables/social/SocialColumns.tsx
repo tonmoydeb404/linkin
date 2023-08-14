@@ -7,9 +7,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/common/components/ui/dropdown-menu";
-import { ISocial } from "@/types/social.type";
+import { ISocial, SocialStatus } from "@/types/social.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Badge } from "../../ui/badge";
 
 type SocialUserColumnsProps = {
   handleDelete: (id: string) => any;
@@ -27,6 +29,27 @@ export const SocialUserColumns = ({
   {
     accessorKey: "url",
     header: "Url",
+    cell: ({ getValue }) => {
+      const url = getValue<string>();
+      return (
+        <Link to={`${url}`} target="_blank" className="text-primary">
+          {url}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<SocialStatus>();
+
+      return (
+        <Badge variant={status === "BANNED" ? "destructive" : "default"}>
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",
@@ -77,10 +100,27 @@ export const SocialAdminColumns = ({
   {
     accessorKey: "url",
     header: "Url",
+    cell: ({ getValue }) => {
+      const url = getValue<string>();
+      return (
+        <Link to={`${url}`} target="_blank" className="text-primary">
+          {url}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<SocialStatus>();
+
+      return (
+        <Badge variant={status === "BANNED" ? "destructive" : "default"}>
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",
