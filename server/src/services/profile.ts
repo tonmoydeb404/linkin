@@ -1,7 +1,5 @@
-import createHttpError from "http-errors";
 import Profile from "../models/Profile";
 import { IProfile } from "../types/profile.type";
-import * as userService from "./user";
 
 export const createProfile = (data: IProfile) => {
   return new Profile(data).save();
@@ -34,7 +32,5 @@ export const deleteProfileById = async (id: string) => {
 };
 
 export const getProfileByUsername = async (username: string) => {
-  const user = await userService.getUserByProperty("username", username);
-  if (!user) throw createHttpError(404, "Requested user not found");
-  return getProfileByProperty("user", user.id);
+  return getProfileByProperty("user", username);
 };

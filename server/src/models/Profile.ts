@@ -36,12 +36,14 @@ ProfileSchema.virtual("links", {
   ref: Link.modelName,
   localField: "user",
   foreignField: "user",
+  match: { status: "ACTIVE" },
 });
 
 ProfileSchema.virtual("socials", {
   ref: Social.modelName,
   localField: "user",
   foreignField: "user",
+  match: { status: "ACTIVE" },
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);
