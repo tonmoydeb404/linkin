@@ -16,6 +16,7 @@ export const getSocial = asyncWrapper(async (req, res) => {
 
   const social = await socialService.getSocialByProperty("_id", social_id);
   if (!social) throw createHttpError(404, "Requested social not found");
+
   res.status(200).json({ results: social });
 });
 

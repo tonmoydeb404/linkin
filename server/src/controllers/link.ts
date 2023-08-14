@@ -17,7 +17,7 @@ export const getLink = asyncWrapper(async (req, res) => {
 
   const link = await linkService.getLinkByProperty("_id", link_id);
 
-  if (!link) throw createHttpError(404, "Requested profile not found");
+  if (!link) throw createHttpError(404, "Requested link not found");
 
   res.status(200).json({ results: link });
 });
@@ -81,8 +81,16 @@ export const deleteLink = asyncWrapper(async (req, res) => {
 export const getLinkBySlug = asyncWrapper(async (req, res) => {
   const { link_slug } = req.params;
 
-  const link = await linkService.getLinkByProperty("slug", link_slug);
+  const link = await linkService
+    .getLinkByProperty("slug", link_slug)
+    .populate("user");
   if (!link) throw createHttpError(404, "Requested profile not found");
+
+  if (link.status === "BANNED")
+    throw createHttpError(410, "Requested link is banned");
+
+  if (typeof link.user !== "string" && link.user.status === "BANNED")
+    throw createHttpError(410, "Requested link user is banned");
 
   link.$inc("clicks", 1);
   await link.save();
