@@ -15,6 +15,7 @@ export interface IUserMethods {
 
 const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
   {
+    _id: mongoose.Types.ObjectId,
     email: { type: String, required: true, unique: true },
     role: {
       type: String,
@@ -57,6 +58,14 @@ UserSchema.methods.generateToken = async function () {
 UserSchema.methods.comparePassword = function (password: string) {
   return compareHash(password, this.password);
 };
+
+// Virtual Profile
+UserSchema.virtual("profile", {
+  ref: "profile",
+  localField: "_id",
+  foreignField: "user",
+  justOne: true,
+});
 
 const User = mongoose.model("user", UserSchema);
 

@@ -5,7 +5,9 @@ import * as userPermission from "../permissions/user";
 import * as userService from "../services/user";
 
 export const getUsers = asyncWrapper(async (req, res) => {
-  const users = await userService.getAllUsers();
+  let users = await userService.getAllUsers().populate("profile");
+
+  users = users.map((user) => user.toObject({ virtuals: true }));
 
   res.status(200).json({ results: users, count: users.length });
 });
@@ -13,13 +15,16 @@ export const getUsers = asyncWrapper(async (req, res) => {
 export const getUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
 
-  const user = await userService.getUserByProperty("_id", user_id);
+  const user = await userService
+    .getUserByProperty("_id", user_id)
+    .populate("profile");
+
   if (!user) throw createHttpError(404, "Requested user not found");
 
   if (!userPermission.canGet(req.user, user))
     throw createHttpError(401, "You don't have access to this resource");
 
-  return res.status(200).json({ results: user.toObject() });
+  return res.status(200).json({ results: user.toObject({ virtuals: true }) });
 });
 
 export const postUser = asyncWrapper(async (req, res) => {

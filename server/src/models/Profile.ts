@@ -26,7 +26,7 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
     default: null,
   },
   user: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: User.modelName,
     unique: true,
   },
