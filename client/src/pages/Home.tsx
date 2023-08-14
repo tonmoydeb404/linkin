@@ -1,6 +1,6 @@
 import { Button } from "@/common/components/ui/button";
 import { Helmet } from "react-helmet-async";
-import { HiArrowRight, HiLink } from "react-icons/hi";
+import { HiArrowRight, HiViewGrid } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -15,7 +15,7 @@ const Home = () => {
           alt="LinkIn"
           className="w-[100px] h-[100px] mb-8"
         />
-        <h1 className="text-5xl font-bold text-white mb-1">
+        <h1 className="text-5xl font-bold mb-1">
           Link<span className="text-[#11AD50]">In</span>
         </h1>
         <p className="text-base mb-10">The link that links them all</p>
@@ -27,10 +27,10 @@ const Home = () => {
             </Link>
           </Button>
 
-          <Button size={"lg"} variant="secondary" asChild>
+          <Button size={"lg"} variant="outline" asChild>
             <Link to={"/dashboard"}>
-              Manage Links
-              <HiLink className="ml-1" />
+              Dashboard
+              <HiViewGrid className="ml-1" />
             </Link>
           </Button>
         </div>

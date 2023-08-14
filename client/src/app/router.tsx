@@ -2,6 +2,7 @@ import AdminOutlet from "@/common/outlet/AdminOutlet";
 import AllLinks from "@/pages/dashboard/AllLinks";
 import AllSocials from "@/pages/dashboard/AllSocials";
 import AllUsers from "@/pages/dashboard/AllUsers";
+import ErrorPage from "@/pages/errors/ErrorPage";
 import { createBrowserRouter } from "react-router-dom";
 import DashboardLayout from "../common/layouts/DashboardLayout";
 import PrivateOutlet from "../common/outlet/PrivateOutlet";
@@ -20,42 +21,47 @@ import NotFound from "../pages/errors/NotFound";
 
 const router = createBrowserRouter([
   {
-    element: <PublicOutlet />,
-    children: [
-      { path: "/login", element: <Login /> },
-      { path: "/register", element: <Register /> },
-    ],
-  },
-  {
-    element: <PrivateOutlet />,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: "/dashboard",
-        element: <DashboardLayout />,
+        element: <PublicOutlet />,
         children: [
-          { path: "", element: <Dashboard /> },
-          { path: "edit-profile", element: <EditProfile /> },
-          { path: "manage-links", element: <ManageLinks /> },
-          { path: "manage-socials", element: <ManageSocials /> },
+          { path: "/login", element: <Login /> },
+          { path: "/register", element: <Register /> },
+        ],
+      },
+      {
+        element: <PrivateOutlet />,
+        children: [
           {
-            element: <AdminOutlet />,
+            path: "/dashboard",
+            element: <DashboardLayout />,
             children: [
-              { path: "all-users", element: <AllUsers /> },
-              { path: "all-links", element: <AllLinks /> },
-              { path: "all-socials", element: <AllSocials /> },
+              { path: "", element: <Dashboard /> },
+              { path: "edit-profile", element: <EditProfile /> },
+              { path: "manage-links", element: <ManageLinks /> },
+              { path: "manage-socials", element: <ManageSocials /> },
+              {
+                element: <AdminOutlet />,
+                children: [
+                  { path: "all-users", element: <AllUsers /> },
+                  { path: "all-links", element: <AllLinks /> },
+                  { path: "all-socials", element: <AllSocials /> },
+                ],
+              },
             ],
           },
         ],
       },
-    ],
-  },
-  {
-    element: <UniOutlet />,
-    children: [
-      { path: "/l/:slug", element: <ShortLink /> },
-      { path: "/:username", element: <Profile /> },
-      { path: "/", element: <Home /> },
-      { path: "*", element: <NotFound /> },
+      {
+        element: <UniOutlet />,
+        children: [
+          { path: "/l/:slug", element: <ShortLink /> },
+          { path: "/:username", element: <Profile /> },
+          { path: "/", element: <Home /> },
+          { path: "*", element: <NotFound /> },
+        ],
+      },
     ],
   },
 ]);

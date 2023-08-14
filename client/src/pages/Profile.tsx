@@ -5,6 +5,8 @@ import { useLazyGetProfileQuery } from "../api/profileApi";
 import LinkCard from "../common/components/cards/LinkCard";
 import ProfileCard from "../common/components/cards/ProfileCard";
 import PagePreloader from "../common/components/preloader/PagePreloader";
+import Banned from "./errors/Banned";
+import ErrorPage from "./errors/ErrorPage";
 import NotFound from "./errors/NotFound";
 
 const Profile = () => {
@@ -21,13 +23,14 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
-  if (
-    !username ||
-    (profile.isError &&
-      "data" in profile.error &&
-      profile.error.data.statusCode === 404)
-  ) {
-    return <NotFound />;
+  if (profile.isError && "data" in profile.error) {
+    if (profile.error.data.statusCode === 404) {
+      return <NotFound />;
+    } else if (profile.error.data.statusCode === 410) {
+      return <Banned />;
+    } else {
+      return <ErrorPage />;
+    }
   }
 
   if (profile.isSuccess) {

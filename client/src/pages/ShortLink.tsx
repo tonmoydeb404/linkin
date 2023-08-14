@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useLazyGetLinkQuery } from "../api/linkApi";
 import PagePreloader from "../common/components/preloader/PagePreloader";
+import Banned from "./errors/Banned";
+import ErrorPage from "./errors/ErrorPage";
 import NotFound from "./errors/NotFound";
 
 const ShortLink = () => {
@@ -23,11 +25,16 @@ const ShortLink = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
-  if (
-    !slug ||
-    (link.isError && "status" in link.error && link.error.status === 404)
-  )
-    return <NotFound />;
+  // handle errors
+  if (link.isError && "data" in link.error) {
+    if (link.error.data.statusCode === 404) {
+      return <NotFound />;
+    } else if (link.error.data.statusCode === 410) {
+      return <Banned />;
+    } else {
+      return <ErrorPage />;
+    }
+  }
 
   return <PagePreloader />;
 };
