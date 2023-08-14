@@ -1,9 +1,22 @@
 import { Router } from "express";
 import * as linkController from "../controllers/link";
+import authorize from "../middlewares/authorize";
 import validate from "../middlewares/validate";
 import * as linkValidator from "../validators/link.validator";
 
 const linkRouter = Router();
+
+linkRouter.put(
+  "/ban/:link_id",
+  authorize(["ADMIN"]),
+  linkController.putBanLink
+);
+linkRouter.put(
+  "/unban/:link_id",
+  authorize(["ADMIN"]),
+  linkController.putUnbanLink
+);
+linkRouter.get("/get-all", authorize(["ADMIN"]), linkController.getAllLinks);
 
 linkRouter
   .route("/")

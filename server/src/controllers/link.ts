@@ -1,24 +1,13 @@
 import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
-import * as linkPermission from "../permissions/links";
+import * as linkPermission from "../permissions/link";
 import * as linkService from "../services/link";
 
 export const getLinks = asyncWrapper(async (req, res) => {
   const { id } = req.user;
-  const { user_id } = req.query;
 
-  let links = [];
-
-  if (typeof user_id === "string") {
-    // get requested user links
-    if (!linkPermission.canGetAll(req.user))
-      throw createHttpError(401, "You have no access to this links");
-    links = links = await linkService.getLinksByProperty("user", user_id);
-  } else {
-    // get loggedin user links
-    links = await linkService.getLinksByProperty("user", id);
-  }
+  const links = await linkService.getLinksByProperty("user", id);
 
   res.status(200).json({ results: links, count: links.length });
 });
@@ -99,4 +88,46 @@ export const getLinkBySlug = asyncWrapper(async (req, res) => {
   await link.save();
 
   res.status(200).json({ results: link });
+});
+
+export const putBanLink = asyncWrapper(async (req, res) => {
+  const { link_id } = req.params;
+
+  if (!linkPermission.canBan(req.user))
+    throw createHttpError(
+      400,
+      "You don't have the permission to perform this task"
+    );
+
+  let link = await linkService.getLinkByProperty("_id", link_id);
+  if (!link) throw createHttpError(404, "Requested link not found");
+
+  // update user
+  link = await linkService.updateLinkById(link_id, { status: "BANNED" });
+
+  return res.status(200).json({ results: link.toObject() });
+});
+
+export const putUnbanLink = asyncWrapper(async (req, res) => {
+  const { link_id } = req.params;
+
+  if (!linkPermission.canBan(req.user))
+    throw createHttpError(
+      400,
+      "You don't have the permission to perform this task"
+    );
+
+  let link = await linkService.getLinkByProperty("_id", link_id);
+  if (!link) throw createHttpError(404, "Requested link not found");
+
+  // update user
+  link = await linkService.updateLinkById(link_id, { status: "ACTIVE" });
+
+  return res.status(200).json({ results: link.toObject() });
+});
+
+export const getAllLinks = asyncWrapper(async (_req, res) => {
+  const links = await linkService.getAll();
+
+  res.status(200).json({ results: links, count: links.length });
 });

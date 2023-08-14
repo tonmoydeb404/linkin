@@ -1,6 +1,10 @@
 import Social from "../models/Social";
 import { ISocial, SocialCreate, SocialUpdate } from "../types/social.type";
 
+export const getAll = () => {
+  return Social.find();
+};
+
 export const getSocialsByProperty = (key: keyof ISocial, value: string) => {
   return Social.find({ [key]: value });
 };

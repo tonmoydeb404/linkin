@@ -1,8 +1,10 @@
 import { Schema, Types, model } from "mongoose";
 import { generate } from "shortid";
 import { LINK_ICON } from "../config/default";
-import { ILink } from "../types/link.type";
+import { ILink, LinkStatus } from "../types/link.type";
 import User from "./User";
+
+const linkStatuses: LinkStatus[] = ["ACTIVE", "BANNED"];
 
 const LinkSchema = new Schema<ILink>({
   title: {
@@ -29,6 +31,12 @@ const LinkSchema = new Schema<ILink>({
   url: {
     type: String,
     required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: linkStatuses,
+    default: "ACTIVE",
   },
   user: {
     type: Types.ObjectId,

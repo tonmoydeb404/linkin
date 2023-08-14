@@ -1,7 +1,7 @@
 import Link from "../models/Link";
-import { ILink } from "../types/link.type";
+import { ILink, LinkCreate, LinkUpdate } from "../types/link.type";
 
-export const getAllLinks = () => {
+export const getAll = () => {
   return Link.find({});
 };
 
@@ -14,12 +14,11 @@ export const getLinkByProperty = (key: keyof ILink, value: string) => {
   return Link.findOne({ [key]: value });
 };
 
-export const createLink = (data: ILink) => {
+export const createLink = (data: LinkCreate) => {
   return new Link(data).save();
 };
 
-type Updates = Pick<ILink, "icon" | "slug" | "title" | "url">;
-export const updateLinkById = async (id: string, updates: Partial<Updates>) => {
+export const updateLinkById = async (id: string, updates: LinkUpdate) => {
   return Link.findByIdAndUpdate(id, { ...updates }, { new: true });
 };
 

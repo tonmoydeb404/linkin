@@ -1,9 +1,26 @@
 import { Router } from "express";
 import * as socialController from "../controllers/social";
+import authorize from "../middlewares/authorize";
 import validate from "../middlewares/validate";
 import * as socialValidator from "../validators/social.validator";
 
 const socialRouter = Router();
+
+socialRouter.put(
+  "/ban/:link_id",
+  authorize(["ADMIN"]),
+  socialController.putBanSocial
+);
+socialRouter.put(
+  "/unban/:link_id",
+  authorize(["ADMIN"]),
+  socialController.putUnbanSocial
+);
+socialRouter.get(
+  "/get-all",
+  authorize(["ADMIN"]),
+  socialController.getAllSocials
+);
 
 socialRouter
   .route("/")
