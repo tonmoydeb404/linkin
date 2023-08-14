@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { HiPlus } from "react-icons/hi";
 import LinkCreateForm from "../../common/components/forms/link/LinkCreateForm";
-import LinkTable from "../../common/components/tables/link/LinkTable";
+import LinkUserTable from "../../common/components/tables/link/LinkUserTable";
 
 const ManageLinks = () => {
   const [showModal, setShowModal] = useState(false);
@@ -21,7 +21,7 @@ const ManageLinks = () => {
           <HiPlus className="ml-2" />
         </Button>
       </div>
-      <LinkTable />
+      <LinkUserTable />
 
       <DialogWrapper
         open={showModal}

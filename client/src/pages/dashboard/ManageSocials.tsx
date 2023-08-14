@@ -5,7 +5,7 @@ import { Button } from "@/common/components/ui/button";
 import { Helmet } from "react-helmet-async";
 import { HiPlus } from "react-icons/hi";
 import SocialCreateForm from "../../common/components/forms/social/SocialCreateForm";
-import SocialTable from "../../common/components/tables/social/SocialTable";
+import SocialUserTable from "../../common/components/tables/social/SocialUserTable";
 
 const ManageSocials = () => {
   const [showModal, setShowModal] = useState(false);
@@ -22,7 +22,7 @@ const ManageSocials = () => {
           <HiPlus className="ml-2" />
         </Button>
       </div>
-      <SocialTable />
+      <SocialUserTable />
 
       <DialogWrapper
         open={showModal}

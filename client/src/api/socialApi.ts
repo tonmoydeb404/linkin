@@ -13,7 +13,7 @@ export const socialApi = createApi({
   baseQuery: linkinBaseQuery("socials"),
   tagTypes: ["SOCIALS"],
   endpoints: (builder) => ({
-    getAllSocials: builder.query<SocialCollectionResponse, any>({
+    getSocials: builder.query<SocialCollectionResponse, any>({
       query: () => ({
         url: "/",
       }),
@@ -50,6 +50,26 @@ export const socialApi = createApi({
       }),
       invalidatesTags: ["SOCIALS"],
     }),
+    getAllSocials: builder.query<SocialCollectionResponse, any>({
+      query: () => ({
+        url: "/get-all",
+      }),
+      providesTags: ["SOCIALS"],
+    }),
+    banSocial: builder.mutation<SocialResponse, string>({
+      query: (id) => ({
+        url: `/ban/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["SOCIALS"],
+    }),
+    unbanSocial: builder.mutation<SocialResponse, string>({
+      query: (id) => ({
+        url: `/unban/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["SOCIALS"],
+    }),
   }),
 });
 
@@ -59,4 +79,7 @@ export const {
   useUpdateSocialMutation,
   useGetAllSocialsQuery,
   useLazyGetSocialQuery,
+  useGetSocialsQuery,
+  useBanSocialMutation,
+  useUnbanSocialMutation,
 } = socialApi;

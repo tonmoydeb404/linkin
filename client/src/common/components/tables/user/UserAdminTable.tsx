@@ -10,7 +10,7 @@ import ConfirmDialog from "../../dialog/ConfirmDialog";
 import UserColumns from "./UserColumns";
 import UserDataTable from "./UserDataTable";
 
-const UserTable = () => {
+const UserAdminTable = () => {
   const { data } = useGetUsersQuery(undefined);
   const [banUser] = useBanUserMutation();
   const [unbanUser] = useUnbanUserMutation();
@@ -39,6 +39,12 @@ const UserTable = () => {
     setRole("USER");
   };
 
+  const reset = () => {
+    setId(null);
+    setMode(null);
+    setRole(null);
+  };
+
   const confirmBan = async () => {
     try {
       if (!id) throw new Error("id not defined");
@@ -50,8 +56,7 @@ const UserTable = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setId(null);
-      setMode(null);
+      reset();
     }
   };
 
@@ -66,8 +71,7 @@ const UserTable = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setId(null);
-      setMode(null);
+      reset();
     }
   };
 
@@ -82,16 +86,8 @@ const UserTable = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setId(null);
-      setMode(null);
-      setRole(null);
+      reset();
     }
-  };
-
-  const reset = () => {
-    setId(null);
-    setMode(null);
-    setRole(null);
   };
 
   const dialogContent = useMemo(() => {
@@ -150,4 +146,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default UserAdminTable;

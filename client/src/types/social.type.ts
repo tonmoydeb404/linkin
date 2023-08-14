@@ -5,11 +5,14 @@ import {
 } from "./linkinApi.type";
 import { IUser } from "./user.type";
 
+export type SocialStatus = "ACTIVE" | "BANNED";
+
 export interface ISocial<T = string | IUser> {
   _id: string;
   site: (typeof socialSites)[number];
   url: string;
   user: T;
+  status: SocialStatus;
 }
 
 export type SocialCollectionResponse = LinkinApiCollectionResponse<ISocial>;

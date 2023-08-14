@@ -50,6 +50,26 @@ export const linkApi = createApi({
       }),
       invalidatesTags: ["LINKS"],
     }),
+    getAllLinks: builder.query<LinkCollectionResponse, any>({
+      query: () => ({
+        url: "/get-all",
+      }),
+      providesTags: ["LINKS"],
+    }),
+    banLink: builder.mutation<LinkResponse, string>({
+      query: (id) => ({
+        url: `/ban/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["LINKS"],
+    }),
+    unbanLink: builder.mutation<LinkResponse, string>({
+      query: (id) => ({
+        url: `/unban/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["LINKS"],
+    }),
   }),
 });
 
@@ -60,4 +80,7 @@ export const {
   useCreateLinkMutation,
   useDeleteLinkMutation,
   useUpdateLinkMutation,
+  useGetAllLinksQuery,
+  useBanLinkMutation,
+  useUnbanLinkMutation,
 } = linkApi;

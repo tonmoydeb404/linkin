@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import {
-  useDeleteSocialMutation,
-  useGetAllSocialsQuery,
-} from "../../../../api/socialApi";
-import { ISocial } from "../../../../types/social.type";
+  useDeleteLinkMutation,
+  useUserLinksQuery,
+} from "../../../../api/linkApi";
+import { ILink } from "../../../../types/link.type";
 import ConfirmDialog from "../../dialog/ConfirmDialog";
 import DialogWrapper from "../../dialog/DialogWrapper";
-import SocialUpdateForm from "../../forms/social/SocialUpdateForm";
-import SocialColumns from "./SocialColumns";
-import SocialDataTable from "./SocialDataTable";
+import LinkUpdateForm from "../../forms/link/LinkUpdateForm";
+import { LinkUserColumns } from "./LinkColumns";
+import LinkDataTable from "./LinkDataTable";
 
-const SocialTable = () => {
-  const { data } = useGetAllSocialsQuery(undefined);
-  const [deleteSocial] = useDeleteSocialMutation();
+const LinkUserTable = () => {
+  const { data } = useUserLinksQuery(undefined);
+  const [deleteLink] = useDeleteLinkMutation();
 
-  const [updateForm, setUpdateForm] = useState<ISocial | null>(null);
+  const [updateForm, setUpdateForm] = useState<ILink | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleDelete = (id: string) => setDeleteId(id);
@@ -23,39 +23,39 @@ const SocialTable = () => {
   const handleRemove = async () => {
     try {
       if (!deleteId) throw new Error("id not defined");
-      await toast.promise(deleteSocial(deleteId).unwrap(), {
-        error: "Error in deleting social link!",
-        pending: "Deleting social link...",
-        success: "Social link Deleted!",
+      await toast.promise(deleteLink(deleteId).unwrap(), {
+        error: "Error in deleting link!",
+        pending: "Deleting link...",
+        success: "Link Deleted!",
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      setDeleteId(null);
     }
   };
 
-  const handleUpdate = (social: ISocial) => setUpdateForm(social);
+  const handleUpdate = (link: ILink) => {
+    setUpdateForm(link);
+  };
 
   return (
     <>
-      <SocialDataTable
+      <LinkDataTable
         data={data?.results || []}
-        columns={SocialColumns({ handleDelete, handleUpdate })}
+        columns={LinkUserColumns({ handleDelete, handleUpdate })}
       />
       <DialogWrapper
         open={!!updateForm}
         onChange={() => setUpdateForm(null)}
         title="Update Link"
       >
-        <SocialUpdateForm
-          social={updateForm}
+        <LinkUpdateForm
+          link={updateForm}
           submitCallback={() => setUpdateForm(null)}
           cancelCallback={() => setUpdateForm(null)}
         />
       </DialogWrapper>
       <ConfirmDialog
-        title="Are you sure to delete social link?"
+        title="Are you sure to delete link?"
         description="this action cannot be undone."
         onAction={handleRemove}
         onCancel={() => setDeleteId(null)}
@@ -66,4 +66,4 @@ const SocialTable = () => {
   );
 };
 
-export default SocialTable;
+export default LinkUserTable;
