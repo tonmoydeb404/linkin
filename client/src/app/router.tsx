@@ -1,3 +1,4 @@
+import AdminOutlet from "@/common/outlet/AdminOutlet";
 import AllLinks from "@/pages/dashboard/AllLinks";
 import AllSocials from "@/pages/dashboard/AllSocials";
 import AllUsers from "@/pages/dashboard/AllUsers";
@@ -36,9 +37,14 @@ const router = createBrowserRouter([
           { path: "edit-profile", element: <EditProfile /> },
           { path: "manage-links", element: <ManageLinks /> },
           { path: "manage-socials", element: <ManageSocials /> },
-          { path: "all-users", element: <AllUsers /> },
-          { path: "all-links", element: <AllLinks /> },
-          { path: "all-socials", element: <AllSocials /> },
+          {
+            element: <AdminOutlet />,
+            children: [
+              { path: "all-users", element: <AllUsers /> },
+              { path: "all-links", element: <AllLinks /> },
+              { path: "all-socials", element: <AllSocials /> },
+            ],
+          },
         ],
       },
     ],
