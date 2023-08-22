@@ -4,7 +4,11 @@ import * as z from "zod";
 import { useAuthLoginMutation } from "../../../../api/authApi";
 import { useAppDispatch } from "../../../../app/hooks";
 import { logInKey } from "../../../../config/localstorage";
-import { authLoading, authSignin } from "../../../../features/auth/authSlice";
+import {
+  authLoading,
+  authSignin,
+  authSignout,
+} from "../../../../features/auth/authSlice";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -53,6 +57,7 @@ const LoginForm = () => {
           }
         });
       }
+      dispatch(authSignout());
       localStorage.setItem(logInKey, "false");
     }
   };
