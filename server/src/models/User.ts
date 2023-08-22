@@ -15,7 +15,6 @@ export interface IUserMethods {
 
 const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
   {
-    _id: mongoose.Types.ObjectId,
     email: { type: String, required: true, unique: true },
     role: {
       type: String,
