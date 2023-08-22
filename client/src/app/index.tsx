@@ -1,3 +1,4 @@
+import HandlePreloader from "@/common/components/preloader/HandlePreloader";
 import ThemeHandler from "@/features/theme/ThemeHandler";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
@@ -17,6 +18,7 @@ const App = () => {
           <RouterProvider router={router} />
         </AuthHandler>
         <ToastContainer position="bottom-right" />
+        <HandlePreloader />
       </Provider>
     </HelmetProvider>
   );
