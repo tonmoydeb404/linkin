@@ -1,6 +1,43 @@
 import { ParamSchema } from "express-validator";
+import * as userService from "../services/user";
 
 export const validObjectId: ParamSchema = {
   isMongoId: true,
   errorMessage: "Invalid Id",
+};
+
+export const usernameSchema: ParamSchema = {
+  errorMessage: "Invalid username",
+  isLength: {
+    options: { min: 3, max: 50 },
+    errorMessage:
+      "Username should be at least minimum 3 chars & maximum 50 chars",
+  },
+  custom: {
+    options: async (value) => {
+      if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        throw new Error(
+          "Username can only contain letters, numbers, and underscores."
+        );
+      }
+
+      const user = await userService.getUserByProperty("username", value);
+      if (user) throw new Error("Username already in use");
+    },
+  },
+  trim: true,
+  toLowerCase: true,
+};
+export const passwordSchema: ParamSchema = {
+  isStrongPassword: {
+    errorMessage:
+      "Password should be at least 6 chars long and should contain at least 1 lowercase, 1 uppercase, 1 number & 1 special symbol.",
+    options: {
+      minLength: 6,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    },
+  },
 };

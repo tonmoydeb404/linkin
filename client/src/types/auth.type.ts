@@ -23,3 +23,12 @@ export type AuthResponse = {
 };
 
 export type AuthError = Partial<Record<keyof AuthRegister, string>>;
+
+export type AuthPasswordReset = {
+  password: string;
+  token: string;
+};
+
+export type AuthPasswordResetRequest = {
+  email: string;
+};

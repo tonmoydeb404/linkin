@@ -18,7 +18,21 @@ authRouter.post(
   validate,
   authController.postLogin
 );
+
 authRouter.get("/refresh", authenticate, authController.getRefresh);
 authRouter.get("/logout", authController.getLogout);
+
+authRouter.post(
+  "/password-reset-request",
+  authValidators.postPasswordResetRequest,
+  validate,
+  authController.postPasswordResetRequest
+);
+authRouter.post(
+  "/password-reset",
+  authValidators.postPasswordReset,
+  validate,
+  authController.postPasswordReset
+);
 
 export default authRouter;

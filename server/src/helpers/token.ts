@@ -2,7 +2,7 @@ import { Request } from "express";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import loadEnv from "./loadEnv";
 
-export const generateToken = async (
+export const generateToken = (
   payload: string | object,
   expire: string | number
 ) => {

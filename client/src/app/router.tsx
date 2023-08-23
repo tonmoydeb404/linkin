@@ -23,6 +23,7 @@ import AllLinks from "@/pages/dashboard/admin/AllLinks";
 import AllSocials from "@/pages/dashboard/admin/AllSocials";
 import AllUsers from "@/pages/dashboard/admin/AllUsers";
 // USER PAGES
+import ResetPassword from "@/pages/auth/ResetPassword";
 import EditProfile from "@/pages/dashboard/user/EditProfile";
 import ManageLinks from "@/pages/dashboard/user/ManageLinks";
 import ManageSocials from "@/pages/dashboard/user/ManageSocials";
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+      { path: "/reset-password", element: <ResetPassword /> },
       { path: "/l/:slug", element: <ShortLink /> },
       { path: "/:username", element: <Profile /> },
       { path: "/", element: <Home /> },

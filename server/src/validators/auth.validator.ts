@@ -1,5 +1,8 @@
 import { checkSchema } from "express-validator";
+import { isValidObjectId } from "mongoose";
+import { verifyToken } from "../helpers/token";
 import * as userService from "../services/user";
+import { passwordSchema } from "./common.validator";
 
 export const register = checkSchema(
   {
@@ -61,6 +64,58 @@ export const login = checkSchema(
     email: {
       errorMessage: "Invalid email",
       isEmail: true,
+    },
+  },
+  ["body"]
+);
+
+export const postPasswordReset = checkSchema(
+  {
+    password: passwordSchema,
+    token: {
+      notEmpty: {
+        errorMessage: "Token is required!",
+      },
+      custom: {
+        options: async (value, { req }) => {
+          try {
+            // verify the token
+            const payload = verifyToken(value);
+            // check payload is a valid object id or not
+            if (
+              typeof payload !== "object" ||
+              !payload?.id ||
+              !isValidObjectId(payload.id)
+            ) {
+              throw new Error("Invalid token payload");
+            }
+
+            // check for the user
+            const user = userService.getUserByProperty("_id", payload.id);
+            if (!user) throw new Error("User not exists!");
+
+            // assign id to the req token
+            req.body.id = payload.id;
+            return true;
+          } catch (error) {
+            throw new Error("Invalid token");
+          }
+        },
+      },
+    },
+  },
+  ["body"]
+);
+
+export const postPasswordResetRequest = checkSchema(
+  {
+    email: {
+      notEmpty: {
+        errorMessage: "Email address is required",
+      },
+      isEmail: {
+        errorMessage: "Enter a valid email address!",
+      },
     },
   },
   ["body"]

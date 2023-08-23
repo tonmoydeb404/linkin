@@ -4,6 +4,7 @@ import {
   HiBriefcase,
   HiExternalLink,
   HiLockClosed,
+  HiRefresh,
   HiUser,
   HiUsers,
 } from "react-icons/hi";
@@ -48,5 +49,10 @@ export const settingRoutes: DashboardRoute[] = [
     path: "/dashboard/change-password",
     title: "Change Password",
     Icon: HiLockClosed,
+  },
+  {
+    path: "/reset-password",
+    title: "Reset Password",
+    Icon: HiRefresh,
   },
 ];

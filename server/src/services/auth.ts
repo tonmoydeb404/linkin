@@ -16,7 +16,7 @@ export const register = async ({
     lastName,
     user: user.id,
   });
-  const { token, payload } = await user.generateToken();
+  const { token, payload } = await user.generateRefreshToken();
 
   return { token, user, profile, payload };
 };
@@ -37,7 +37,7 @@ export const loginWithEmail = async ({ email, password }: AuthLogin) => {
     throw createHttpError(410, "Account is banned!");
 
   // generate token
-  const { token, payload } = await user.generateToken();
+  const { token, payload } = await user.generateRefreshToken();
 
   return { token, payload, user };
 };

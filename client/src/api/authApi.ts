@@ -1,6 +1,12 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { linkinBaseQuery } from "../app/settings";
-import { AuthLogin, AuthRegister, AuthResponse } from "../types/auth.type";
+import {
+  AuthLogin,
+  AuthPasswordReset,
+  AuthPasswordResetRequest,
+  AuthRegister,
+  AuthResponse,
+} from "../types/auth.type";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -30,6 +36,23 @@ export const authApi = createApi({
         url: `/logout`,
       }),
     }),
+    authPasswordReset: builder.mutation<AuthResponse, AuthPasswordReset>({
+      query: ({ password, token }) => ({
+        url: `/password-reset`,
+        method: "POST",
+        body: { password, token },
+      }),
+    }),
+    authPasswordResetRequest: builder.mutation<
+      AuthResponse,
+      AuthPasswordResetRequest
+    >({
+      query: ({ email }) => ({
+        url: `/password-reset-request`,
+        method: "POST",
+        body: { email },
+      }),
+    }),
   }),
 });
 
@@ -38,4 +61,6 @@ export const {
   useAuthLoginMutation,
   useLazyAuthRefreshQuery,
   useLazyAuthLogoutQuery,
+  useAuthPasswordResetMutation,
+  useAuthPasswordResetRequestMutation,
 } = authApi;

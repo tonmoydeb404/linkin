@@ -9,8 +9,9 @@ export const userStatus: UserStatus[] = ["ACTIVE", "BANNED"];
 export const userRoles: UserRole[] = ["ADMIN", "USER"];
 
 export interface IUserMethods {
-  generateToken(): Promise<{ token: string; payload: AuthPayload }>;
   comparePassword: (password: string) => Promise<boolean>;
+  generateRefreshToken(): Promise<{ token: string; payload: AuthPayload }>;
+  generatePasswordResetToken(): string;
 }
 
 const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
@@ -54,15 +55,20 @@ UserSchema.pre("findOneAndUpdate", async function () {
 });
 
 // generating token
-UserSchema.methods.generateToken = async function () {
+UserSchema.methods.generateRefreshToken = async function () {
   const payload = await authService.getAuthPayload(this._id);
-  const token = await generateToken(payload, "1d");
+  const token = generateToken(payload, "1d");
   return { token, payload };
 };
 
 // compare password
 UserSchema.methods.comparePassword = function (password: string) {
   return compareHash(password, this.password);
+};
+
+// generate password reset token
+UserSchema.methods.generatePasswordResetToken = function (): string {
+  return generateToken({ id: this._id }, "1h");
 };
 
 // Virtual Profile

@@ -9,4 +9,7 @@ export default {
   JWT_SECRET: process.env.JWT_SECRET,
   DOMAIN: process.env.DOMAIN,
   NODE_ENV: process.env.NODE_ENV,
+  PASSWORD_RESET_URL: process.env.PASSWORD_RESET_URL,
+  MAIL_ID: process.env.MAIL_ID,
+  MAIL_PASSWORD: process.env.MAIL_PASSWORD,
 };
