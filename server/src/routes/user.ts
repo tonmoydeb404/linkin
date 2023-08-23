@@ -6,21 +6,6 @@ import * as userValidator from "../validators/user.validator";
 
 const userRouter = Router();
 
-userRouter
-  .route("/")
-  .get(authorize(["ADMIN"]), userController.getUsers)
-  .post(userValidator.postUser, validate, userController.postUser);
-userRouter
-  .route("/:user_id")
-  .get(userValidator.getUser, validate, userController.getUser)
-  .patch(
-    userValidator.getUser,
-    userValidator.patchUser,
-    validate,
-    userController.patchUser
-  )
-  .delete(userValidator.getUser, validate, userController.deleteUser);
-
 userRouter.put(
   "/ban/:user_id",
   authorize(["ADMIN"]),
@@ -38,5 +23,32 @@ userRouter.put(
   validate,
   userController.putUserRole
 );
+userRouter.put(
+  "/change-password",
+  userValidator.putPassword,
+  validate,
+  userController.putPassword
+);
+userRouter.put(
+  "/change-username",
+  userValidator.putUsername,
+  validate,
+  userController.putUsername
+);
+
+userRouter
+  .route("/")
+  .get(authorize(["ADMIN"]), userController.getUsers)
+  .post(userValidator.postUser, validate, userController.postUser);
+userRouter
+  .route("/:user_id")
+  .get(userValidator.getUser, validate, userController.getUser)
+  .patch(
+    userValidator.getUser,
+    userValidator.patchUser,
+    validate,
+    userController.patchUser
+  )
+  .delete(userValidator.getUser, validate, userController.deleteUser);
 
 export default userRouter;

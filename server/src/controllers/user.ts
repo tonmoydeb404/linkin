@@ -136,3 +136,41 @@ export const putUserRole = asyncWrapper(async (req, res) => {
 
   return res.status(200).json({ results: user.toObject() });
 });
+
+// change user password
+export const putPassword = asyncWrapper(async (req, res) => {
+  const { id } = req.user;
+  const { old_password, new_password } = matchedData(req);
+
+  let user = await userService.getUserByProperty("_id", id).select("password");
+  if (!user) throw createHttpError(404, "Requested user not found");
+  const passwordMatched = await user.comparePassword(old_password);
+
+  if (!passwordMatched) throw createHttpError(401, "Old password not matched");
+
+  // update user
+  await userService.updateUserById(id, { password: new_password });
+
+  return res.status(204).json({ results: `password updated!` });
+});
+
+// change user username
+export const putUsername = asyncWrapper(async (req, res) => {
+  const { id } = req.user;
+  const { username, password } = matchedData(req);
+
+  let user = await userService.getUserByProperty("_id", id).select("password");
+  if (!user) throw createHttpError(404, "Requested user not found");
+  const passwordMatched = await user.comparePassword(password);
+
+  if (!passwordMatched) throw createHttpError(401, "Password not matched");
+
+  // update user
+  await userService.updateUserById(id, { username });
+
+  return res.status(202).json({
+    results: {
+      username,
+    },
+  });
+});

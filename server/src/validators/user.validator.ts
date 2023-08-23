@@ -1,7 +1,43 @@
-import { checkSchema } from "express-validator";
+import { ParamSchema, checkSchema } from "express-validator";
 import { isValidObjectId } from "mongoose";
 import { userRoles } from "../models/User";
 import * as userService from "../services/user";
+
+const usernameSchema: ParamSchema = {
+  errorMessage: "Invalid username",
+  isLength: {
+    options: { min: 3, max: 50 },
+    errorMessage:
+      "Username should be at least minimum 3 chars & maximum 50 chars",
+  },
+  custom: {
+    options: async (value) => {
+      if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        throw new Error(
+          "Username can only contain letters, numbers, and underscores."
+        );
+      }
+
+      const user = await userService.getUserByProperty("username", value);
+      if (user) throw new Error("Username already in use");
+    },
+  },
+  trim: true,
+  toLowerCase: true,
+};
+const passwordSchema: ParamSchema = {
+  isStrongPassword: {
+    errorMessage:
+      "Password should be at least 6 chars long and should contain at least 1 lowercase, 1 uppercase, 1 number & 1 special symbol.",
+    options: {
+      minLength: 6,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    },
+  },
+};
 
 export const getUser = checkSchema(
   {
@@ -22,28 +58,8 @@ export const getUser = checkSchema(
 
 export const postUser = checkSchema(
   {
-    username: {
-      errorMessage: "Invalid username",
-      isLength: {
-        options: { min: 3, max: 50 },
-        errorMessage:
-          "Username should be at least minimum 3 chars & maximum 50 chars",
-      },
-      custom: {
-        options: async (value) => {
-          const user = await userService.getUserByProperty("username", value);
-          if (user) throw new Error("Username already in use");
-        },
-      },
-      trim: true,
-      toLowerCase: true,
-    },
-    password: {
-      isLength: {
-        options: { min: 6 },
-        errorMessage: "Passoword should be at least 6 chars long",
-      },
-    },
+    username: usernameSchema,
+    password: passwordSchema,
     email: {
       errorMessage: "Invalid email",
       isEmail: true,
@@ -117,6 +133,31 @@ export const putUserRole = checkSchema(
         options: [userRoles],
         errorMessage: "Invalid role",
       },
+    },
+  },
+  ["body"]
+);
+
+export const putPassword = checkSchema(
+  {
+    old_password: {
+      exists: {
+        errorMessage: "Old password is required!",
+      },
+    },
+    new_password: passwordSchema,
+  },
+  ["body"]
+);
+
+export const putUsername = checkSchema(
+  {
+    username: usernameSchema,
+    password: {
+      exists: {
+        errorMessage: "Old password is required!",
+      },
+      trim: true,
     },
   },
   ["body"]

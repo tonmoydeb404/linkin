@@ -45,6 +45,13 @@ UserSchema.pre("save", async function () {
   const hashedPassword = await generateHash(this.password);
   this.password = hashedPassword;
 });
+UserSchema.pre("findOneAndUpdate", async function () {
+  const data: Record<string, any> = this.getUpdate();
+  if (data?.password) {
+    const hashedPassword = await generateHash(data.password);
+    data.password = hashedPassword;
+  }
+});
 
 // generating token
 UserSchema.methods.generateToken = async function () {
