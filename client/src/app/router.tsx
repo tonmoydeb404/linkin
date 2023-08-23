@@ -30,24 +30,24 @@ const router = createBrowserRouter([
         ],
       },
       {
-        element: <PrivateOutlet />,
+        path: "/dashboard",
+        element: <DashboardLayout />,
         children: [
           {
-            path: "/dashboard",
-            element: <DashboardLayout />,
+            element: <PrivateOutlet />,
             children: [
               { path: "", element: <Dashboard /> },
               { path: "edit-profile", element: <EditProfile /> },
               { path: "manage-links", element: <ManageLinks /> },
               { path: "manage-socials", element: <ManageSocials /> },
-              {
-                element: <AdminOutlet />,
-                children: [
-                  { path: "all-users", element: <AllUsers /> },
-                  { path: "all-links", element: <AllLinks /> },
-                  { path: "all-socials", element: <AllSocials /> },
-                ],
-              },
+            ],
+          },
+          {
+            element: <AdminOutlet />,
+            children: [
+              { path: "all-users", element: <AllUsers /> },
+              { path: "all-links", element: <AllLinks /> },
+              { path: "all-socials", element: <AllSocials /> },
             ],
           },
         ],

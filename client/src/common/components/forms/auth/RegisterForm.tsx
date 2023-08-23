@@ -4,11 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuthRegisterMutation } from "../../../../api/authApi";
 import { useAppDispatch } from "../../../../app/hooks";
 import { logInKey } from "../../../../config/localstorage";
-import {
-  authLoading,
-  authSignin,
-  authSignout,
-} from "../../../../features/auth/authSlice";
+import { authSignin, authSignout } from "../../../../features/auth/authSlice";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -47,7 +43,6 @@ const RegisterForm = () => {
 
   const onSubmit = async (values: RegisterSchema) => {
     try {
-      dispatch(authLoading());
       const data = await authRegister(values).unwrap();
       dispatch(authSignin(data.payload));
       localStorage.setItem(logInKey, "true");

@@ -8,12 +8,12 @@ const AdminOutlet = () => {
 
   if (status === "UNAUTHORIZED") return <Navigate to={"/login"} replace />;
 
-  if (status === "AUTHORIZED") {
-    if (user?.role === "ADMIN") {
-      return <Outlet />;
-    } else {
-      return <Navigate to={"/dashboard"} replace />;
-    }
+  if (status === "AUTHORIZED" && user?.role !== "ADMIN") {
+    return <Navigate to={"/dashboard"} replace />;
+  }
+
+  if (status === "AUTHORIZED" && user?.role === "ADMIN") {
+    return <Outlet />;
   }
 
   return <PagePreloader />;
