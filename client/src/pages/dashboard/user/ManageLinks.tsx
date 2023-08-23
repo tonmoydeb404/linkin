@@ -1,10 +1,10 @@
 import DialogWrapper from "@/common/components/dialog/DialogWrapper";
+import LinkCreateForm from "@/common/components/forms/link/LinkCreateForm";
+import LinkUserTable from "@/common/components/tables/link/LinkUserTable";
 import { Button } from "@/common/components/ui/button";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { HiPlus } from "react-icons/hi";
-import LinkCreateForm from "../../common/components/forms/link/LinkCreateForm";
-import LinkUserTable from "../../common/components/tables/link/LinkUserTable";
 
 const ManageLinks = () => {
   const [showModal, setShowModal] = useState(false);

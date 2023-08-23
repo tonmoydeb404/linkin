@@ -17,3 +17,11 @@ export type UpdateUserRole = {
   user_id: string;
   role: UserRole;
 };
+export type UpdateUsername = {
+  username: string;
+  password: string;
+};
+export type UpdatePassword = {
+  old_password: string;
+  new_password: string;
+};

@@ -1,22 +1,31 @@
+import DashboardLayout from "@/common/layouts/DashboardLayout";
 import AdminOutlet from "@/common/outlet/AdminOutlet";
-import AllLinks from "@/pages/dashboard/AllLinks";
-import AllSocials from "@/pages/dashboard/AllSocials";
-import AllUsers from "@/pages/dashboard/AllUsers";
-import ErrorPage from "@/pages/errors/ErrorPage";
+import PrivateOutlet from "@/common/outlet/PrivateOutlet";
+import PublicOutlet from "@/common/outlet/PublicOutlet";
 import { createBrowserRouter } from "react-router-dom";
-import DashboardLayout from "../common/layouts/DashboardLayout";
-import PrivateOutlet from "../common/outlet/PrivateOutlet";
-import PublicOutlet from "../common/outlet/PublicOutlet";
-import Home from "../pages/Home";
-import Profile from "../pages/Profile";
-import ShortLink from "../pages/ShortLink";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import Dashboard from "../pages/dashboard";
-import EditProfile from "../pages/dashboard/EditProfile";
-import ManageLinks from "../pages/dashboard/ManageLinks";
-import ManageSocials from "../pages/dashboard/ManageSocials";
-import NotFound from "../pages/errors/NotFound";
+// ERROR PAGES
+import ErrorPage from "@/pages/errors/ErrorPage";
+import NotFound from "@/pages/errors/NotFound";
+// PUBLIC PAGES
+import Home from "@/pages/Home";
+import Profile from "@/pages/Profile";
+import ShortLink from "@/pages/ShortLink";
+// AUTH PAGES
+import Login from "@/pages/auth/Login";
+import Register from "@/pages/auth/Register";
+// DASHBOARD PAGES
+import Dashboard from "@/pages/dashboard";
+// SETTINGS PAGES
+import ChangePassword from "@/pages/dashboard/settings/ChangePassword";
+import ChangeUsername from "@/pages/dashboard/settings/ChangeUsername";
+// ADMIN PAGES
+import AllLinks from "@/pages/dashboard/admin/AllLinks";
+import AllSocials from "@/pages/dashboard/admin/AllSocials";
+import AllUsers from "@/pages/dashboard/admin/AllUsers";
+// USER PAGES
+import EditProfile from "@/pages/dashboard/user/EditProfile";
+import ManageLinks from "@/pages/dashboard/user/ManageLinks";
+import ManageSocials from "@/pages/dashboard/user/ManageSocials";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +49,9 @@ const router = createBrowserRouter([
               { path: "edit-profile", element: <EditProfile /> },
               { path: "manage-links", element: <ManageLinks /> },
               { path: "manage-socials", element: <ManageSocials /> },
+              // account routes
+              { path: "change-password", element: <ChangePassword /> },
+              { path: "change-username", element: <ChangeUsername /> },
             ],
           },
           {

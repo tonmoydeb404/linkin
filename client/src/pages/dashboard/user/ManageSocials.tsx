@@ -1,11 +1,10 @@
-import { useState } from "react";
-
 import DialogWrapper from "@/common/components/dialog/DialogWrapper";
+import SocialCreateForm from "@/common/components/forms/social/SocialCreateForm";
+import SocialUserTable from "@/common/components/tables/social/SocialUserTable";
 import { Button } from "@/common/components/ui/button";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { HiPlus } from "react-icons/hi";
-import SocialCreateForm from "../../common/components/forms/social/SocialCreateForm";
-import SocialUserTable from "../../common/components/tables/social/SocialUserTable";
 
 const ManageSocials = () => {
   const [showModal, setShowModal] = useState(false);

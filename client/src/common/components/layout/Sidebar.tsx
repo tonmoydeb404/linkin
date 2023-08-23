@@ -4,7 +4,11 @@ import { cn } from "@/utils/ui-utils";
 import { HiViewGrid } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { adminRoutes, userRoutes } from "../../../config/dashboard-routes";
+import {
+  adminRoutes,
+  settingRoutes,
+  userRoutes,
+} from "../../../config/dashboard-routes";
 import { buttonVariants } from "../ui/button";
 
 type Props = {
@@ -17,7 +21,7 @@ const Sidebar = ({ className = "" }: Props) => {
 
   return (
     <aside className={`py-10 px-2 ${className}`}>
-      <div className="flex flex-col  gap-y-1 w-full">
+      <div className="flex flex-col  gap-y-0.5 w-full">
         <NavLink
           end
           to={""}
@@ -87,6 +91,30 @@ const Sidebar = ({ className = "" }: Props) => {
             ))}
           </>
         ) : null}
+
+        <h2 className="mb-1 mt-5 px-4 text-lg font-semibold tracking-tight">
+          Account Settings
+        </h2>
+        {settingRoutes.map((route) => (
+          <NavLink
+            end
+            key={route.path}
+            to={route.path}
+            className={({ isActive }) =>
+              cn(
+                buttonVariants({ variant: "ghost" }),
+                "justify-start gap-1",
+                isActive
+                  ? "bg-secondary-foreground text-secondary hover:bg-secondary-foreground hover:text-secondary dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary"
+                  : "hover:bg-secondary-foreground/10 dark:hover:bg-secondary/30"
+              )
+            }
+            onClick={() => dispatch(sidebarClose())}
+          >
+            <route.Icon className="text-lg" />
+            {route.title}
+          </NavLink>
+        ))}
       </div>
     </aside>
   );

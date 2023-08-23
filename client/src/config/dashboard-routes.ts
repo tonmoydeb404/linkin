@@ -1,5 +1,12 @@
 import { IconType } from "react-icons";
-import { HiBriefcase, HiExternalLink, HiUser, HiUsers } from "react-icons/hi";
+import {
+  HiAtSymbol,
+  HiBriefcase,
+  HiExternalLink,
+  HiLockClosed,
+  HiUser,
+  HiUsers,
+} from "react-icons/hi";
 
 type DashboardRoute = { title: string; path: string; Icon: IconType };
 
@@ -28,5 +35,18 @@ export const adminRoutes: DashboardRoute[] = [
     title: "All Socials",
     path: "/dashboard/all-socials",
     Icon: HiBriefcase,
+  },
+];
+
+export const settingRoutes: DashboardRoute[] = [
+  {
+    path: "/dashboard/change-username",
+    title: "Change username",
+    Icon: HiAtSymbol,
+  },
+  {
+    path: "/dashboard/change-password",
+    title: "Change Password",
+    Icon: HiLockClosed,
   },
 ];

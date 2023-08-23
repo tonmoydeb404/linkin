@@ -1,10 +1,10 @@
+import { useGetOwnProfileQuery } from "@/api/profileApi";
+import { useAppDispatch } from "@/app/hooks";
+import ProfileUpdateForm from "@/common/components/forms/profile/ProfileUpdateForm";
+import { authUpdate } from "@/features/auth/authSlice";
+import { IProfile } from "@/types/profile.type";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
-import { useGetOwnProfileQuery } from "../../api/profileApi";
-import { useAppDispatch } from "../../app/hooks";
-import ProfileUpdateForm from "../../common/components/forms/profile/ProfileUpdateForm";
-import { authUpdate } from "../../features/auth/authSlice";
-import { IProfile } from "../../types/profile.type";
 
 const EditProfile = () => {
   const navigate = useNavigate();

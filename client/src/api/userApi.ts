@@ -1,31 +1,37 @@
-import { UpdateUserRole, UserResponse, UsersResponse } from "@/types/user.type";
+import {
+  UpdatePassword,
+  UpdateUserRole,
+  UpdateUsername,
+  UserResponse,
+  UsersResponse,
+} from "@/types/user.type";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { linkinBaseQuery } from "../app/settings";
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: linkinBaseQuery("users"),
-  tagTypes: ["PROFILE"],
+  tagTypes: ["USER"],
   endpoints: (builder) => ({
     getUsers: builder.query<UsersResponse, undefined>({
       query: () => ({
         url: `/`,
       }),
-      providesTags: ["PROFILE"],
+      providesTags: ["USER"],
     }),
     banUser: builder.mutation<UserResponse, string>({
       query: (user_id) => ({
         url: `/ban/${user_id}`,
         method: "PUT",
       }),
-      invalidatesTags: ["PROFILE"],
+      invalidatesTags: ["USER"],
     }),
     unbanUser: builder.mutation<UserResponse, string>({
       query: (user_id) => ({
         url: `/unban/${user_id}`,
         method: "PUT",
       }),
-      invalidatesTags: ["PROFILE"],
+      invalidatesTags: ["USER"],
     }),
     updateUserRole: builder.mutation<UserResponse, UpdateUserRole>({
       query: ({ user_id, role }) => ({
@@ -35,7 +41,29 @@ export const userApi = createApi({
           role,
         },
       }),
-      invalidatesTags: ["PROFILE"],
+      invalidatesTags: ["USER"],
+    }),
+    updateUsername: builder.mutation<UserResponse, UpdateUsername>({
+      query: ({ password, username }) => ({
+        url: `/change-username`,
+        method: "PUT",
+        body: {
+          password,
+          username,
+        },
+      }),
+      invalidatesTags: ["USER"],
+    }),
+    updatePassword: builder.mutation<UserResponse, UpdatePassword>({
+      query: ({ new_password, old_password }) => ({
+        url: `/change-password`,
+        method: "PUT",
+        body: {
+          new_password,
+          old_password,
+        },
+      }),
+      invalidatesTags: ["USER"],
     }),
   }),
 });
@@ -45,4 +73,6 @@ export const {
   useBanUserMutation,
   useUnbanUserMutation,
   useUpdateUserRoleMutation,
+  useUpdatePasswordMutation,
+  useUpdateUsernameMutation,
 } = userApi;
