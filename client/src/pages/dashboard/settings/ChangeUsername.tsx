@@ -10,11 +10,11 @@ const ChangeUsername = () => {
   return (
     <>
       <Helmet>
-        <title>Update Username - LinkIn</title>
+        <title>Change Username - LinkIn</title>
       </Helmet>
 
       <div className="mb-10 flex items-center gap-2 flex-wrap">
-        <h2 className="text-xl font-semibold">Update Username</h2>
+        <h2 className="text-xl font-semibold">Change Username</h2>
         <span>{user ? `(${user.username})` : null}</span>
       </div>
       <UpdateUsernameForm
