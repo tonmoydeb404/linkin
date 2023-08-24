@@ -1,17 +1,27 @@
 import { Request } from "express";
-import { JwtPayload, sign, verify } from "jsonwebtoken";
+import { JwtPayload, decode, sign, verify } from "jsonwebtoken";
 import loadEnv from "./loadEnv";
 
 export const generateToken = (
   payload: string | object,
-  expire: string | number
+  expire: string | number,
+  additonalSecret: string | undefined = ""
 ) => {
-  return sign(payload, loadEnv.JWT_SECRET, { expiresIn: expire });
+  let secret = loadEnv.JWT_SECRET;
+  if (additonalSecret && additonalSecret.length) secret += additonalSecret;
+  return sign(payload, secret, { expiresIn: expire });
 };
 
-export const verifyToken = (token: string) => {
-  return verify(token, loadEnv.JWT_SECRET);
+export const verifyToken = (
+  token: string,
+  additonalSecret: string | undefined = ""
+) => {
+  let secret = loadEnv.JWT_SECRET;
+  if (additonalSecret && additonalSecret.length) secret += additonalSecret;
+  return verify(token, secret);
 };
+
+export const getTokenValue = (token: string) => decode(token);
 
 export const verifyPayloadObject = <T>(
   payload: string | JwtPayload,

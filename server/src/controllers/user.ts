@@ -1,5 +1,6 @@
 import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
+import { authCookieOptions } from "../config/cookieOptions";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as userPermission from "../permissions/user";
 import * as userService from "../services/user";
@@ -149,9 +150,18 @@ export const putPassword = asyncWrapper(async (req, res) => {
   if (!passwordMatched) throw createHttpError(401, "Old password not matched");
 
   // update user
-  await userService.updateUserById(id, { password: new_password });
+  const updatedUser = await userService
+    .updateUserById(id, { password: new_password })
+    .select({ password: 1 });
 
-  return res.status(204).json({ results: `password updated!` });
+  // generate new token for updated password
+  const { payload, token } = await updatedUser.generateRefreshToken();
+
+  // set updated token in cookies
+  res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
+  res.cookie("logged_in", true, authCookieOptions);
+
+  return res.status(201).json({ token, payload });
 });
 
 // change user username

@@ -21,14 +21,13 @@ export const getAllUsers = () => {
   return User.find({});
 };
 
-export const updateUserById = async (id: string, updates: Partial<IUser>) => {
-  return User.findByIdAndUpdate(
+export const updateUserById = (id: string, updates: Partial<IUser>) =>
+  User.findByIdAndUpdate(
     id,
     { ...updates },
     { new: true, runValidators: true }
   );
-};
 
-export const deleteUserById = async (id: string) => {
+export const deleteUserById = (id: string) => {
   return User.findByIdAndDelete(id);
 };

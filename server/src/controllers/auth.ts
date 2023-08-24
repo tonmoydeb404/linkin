@@ -1,19 +1,11 @@
-import { CookieOptions } from "express";
 import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
+import { authCookieOptions } from "../config/cookieOptions";
 import { passwordResetMail } from "../config/nodemailer";
 import asyncWrapper from "../helpers/asyncWrapper";
 import loadEnv from "../helpers/loadEnv";
 import * as authService from "../services/auth";
 import * as userService from "../services/user";
-
-const cookieOptions: CookieOptions = {
-  httpOnly: false,
-  sameSite: loadEnv.NODE_ENV === "production" ? "none" : "lax",
-  secure: loadEnv.NODE_ENV === "production",
-  maxAge: 24 * 60 * 60 * 1000,
-  domain: loadEnv.DOMAIN,
-};
 
 export const postRegister = asyncWrapper(async (req, res) => {
   const { firstName, lastName, email, password, username } = matchedData(req);
@@ -29,8 +21,8 @@ export const postRegister = asyncWrapper(async (req, res) => {
     lastName,
   });
 
-  res.cookie("token", token, { ...cookieOptions, httpOnly: true });
-  res.cookie("logged_in", true, cookieOptions);
+  res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
+  res.cookie("logged_in", true, authCookieOptions);
 
   return res.status(201).json({ payload, token });
 });
@@ -45,24 +37,26 @@ export const postLogin = asyncWrapper(async (req, res) => {
     password,
   });
 
-  res.cookie("token", token, { ...cookieOptions, httpOnly: true });
-  res.cookie("logged_in", true, cookieOptions);
+  res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
+  res.cookie("logged_in", true, authCookieOptions);
 
   return res.status(200).json({ token, payload });
 });
 
 export const getRefresh = asyncWrapper(async (req, res) => {
-  const user = await userService.getUserByProperty("_id", req.user.id);
+  const user = await userService
+    .getUserByProperty("_id", req.user.id)
+    .select("password");
   const { token, payload } = await user.generateRefreshToken();
-  res.cookie("token", token, { ...cookieOptions, httpOnly: true });
-  res.cookie("logged_in", true, cookieOptions);
+  res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
+  res.cookie("logged_in", true, authCookieOptions);
 
   return res.status(200).json({ token, payload });
 });
 
 export const getLogout = asyncWrapper(async (req, res) => {
   res.clearCookie("token");
-  res.cookie("logged_in", false, cookieOptions);
+  res.cookie("logged_in", false, authCookieOptions);
 
   return res.sendStatus(200);
 });

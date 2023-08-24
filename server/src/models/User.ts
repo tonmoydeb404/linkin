@@ -57,7 +57,7 @@ UserSchema.pre("findOneAndUpdate", async function () {
 // generating token
 UserSchema.methods.generateRefreshToken = async function () {
   const payload = await authService.getAuthPayload(this._id);
-  const token = generateToken(payload, "1d");
+  const token = generateToken(payload, "1d", this.password);
   return { token, payload };
 };
 
