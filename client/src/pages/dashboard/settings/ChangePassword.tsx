@@ -11,8 +11,12 @@ const ChangePassword = () => {
         <title>Change password - LinkIn</title>
       </Helmet>
 
-      <div className="mb-10 flex items-center gap-2 flex-wrap">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold">Change password</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          by changing password you will logout from all previous device you have
+          used.
+        </p>
       </div>
       <UpdatePasswordForm
         cancelCallback={() => navigate("/dashboard")}

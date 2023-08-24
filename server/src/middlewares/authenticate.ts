@@ -22,8 +22,6 @@ const authenticate = asyncWrapper(async (req, _res, next) => {
     // check user exist or not
     if (!user) throw createHttpError(401, "User account not found");
 
-    console.log({ token, pass: user.password });
-
     // validate this token
     payload = verifyToken(token, user.password);
 
