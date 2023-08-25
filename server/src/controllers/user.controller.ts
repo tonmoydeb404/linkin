@@ -24,7 +24,7 @@ export const getUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
 
   const user = await userService
-    .getOneByProperty("_id", user_id)
+    .getByProperty("_id", user_id)
     .populate("profile");
 
   if (!user) throw createHttpError(404, "Requested user not found");
@@ -62,7 +62,7 @@ export const patchUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
   const { email, username } = matchedData(req);
 
-  let user = await userService.getOneByProperty("_id", user_id);
+  let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
 
   if (!userPermission.canUpdate(req.user, user))
@@ -71,12 +71,11 @@ export const patchUser = asyncWrapper(async (req, res) => {
   if (!email && !username)
     throw createHttpError(400, "You have to update at least one property");
 
-  const updates: Record<string, any> = {};
-  if (email) updates.email = email;
-  if (username) updates.username = username;
+  if (email) user.email = email;
+  if (username) user.username = username;
 
   // update user
-  user = await userService.updateById(user_id, updates);
+  await user.save();
 
   return res.status(200).json({ results: user.toObject() });
 });
@@ -85,7 +84,7 @@ export const patchUser = asyncWrapper(async (req, res) => {
 export const deleteUser = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
 
-  let user = await userService.getOneByProperty("_id", user_id);
+  let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "requested user not found");
 
   if (!userPermission.canDelete(req.user, user))
@@ -94,7 +93,8 @@ export const deleteUser = asyncWrapper(async (req, res) => {
       "You don't have any access to Delete this resource"
     );
 
-  user = await userService.deleteById(user_id);
+  // delete user
+  user.deleteOne();
 
   return res.status(200).json({ results: user_id });
 });
@@ -109,11 +109,12 @@ export const putBanUser = asyncWrapper(async (req, res) => {
       "You don't have the permission to perform this task"
     );
 
-  let user = await userService.getOneByProperty("_id", user_id);
+  let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
 
-  // update user
-  user = await userService.updateById(user_id, { status: "BANNED" });
+  // ban user
+  user.status = "BANNED";
+  await user.save();
 
   return res.status(200).json({ results: user.toObject() });
 });
@@ -128,11 +129,12 @@ export const putUnbanUser = asyncWrapper(async (req, res) => {
       "You don't have the permission to perform this task"
     );
 
-  let user = await userService.getOneByProperty("_id", user_id);
+  let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
 
-  // update user
-  user = await userService.updateById(user_id, { status: "ACTIVE" });
+  // unban user
+  user.status = "ACTIVE";
+  await user.save();
 
   return res.status(200).json({ results: user.toObject() });
 });
@@ -142,11 +144,12 @@ export const putUserRole = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
   const { role } = matchedData(req);
 
-  let user = await userService.getOneByProperty("_id", user_id);
+  let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
 
-  // update user
-  user = await userService.updateById(user_id, { role });
+  // update user role
+  user.role = role;
+  await user.save();
 
   return res.status(200).json({ results: user.toObject() });
 });
@@ -156,19 +159,18 @@ export const putPassword = asyncWrapper(async (req, res) => {
   const { id } = req.user;
   const { old_password, new_password } = matchedData(req);
 
-  let user = await userService.getOneByProperty("_id", id).select("password");
+  let user = await userService.getByProperty("_id", id).select("password");
   if (!user) throw createHttpError(404, "Requested user not found");
   const passwordMatched = await user.comparePassword(old_password);
 
   if (!passwordMatched) throw createHttpError(401, "Old password not matched");
 
-  // update user
-  const updatedUser = await userService
-    .updateById(id, { password: new_password })
-    .select({ password: 1 });
+  // update user password
+  user.password = new_password;
+  await user.save();
 
   // generate new token for updated password
-  const { payload, token } = await updatedUser.generateRefreshToken();
+  const { payload, token } = await user.generateRefreshToken();
 
   // set updated token in cookies
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
@@ -182,19 +184,18 @@ export const putUsername = asyncWrapper(async (req, res) => {
   const { id } = req.user;
   const { username, password } = matchedData(req);
 
-  let user = await userService.getOneByProperty("_id", id).select("password");
+  let user = await userService.getByProperty("_id", id).select("password");
   if (!user) throw createHttpError(404, "Requested user not found");
   const passwordMatched = await user.comparePassword(password);
 
   if (!passwordMatched) throw createHttpError(401, "Password not matched");
 
-  // update user
-  await userService.updateById(id, { username });
+  // update user username
+  user.username = username;
+  await user.save();
 
   return res.status(202).json({
-    results: {
-      username,
-    },
+    results: user.toObject(),
   });
 });
 
@@ -210,7 +211,7 @@ export const postEmailVerification = asyncWrapper(async (req, res) => {
     throw createHttpError(400, "Invalid token!");
 
   // check for the user
-  const user = await userService.getOneByProperty("_id", payload.id);
+  const user = await userService.getByProperty("_id", payload.id);
   if (!user) throw createHttpError(404, "User not exists!");
 
   if (user.email !== payload.email)
@@ -228,7 +229,7 @@ export const postEmailVerification = asyncWrapper(async (req, res) => {
 
 // request for a email verification token
 export const getEmailVerification = asyncWrapper(async (req, res) => {
-  let user = await userService.getOneByProperty("email", req.user.email);
+  let user = await userService.getByProperty("email", req.user.email);
   if (!user) throw createHttpError(404, "Requested user not found");
 
   const { token, payload } = user.generateEmailVerificationToken();
@@ -257,7 +258,7 @@ export const putVerifiedStatus = asyncWrapper(async (req, res) => {
   const { user_id } = req.params;
   const { verified_status } = matchedData(req);
 
-  let user = await userService.getOneByProperty("_id", user_id);
+  let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
 
   if (user.verifiedStatus !== verified_status) {

@@ -1,19 +1,15 @@
 import { checkSchema } from "express-validator";
-import { isValidObjectId } from "mongoose";
 import * as linkService from "../services/link.service";
 
 export const getLink = checkSchema(
   {
     link_id: {
-      custom: {
-        options: (value) => {
-          if (!isValidObjectId(value)) {
-            throw new Error("Invalid user id");
-          }
-          return true;
-        },
+      isMongoId: {
+        errorMessage: "Invalid link id",
       },
-      isString: true,
+      notEmpty: {
+        errorMessage: "Link id is required.",
+      },
     },
   },
   ["params"]
@@ -44,7 +40,7 @@ export const postLink = checkSchema(
       },
       custom: {
         options: async (value) => {
-          const link = await linkService.getLinkByProperty("slug", value);
+          const link = await linkService.getByProperty("slug", value);
           if (link) throw new Error("slug already in use");
         },
       },

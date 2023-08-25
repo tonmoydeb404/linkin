@@ -1,10 +1,16 @@
 import { checkSchema } from "express-validator";
 import socialSites from "../config/social-sites";
-import * as commonValidator from "./common.validator";
 
 export const getSocial = checkSchema(
   {
-    social_id: commonValidator.validObjectId,
+    social_id: {
+      isMongoId: {
+        errorMessage: "Invalid social id",
+      },
+      notEmpty: {
+        errorMessage: "Social id is required.",
+      },
+    },
   },
   ["params"]
 );

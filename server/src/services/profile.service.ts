@@ -1,36 +1,31 @@
 import Profile from "../models/Profile";
-import { IProfile } from "../types/profile.type";
+import { IProfile, ProfileUpdates } from "../types/profile.type";
 
-export const createProfile = (data: IProfile) => {
+// create a profile
+export const create = (data: IProfile) => {
   return new Profile(data).save();
 };
 
-export const getAllProfiles = () => Profile.find({});
+// get all profiles
+export const getAll = () => Profile.find({});
 
-export const getProfileByProperty = (key: keyof IProfile, value: string) => {
+// filter by property and get a profile
+export const getByProperty = (key: keyof IProfile, value: string) => {
   if (key === "_id") return Profile.findById(value);
   return Profile.findOne({ [key]: value });
 };
 
-type Updates = Pick<IProfile, "avatar" | "firstName" | "lastName" | "bio">;
-export const updateProfileById = async (
-  id: string,
-  updates: Partial<Updates>
-) => {
+// update profile using id
+export const updateById = async (id: string, updates: ProfileUpdates) => {
   return Profile.findByIdAndUpdate(id, { ...updates }, { new: true });
 };
 
-export const updateProfileByUser = async (
-  user: string,
-  updates: Partial<Updates>
-) => {
+// update profile using user id
+export const updateByUser = async (user: string, updates: ProfileUpdates) => {
   return Profile.findOneAndUpdate({ user }, { ...updates }, { new: true });
 };
 
-export const deleteProfileById = async (id: string) => {
+// delete profile using id
+export const deleteById = async (id: string) => {
   return Profile.findByIdAndDelete(id);
-};
-
-export const getProfileByUsername = async (username: string) => {
-  return getProfileByProperty("user", username);
 };

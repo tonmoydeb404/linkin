@@ -9,3 +9,8 @@ export interface IProfile {
   bio?: string | null;
   user: IUser | string;
 }
+
+// services types
+export type ProfileUpdates = Partial<
+  Pick<IProfile, "avatar" | "firstName" | "lastName" | "bio">
+>;

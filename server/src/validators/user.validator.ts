@@ -57,7 +57,7 @@ export const patchUser = checkSchema(
 export const putUserRole = checkSchema(
   {
     role: {
-      isEmpty: {
+      notEmpty: {
         errorMessage: "user role is required.",
       },
       isIn: {

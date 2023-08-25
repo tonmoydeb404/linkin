@@ -51,7 +51,7 @@ export const postLogin = asyncWrapper(async (req, res) => {
 // get a refresh token
 export const getRefresh = asyncWrapper(async (req, res) => {
   const user = await userService
-    .getOneByProperty("_id", req.user.id)
+    .getByProperty("_id", req.user.id)
     .select("password");
   const { token, payload } = await user.generateRefreshToken();
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
@@ -73,7 +73,7 @@ export const postPasswordResetRequest = asyncWrapper(async (req, res) => {
   const { email } = matchedData(req);
 
   let user = await userService
-    .getOneByProperty("email", email)
+    .getByProperty("email", email)
     .select("+password");
   if (!user) throw createHttpError(404, "Requested user not found");
 
@@ -113,7 +113,7 @@ export const postPasswordReset = asyncWrapper(async (req, res) => {
 
   // get user
   const user = await userService
-    .getOneByProperty("_id", payload.id)
+    .getByProperty("_id", payload.id)
     .select("+password");
   // check user exist or not
   if (!user) throw createHttpError(400, "User account not found");

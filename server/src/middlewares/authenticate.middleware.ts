@@ -18,7 +18,7 @@ const authenticate = asyncWrapper(async (req, _res, next) => {
 
     // get user
     const user = await userService
-      .getOneByProperty("_id", payload.id)
+      .getByProperty("_id", payload.id)
       .select("+password");
     // check user exist or not
     if (!user) throw new Error("User account not found");

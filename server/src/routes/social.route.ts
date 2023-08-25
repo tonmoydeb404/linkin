@@ -7,13 +7,17 @@ import * as socialValidator from "../validators/social.validator";
 const socialRouter = Router();
 
 socialRouter.put(
-  "/ban/:link_id",
+  "/ban/:social_id",
   authorize(["ADMIN"]),
+  socialValidator.getSocial,
+  validate,
   socialController.putBanSocial
 );
 socialRouter.put(
-  "/unban/:link_id",
+  "/unban/:social_id",
   authorize(["ADMIN"]),
+  socialValidator.getSocial,
+  validate,
   socialController.putUnbanSocial
 );
 socialRouter.get(

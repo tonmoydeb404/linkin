@@ -7,7 +7,7 @@ import * as linkService from "../services/link.service";
 export const getLinks = asyncWrapper(async (req, res) => {
   const { id } = req.user;
 
-  const links = await linkService.getLinksByProperty("user", id);
+  const links = await linkService.getAllByProperty("user", id);
 
   res.status(200).json({ results: links, count: links.length });
 });
@@ -15,7 +15,7 @@ export const getLinks = asyncWrapper(async (req, res) => {
 export const getLink = asyncWrapper(async (req, res) => {
   const { link_id } = req.params;
 
-  const link = await linkService.getLinkByProperty("_id", link_id);
+  const link = await linkService.getByProperty("_id", link_id);
 
   if (!link) throw createHttpError(404, "Requested link not found");
 
@@ -28,7 +28,7 @@ export const postLink = asyncWrapper(async (req, res) => {
 
   if (!title || !url) throw createHttpError(400, "Please provide valid inputs");
 
-  let link = await linkService.createLink({
+  let link = await linkService.create({
     title,
     slug,
     url,
@@ -45,7 +45,7 @@ export const patchLink = asyncWrapper(async (req, res) => {
   const { link_id } = req.params;
   const { title, url, icon } = matchedData(req);
 
-  let link = await linkService.getLinkByProperty("_id", link_id);
+  let link = await linkService.getByProperty("_id", link_id);
   if (!link) throw createHttpError(404, "Requested Link not found");
 
   if (!linkPermission.canUpdate(req.user, link))
@@ -54,12 +54,11 @@ export const patchLink = asyncWrapper(async (req, res) => {
   if (!title && !url && !icon)
     throw createHttpError(400, "You have to update at least one propery");
 
-  const updates: Record<string, any> = {};
-  if (title !== undefined) updates.title = title;
-  if (url !== undefined) updates.url = url;
-  if (icon !== undefined) updates.icon = icon;
+  if (title !== undefined) link.title = title;
+  if (url !== undefined) link.url = url;
+  if (icon !== undefined) link.icon = icon;
 
-  link = await linkService.updateLinkById(link_id, updates);
+  await link.save();
 
   return res.status(200).json({ results: link });
 });
@@ -67,13 +66,13 @@ export const patchLink = asyncWrapper(async (req, res) => {
 export const deleteLink = asyncWrapper(async (req, res) => {
   const { link_id } = req.params;
 
-  let link = await linkService.getLinkByProperty("_id", link_id);
+  let link = await linkService.getByProperty("_id", link_id);
   if (!link) throw createHttpError(404, "Requested Link not found");
 
   if (!linkPermission.canDelete(req.user, link))
     throw createHttpError(401, "You have no access to Delete this content");
 
-  link = await linkService.deleteLinkById(link_id);
+  await link.deleteOne();
 
   res.status(200).json({ results: link._id });
 });
@@ -82,7 +81,7 @@ export const getLinkBySlug = asyncWrapper(async (req, res) => {
   const { link_slug } = req.params;
 
   const link = await linkService
-    .getLinkByProperty("slug", link_slug)
+    .getByProperty("slug", link_slug)
     .populate("user");
   if (!link) throw createHttpError(404, "Requested profile not found");
 
@@ -107,11 +106,12 @@ export const putBanLink = asyncWrapper(async (req, res) => {
       "You don't have the permission to perform this task"
     );
 
-  let link = await linkService.getLinkByProperty("_id", link_id);
+  let link = await linkService.getByProperty("_id", link_id);
   if (!link) throw createHttpError(404, "Requested link not found");
 
-  // update user
-  link = await linkService.updateLinkById(link_id, { status: "BANNED" });
+  // ban link
+  link.status = "BANNED";
+  await link.save();
 
   return res.status(200).json({ results: link.toObject() });
 });
@@ -125,11 +125,12 @@ export const putUnbanLink = asyncWrapper(async (req, res) => {
       "You don't have the permission to perform this task"
     );
 
-  let link = await linkService.getLinkByProperty("_id", link_id);
+  let link = await linkService.getByProperty("_id", link_id);
   if (!link) throw createHttpError(404, "Requested link not found");
 
-  // update user
-  link = await linkService.updateLinkById(link_id, { status: "ACTIVE" });
+  // unban link
+  link.status = "ACTIVE";
+  await link.save();
 
   return res.status(200).json({ results: link.toObject() });
 });

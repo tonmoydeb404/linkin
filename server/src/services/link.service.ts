@@ -1,27 +1,33 @@
 import Link from "../models/Link";
 import { ILink, LinkCreate, LinkUpdate } from "../types/link.type";
 
+// get all links
 export const getAll = () => {
   return Link.find({});
 };
 
-export const getLinksByProperty = (key: keyof ILink, value: string) => {
+// filter by property and get multiple links
+export const getAllByProperty = (key: keyof ILink, value: string) => {
   return Link.find({ [key]: value });
 };
 
-export const getLinkByProperty = (key: keyof ILink, value: string) => {
+// filter by propety and get a single link
+export const getByProperty = (key: keyof ILink, value: string) => {
   if (key === "_id") return Link.findById(value);
   return Link.findOne({ [key]: value });
 };
 
-export const createLink = (data: LinkCreate) => {
+// create a link
+export const create = (data: LinkCreate) => {
   return new Link(data).save();
 };
 
-export const updateLinkById = async (id: string, updates: LinkUpdate) => {
+// update link using id
+export const updateById = async (id: string, updates: LinkUpdate) => {
   return Link.findByIdAndUpdate(id, { ...updates }, { new: true });
 };
 
-export const deleteLinkById = async (id: string) => {
+// delete link using id
+export const deleteById = async (id: string) => {
   return Link.findByIdAndDelete(id);
 };
