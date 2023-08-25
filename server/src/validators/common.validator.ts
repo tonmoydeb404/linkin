@@ -1,5 +1,5 @@
 import { ParamSchema } from "express-validator";
-import * as userService from "../services/user";
+import * as userService from "../services/user.service";
 
 export const validObjectId: ParamSchema = {
   isMongoId: true,
@@ -21,7 +21,7 @@ export const usernameSchema: ParamSchema = {
         );
       }
 
-      const user = await userService.getUserByProperty("username", value);
+      const user = await userService.getOneByProperty("username", value);
       if (user) throw new Error("Username already in use");
     },
   },
@@ -38,6 +38,16 @@ export const passwordSchema: ParamSchema = {
       minUppercase: 1,
       minNumbers: 1,
       minSymbols: 1,
+    },
+  },
+};
+export const emailSchema: ParamSchema = {
+  errorMessage: "Invalid email",
+  isEmail: true,
+  custom: {
+    options: async (value) => {
+      const user = await userService.getOneByProperty("email", value);
+      if (user) throw new Error("Email already in use");
     },
   },
 };

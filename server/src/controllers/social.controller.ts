@@ -2,7 +2,7 @@ import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as socialPermission from "../permissions/social";
-import * as socialService from "../services/social";
+import * as socialService from "../services/social.service";
 
 export const getSocials = asyncWrapper(async (req, res) => {
   const { id } = req.user;

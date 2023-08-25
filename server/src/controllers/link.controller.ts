@@ -2,7 +2,7 @@ import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as linkPermission from "../permissions/link";
-import * as linkService from "../services/link";
+import * as linkService from "../services/link.service";
 
 export const getLinks = asyncWrapper(async (req, res) => {
   const { id } = req.user;

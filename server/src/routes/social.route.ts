@@ -1,7 +1,7 @@
 import { Router } from "express";
-import * as socialController from "../controllers/social";
-import authorize from "../middlewares/authorize";
-import validate from "../middlewares/validate";
+import * as socialController from "../controllers/social.controller";
+import authorize from "../middlewares/authorize.middleware";
+import validate from "../middlewares/validate.middleware";
 import * as socialValidator from "../validators/social.validator";
 
 const socialRouter = Router();

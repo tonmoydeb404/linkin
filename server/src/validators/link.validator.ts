@@ -1,6 +1,6 @@
 import { checkSchema } from "express-validator";
 import { isValidObjectId } from "mongoose";
-import * as linkService from "../services/link";
+import * as linkService from "../services/link.service";
 
 export const getLink = checkSchema(
   {

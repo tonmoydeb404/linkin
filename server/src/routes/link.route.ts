@@ -1,8 +1,8 @@
 import { Router } from "express";
-import * as linkController from "../controllers/link";
-import authenticate from "../middlewares/authenticate";
-import authorize from "../middlewares/authorize";
-import validate from "../middlewares/validate";
+import * as linkController from "../controllers/link.controller";
+import authenticate from "../middlewares/authenticate.middleware";
+import authorize from "../middlewares/authorize.middleware";
+import validate from "../middlewares/validate.middleware";
 import * as linkValidator from "../validators/link.validator";
 
 const linkRouter = Router();

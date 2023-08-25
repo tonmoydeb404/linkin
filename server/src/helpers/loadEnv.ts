@@ -12,4 +12,5 @@ export default {
   PASSWORD_RESET_URL: process.env.PASSWORD_RESET_URL,
   MAIL_ID: process.env.MAIL_ID,
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
+  EMAIL_VERFICATION_URL: process.env.EMAIL_VERFICATION_URL,
 };

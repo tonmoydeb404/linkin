@@ -1,43 +1,11 @@
-import { ParamSchema, checkSchema } from "express-validator";
+import { checkSchema } from "express-validator";
 import { isValidObjectId } from "mongoose";
 import { userRoles } from "../models/User";
-import * as userService from "../services/user";
-
-const usernameSchema: ParamSchema = {
-  errorMessage: "Invalid username",
-  isLength: {
-    options: { min: 3, max: 50 },
-    errorMessage:
-      "Username should be at least minimum 3 chars & maximum 50 chars",
-  },
-  custom: {
-    options: async (value) => {
-      if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-        throw new Error(
-          "Username can only contain letters, numbers, and underscores."
-        );
-      }
-
-      const user = await userService.getUserByProperty("username", value);
-      if (user) throw new Error("Username already in use");
-    },
-  },
-  trim: true,
-  toLowerCase: true,
-};
-const passwordSchema: ParamSchema = {
-  isStrongPassword: {
-    errorMessage:
-      "Password should be at least 6 chars long and should contain at least 1 lowercase, 1 uppercase, 1 number & 1 special symbol.",
-    options: {
-      minLength: 6,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1,
-    },
-  },
-};
+import {
+  emailSchema,
+  passwordSchema,
+  usernameSchema,
+} from "./common.validator";
 
 export const getUser = checkSchema(
   {
@@ -60,22 +28,9 @@ export const postUser = checkSchema(
   {
     username: usernameSchema,
     password: passwordSchema,
-    email: {
-      errorMessage: "Invalid email",
-      isEmail: true,
-      custom: {
-        options: async (value) => {
-          const user = await userService.getUserByProperty("email", value);
-          if (user) throw new Error("Email already in use");
-        },
-      },
-    },
+    email: emailSchema,
     role: {
       optional: true,
-      isLength: {
-        options: { min: 1 },
-        errorMessage: "User role should be at least 1 character long",
-      },
       isIn: {
         options: [userRoles],
         errorMessage: "Invalid roles",
@@ -88,31 +43,11 @@ export const postUser = checkSchema(
 export const patchUser = checkSchema(
   {
     username: {
-      errorMessage: "Invalid username",
-      isLength: {
-        options: { min: 3, max: 50 },
-        errorMessage:
-          "Username should be at least minimum 3 chars & maximum 50 chars",
-      },
-      toLowerCase: true,
-      custom: {
-        options: async (value) => {
-          const user = await userService.getUserByProperty("username", value);
-          if (user) throw new Error("Username already in use");
-        },
-      },
-      trim: true,
+      ...usernameSchema,
       optional: true,
     },
     email: {
-      errorMessage: "Invalid email",
-      isEmail: true,
-      custom: {
-        options: async (value) => {
-          const user = await userService.getUserByProperty("email", value);
-          if (user) throw new Error("Email already in use");
-        },
-      },
+      ...emailSchema,
       optional: true,
     },
   },
@@ -158,6 +93,17 @@ export const putUsername = checkSchema(
         errorMessage: "Old password is required!",
       },
       trim: true,
+    },
+  },
+  ["body"]
+);
+
+export const postEmailVerification = checkSchema(
+  {
+    token: {
+      notEmpty: {
+        errorMessage: "Token is required!",
+      },
     },
   },
   ["body"]

@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import { AuthLogin, AuthPayload, AuthRegister } from "../types/auth.type";
-import * as profileService from "./profile";
-import * as userService from "./user";
+import * as profileService from "./profile.service";
+import * as userService from "./user.service";
 
 export const register = async ({
   email,
@@ -10,7 +10,12 @@ export const register = async ({
   password,
   username,
 }: AuthRegister) => {
-  const user = await userService.createUser({ email, password, username });
+  const user = await userService.create({
+    email,
+    password,
+    username,
+    role: "USER",
+  });
   const profile = await profileService.createProfile({
     firstName,
     lastName,
@@ -24,7 +29,7 @@ export const register = async ({
 export const loginWithEmail = async ({ email, password }: AuthLogin) => {
   // find user
   const user = await userService
-    .getUserByProperty("email", email)
+    .getOneByProperty("email", email)
     .select("+password");
 
   if (!user) throw createHttpError(404, "requested user not found");
@@ -43,7 +48,7 @@ export const loginWithEmail = async ({ email, password }: AuthLogin) => {
 };
 
 export const getAuthPayload = async (id: string) => {
-  const user = await userService.getUserByProperty("_id", id);
+  const user = await userService.getOneByProperty("_id", id);
   const profile = await profileService.getProfileByProperty("user", id);
 
   if (!user || !profile) throw createHttpError(400, "User not found");
@@ -57,6 +62,7 @@ export const getAuthPayload = async (id: string) => {
     role: user.role,
     username: user.username,
     status: user.status,
+    emailVerfied: user.emailVerified,
   };
 
   return payload;

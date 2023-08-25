@@ -15,10 +15,16 @@ export const generateToken = (
 export const verifyToken = (
   token: string,
   additonalSecret: string | undefined = ""
-) => {
-  let secret = loadEnv.JWT_SECRET;
-  if (additonalSecret && additonalSecret.length) secret += additonalSecret;
-  return verify(token, secret);
+): JwtPayload | string | null => {
+  try {
+    let secret = loadEnv.JWT_SECRET;
+    if (additonalSecret && additonalSecret.length) secret += additonalSecret;
+    const payload = verify(token, secret);
+    return payload;
+  } catch (error) {
+    console.log(error);
+  }
+  return null;
 };
 
 export const getTokenValue = (token: string) => decode(token);

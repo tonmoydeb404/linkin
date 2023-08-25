@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { getHealth } from "../controllers/health";
-import authenticate from "../middlewares/authenticate";
-import authRouter from "../routes/auth";
-import linkRouter from "../routes/link";
-import profileRouter from "../routes/profile";
-import socialRouter from "../routes/social";
-import userRouter from "../routes/user";
+import { getHealth } from "../controllers/health.controller";
+import authenticate from "../middlewares/authenticate.middleware";
+import authRouter from "../routes/auth.route";
+import linkRouter from "../routes/link.route";
+import profileRouter from "../routes/profile.route";
+import socialRouter from "../routes/social.route";
+import userRouter from "../routes/user.route";
 
 const router = Router();
 

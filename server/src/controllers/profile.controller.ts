@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
-import * as profileService from "../services/profile";
-import * as userServices from "../services/user";
+import * as profileService from "../services/profile.service";
+import * as userServices from "../services/user.service";
 import { IProfile } from "../types/profile.type";
 
 export const getProfile = asyncWrapper(async (req, res) => {
@@ -38,7 +38,7 @@ export const patchProfile = asyncWrapper(async (req, res) => {
 
 export const getUserProfile = asyncWrapper(async (req, res) => {
   const { username } = req.params;
-  const user = await userServices.getUserByProperty("username", username);
+  const user = await userServices.getOneByProperty("username", username);
   if (!user) throw createHttpError(404, "Requested user not found");
   // send error if user is banned
   if (user.status === "BANNED")
