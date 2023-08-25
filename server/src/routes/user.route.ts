@@ -6,20 +6,30 @@ import * as userValidator from "../validators/user.validator";
 
 const userRouter = Router();
 
-// BAN USER
+// VERIFY USER (ADMIN ONLY)
+userRouter.put(
+  "/verify/:user_id",
+  authorize(["ADMIN"]),
+  userValidator.putVerifiedStatus,
+  validate,
+  userController.putVerifiedStatus
+);
+
+// BAN USER (ADMIN ONLY)
 userRouter.put(
   "/ban/:user_id",
   authorize(["ADMIN"]),
   userController.putBanUser
 );
-// UNBAN USER
+
+// UNBAN USER (ADMIN ONLY)
 userRouter.put(
   "/unban/:user_id",
   authorize(["ADMIN"]),
   userController.putUnbanUser
 );
 
-// UPDATE USER ROLE
+// UPDATE USER ROLE (ADMIN ONLY)
 userRouter.put(
   "/change-role/:user_id",
   authorize(["ADMIN"]),

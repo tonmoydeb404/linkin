@@ -9,7 +9,6 @@ import { getTokenValue, verifyToken } from "../helpers/token";
 import * as authService from "../services/auth.service";
 import * as userService from "../services/user.service";
 import { PasswordResetPayload } from "../types/common.type";
-import { UserResponse } from "../types/user.type";
 
 // create a new account
 export const postRegister = asyncWrapper(async (req, res) => {
@@ -124,18 +123,9 @@ export const postPasswordReset = asyncWrapper(async (req, res) => {
   // check valid token or not
   if (!payload) throw createHttpError(400, "Invalid token!");
 
+  // update user password
   user.password = password;
   await user.save();
 
-  // prepare user response object
-  const uResponse: UserResponse = {
-    _id: user.id,
-    email: user.email,
-    emailVerified: user.emailVerified,
-    role: user.role,
-    status: user.status,
-    username: user.username,
-  };
-
-  return res.status(200).json({ results: { user: uResponse } });
+  return res.status(200).json({ results: { user: user.toObject() } });
 });

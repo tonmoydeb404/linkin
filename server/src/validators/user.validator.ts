@@ -1,6 +1,6 @@
 import { checkSchema } from "express-validator";
 import { isValidObjectId } from "mongoose";
-import { userRoles } from "../models/User";
+import { userRoles, userVerifiedStatus } from "../models/User";
 import {
   emailSchema,
   passwordSchema,
@@ -57,12 +57,8 @@ export const patchUser = checkSchema(
 export const putUserRole = checkSchema(
   {
     role: {
-      exists: {
+      isEmpty: {
         errorMessage: "user role is required.",
-      },
-      isLength: {
-        options: { min: 1 },
-        errorMessage: "User role should be at least 1 character long",
       },
       isIn: {
         options: [userRoles],
@@ -103,6 +99,21 @@ export const postEmailVerification = checkSchema(
     token: {
       notEmpty: {
         errorMessage: "Token is required!",
+      },
+    },
+  },
+  ["body"]
+);
+
+export const putVerifiedStatus = checkSchema(
+  {
+    verified_status: {
+      notEmpty: {
+        errorMessage: "verification status is required.",
+      },
+      isIn: {
+        options: [userVerifiedStatus],
+        errorMessage: "Invalid verification status",
       },
     },
   },

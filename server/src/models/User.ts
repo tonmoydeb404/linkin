@@ -7,10 +7,20 @@ import {
   EmailVerificationPayload,
   PasswordResetPayload,
 } from "../types/common.type";
-import { IUser, UserRole, UserStatus } from "../types/user.type";
+import {
+  IUser,
+  UserRole,
+  UserStatus,
+  UserVerifiedStatus,
+} from "../types/user.type";
 
 export const userStatus: UserStatus[] = ["ACTIVE", "BANNED"];
 export const userRoles: UserRole[] = ["ADMIN", "USER"];
+export const userVerifiedStatus: UserVerifiedStatus[] = [
+  "NONE",
+  "DEVELOPER",
+  "CELEBRITY",
+];
 
 export interface IUserMethods {
   comparePassword: (password: string) => Promise<boolean>;
@@ -49,8 +59,22 @@ const UserSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
       enum: userStatus,
       default: "ACTIVE",
     },
+    verifiedStatus: {
+      type: String,
+      enum: userVerifiedStatus,
+      required: true,
+      default: "NONE",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toObject: {
+      transform(_doc, ret, _options) {
+        delete ret.password;
+        return ret;
+      },
+    },
+  }
 );
 
 // password hashing on save

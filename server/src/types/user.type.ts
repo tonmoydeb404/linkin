@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 
 export type UserRole = "ADMIN" | "USER";
 export type UserStatus = "ACTIVE" | "BANNED";
+export type UserVerifiedStatus = "NONE" | "DEVELOPER" | "CELEBRITY";
 
 export interface IUser {
   _id: string | Types.ObjectId;
@@ -11,6 +12,7 @@ export interface IUser {
   role: UserRole;
   username: string;
   status: UserStatus;
+  verifiedStatus: UserVerifiedStatus;
 }
 
 // services types
@@ -19,6 +21,3 @@ export type CreateUser = Pick<
   "email" | "password" | "username" | "role"
 >;
 export type UpdateUser = Partial<IUser>;
-
-// Response Types
-export type UserResponse = Omit<IUser, "password">;

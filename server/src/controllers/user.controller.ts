@@ -251,3 +251,20 @@ export const getEmailVerification = asyncWrapper(async (req, res) => {
     },
   });
 });
+
+// change user verified status
+export const putVerifiedStatus = asyncWrapper(async (req, res) => {
+  const { user_id } = req.params;
+  const { verified_status } = matchedData(req);
+
+  let user = await userService.getOneByProperty("_id", user_id);
+  if (!user) throw createHttpError(404, "Requested user not found");
+
+  if (user.verifiedStatus !== verified_status) {
+    // update user verified status
+    user.verifiedStatus = verified_status;
+    await user.save();
+  }
+
+  return res.status(200).json({ results: user.toObject() });
+});
