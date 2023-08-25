@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { PROFILE_AVATAR } from "../config/default";
 import { IProfile } from "../types/profile.type";
+import Layout from "./Layout";
 import Link from "./Link";
 import Social from "./Social";
 import User from "./User";
@@ -44,6 +45,13 @@ ProfileSchema.virtual("socials", {
   localField: "user",
   foreignField: "user",
   match: { status: "ACTIVE" },
+});
+
+ProfileSchema.virtual("layout", {
+  ref: Layout.modelName,
+  localField: "user",
+  foreignField: "user",
+  justOne: true,
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);

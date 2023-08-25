@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import { AuthLogin, AuthPayload, AuthRegister } from "../types/auth.type";
+import * as layoutService from "./layout.service";
 import * as profileService from "./profile.service";
 import * as userService from "./user.service";
 
@@ -17,14 +18,17 @@ export const register = async ({
     username,
     role: "USER",
   });
+  // create profile for user
   const profile = await profileService.create({
     firstName,
     lastName,
     user: user.id,
   });
+  // create layout for user
+  const layout = await layoutService.create({ user: user.id });
   const { token, payload } = await user.generateRefreshToken();
 
-  return { token, user, profile, payload };
+  return { token, user, profile, payload, layout };
 };
 
 // login using email

@@ -19,6 +19,7 @@ export const getProfile = asyncWrapper(async (req, res) => {
 export const patchProfile = asyncWrapper(async (req, res) => {
   const { id } = req.user;
   const { firstName, lastName, avatar, bio } = req.body as IProfile;
+  // TODO: use express validator here
 
   if (!firstName && !lastName && !avatar && !bio)
     throw createHttpError(400, "You have to update at least one propery");
@@ -46,7 +47,7 @@ export const getUserProfile = asyncWrapper(async (req, res) => {
 
   const profile = await profileService
     .getByProperty("user", user.id)
-    .populate(["links", "socials", "user"]);
+    .populate(["links", "socials", "user", "layout"]);
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
   res.status(200).json({ results: profile.toObject({ virtuals: true }) });
