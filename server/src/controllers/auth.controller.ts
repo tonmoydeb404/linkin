@@ -78,6 +78,8 @@ export const postPasswordResetRequest = asyncWrapper(async (req, res) => {
     .select("+password");
   if (!user) throw createHttpError(404, "Requested user not found");
 
+  if (!user.emailVerified) throw createHttpError(400, "Email is not verified!");
+
   const { token, payload } = user.generatePasswordResetToken();
   const requestURL = `${loadEnv.PASSWORD_RESET_URL}?token=${token}`;
 
