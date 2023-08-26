@@ -10,38 +10,36 @@ type Props = {
 const ProfileCard = ({ profile, className = "" }: Props) => {
   return (
     <div className={className}>
-      <div className="flex flex-col items-center mb-8 text-center">
+      <div className="profile_card_info">
         <img
           src={profile.avatar}
           alt={`${profile.firstName} ${profile.lastName}`}
-          className="w-[160px] h-[160px] aspect-square rounded-full mb-5"
+          className="profile_card_avatar"
         />
 
         <div className="relative">
-          <h1 className="text-3xl font-bold mb-1">
+          <h1 className="profile_card_title">
             {profile.firstName} {profile.lastName}
           </h1>
-          <span className="absolute -right-7 top-1/2 -translate-y-1/2">
+          <span className="profile_card_verified">
             {profile.user.verifiedStatus === "DEVELOPER" ? (
               <HiBadgeCheck
-                className={`text-2xl  text-primary`}
+                className={`developer`}
                 title="Verified as a developer"
               />
             ) : null}
             {profile.user.verifiedStatus === "CELEBRITY" ? (
               <HiBadgeCheck
-                className={`text-2xl text-blue-600`}
+                className={`celebrity`}
                 title="Verified as a celebrity"
               />
             ) : null}
           </span>
         </div>
 
-        <h2 className="text-base font-medium text-gray-600 dark:text-gray-400">
-          @{profile.user.username}
-        </h2>
+        <h2 className="profile_card_subtitle">@{profile.user.username}</h2>
 
-        <p className="mt-5 max-w-md">{profile.bio}</p>
+        <p className="profile_card_bio">{profile.bio}</p>
       </div>
       {profile?.socials ? <ProfileSocials socials={profile.socials} /> : null}
     </div>

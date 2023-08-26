@@ -1,3 +1,4 @@
+import setDocTheme from "@/utils/setDocTheme";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
@@ -19,14 +20,10 @@ const Profile = () => {
         if (!username) throw new Error("username not defined");
         const response = await getProfile(username).unwrap();
 
-        document.documentElement.classList.add(
-          response.result.layout?.defaultTheme || ""
-        );
+        // update theme according to user layout preference
+        setDocTheme(response.result.layout?.defaultTheme || "SYSTEM");
+        // update shape style according to user
         document.documentElement.dataset.style = response.result.layout?.style;
-        document.documentElement.setAttribute(
-          "style",
-          `--user-color: ${response.result.layout?.color || ""}`
-        );
       } catch (error) {
         console.log(error);
       }
@@ -54,8 +51,8 @@ const Profile = () => {
             LinkIn
           </title>
         </Helmet>
-        <main className="w-full min-h-screen bg-gray-200 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
-          <div className="max-w-lg mx-auto px-3 sm:px-0 py-16">
+        <main className="profile">
+          <div className="profile_container">
             <ProfileCard profile={profile.data.result} className="mb-10" />
             {profile.data.result.links ? (
               <div className="flex flex-col gap-2 mb-10">

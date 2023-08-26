@@ -1,0 +1,57 @@
+.profile_card_info {
+  @apply flex flex-col items-center mb-8 text-center;
+}
+
+.profile_card_avatar {
+  @apply w-[160px] h-[160px] aspect-square rounded-2xl  mb-5;
+}
+
+[data-style="CIRCULAR"] .profile_card_avatar {
+  @apply rounded-full;
+}
+
+[data-style="SQUARE"] .profile_card_avatar {
+  @apply rounded-none;
+}
+
+.profile_card_title {
+  @apply text-3xl font-bold mb-1;
+}
+
+.profile_card_subtitle {
+  @apply text-base font-medium text-gray-600 dark:text-gray-400;
+}
+
+.profile_card_bio {
+  @apply mt-5 max-w-md;
+}
+
+.profile_card_verified {
+  @apply absolute -right-7 top-1/2 -translate-y-1/2 text-2xl;
+}
+
+.profile_card_verified > .developer {
+  @apply text-primary;
+}
+
+.profile_card_verified > .celebrity {
+  @apply text-blue-600;
+}
+
+/* socials */
+.profile_card_socials {
+  @apply flex items-center justify-center flex-wrap gap-2;
+}
+
+.profile_card_social {
+  @apply p-2 inline-block rounded-lg duration-200 text-[28px];
+  @apply hover:text-primary hover:bg-black/10 dark:hover:bg-gray-800;
+}
+
+[data-style="CIRCULAR"] .profile_card_social {
+  @apply rounded-full;
+}
+
+[data-style="SQUARE"] .profile_card_social {
+  @apply rounded-none;
+}

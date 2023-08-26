@@ -1,0 +1,6 @@
+/* CARD STYLE */
+@import "./components/card/profile-card.css";
+@import "./components/card/link-card.css";
+
+/* PAGE STYLE */
+@import "./pages/profile.css";
