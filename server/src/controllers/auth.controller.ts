@@ -133,34 +133,6 @@ export const putPasswordReset = asyncWrapper(async (req, res) => {
   return res.status(200).json({ results: { user: user.toObject() } });
 });
 
-// verify a user email
-export const postEmailVerification = asyncWrapper(async (req, res) => {
-  const { token } = matchedData(req);
-
-  // verify the token
-  const payload = verifyToken(token) as EmailVerificationPayload | null;
-
-  // check payload has a valid object id or not
-  if (!payload?.id || !isValidObjectId(payload.id) || payload.id != req.user.id)
-    throw createHttpError(400, "Invalid token!");
-
-  // check for the user
-  const user = await userService.getByProperty("_id", payload.id);
-  if (!user) throw createHttpError(404, "User not exists!");
-
-  if (user.email !== payload.email)
-    throw createHttpError(400, "Invalid token!");
-
-  // check email already verified or not
-  if (user.emailVerified) throw createHttpError(400, "Email already verified");
-
-  // update email verification status
-  user.emailVerified = true;
-  await user.save();
-
-  return res.status(200).json({ results: { user } });
-});
-
 // request for a email verification token
 export const getEmailVerification = asyncWrapper(async (req, res) => {
   let user = await userService.getByProperty("email", req.user.email);
@@ -185,4 +157,32 @@ export const getEmailVerification = asyncWrapper(async (req, res) => {
       mailSent: true,
     },
   });
+});
+
+// verify a user email
+export const putEmailVerification = asyncWrapper(async (req, res) => {
+  const { token } = matchedData(req);
+
+  // verify the token
+  const payload = verifyToken(token) as EmailVerificationPayload | null;
+
+  // check payload has a valid object id or not
+  if (!payload?.id || !isValidObjectId(payload.id) || payload.id != req.user.id)
+    throw createHttpError(400, "Invalid token!");
+
+  // check for the user
+  const user = await userService.getByProperty("_id", payload.id);
+  if (!user) throw createHttpError(404, "User not exists!");
+
+  if (user.email !== payload.email)
+    throw createHttpError(400, "Invalid token!");
+
+  // check email already verified or not
+  if (user.emailVerified) throw createHttpError(400, "Email already verified");
+
+  // update email verification status
+  user.emailVerified = true;
+  await user.save();
+
+  return res.status(200).json({ results: { user } });
 });

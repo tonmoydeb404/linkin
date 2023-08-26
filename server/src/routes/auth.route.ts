@@ -48,9 +48,9 @@ authRouter
   .all(authenticate)
   .get(authController.getEmailVerification)
   .post(
-    authValidators.postEmailVerification,
+    authValidators.putEmailVerification,
     validate,
-    authController.postEmailVerification
+    authController.putEmailVerification
   );
 
 export default authRouter;

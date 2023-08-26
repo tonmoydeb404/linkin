@@ -73,7 +73,7 @@ export const postPasswordReset = checkSchema(
 );
 
 // verify email validator
-export const postEmailVerification = checkSchema(
+export const putEmailVerification = checkSchema(
   {
     token: {
       notEmpty: {
