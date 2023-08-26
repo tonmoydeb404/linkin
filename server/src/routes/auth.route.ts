@@ -6,12 +6,15 @@ import * as authValidators from "../validators/auth.validator";
 
 const authRouter = Router();
 
+// REGISTER A NEW ACCOUNT
 authRouter.post(
   "/register",
   authValidators.postRegister,
   validate,
   authController.postRegister
 );
+
+// LOGIN WITH EXISTING ACCOUNT
 authRouter.post(
   "/login",
   authValidators.postLogin,
@@ -19,20 +22,35 @@ authRouter.post(
   authController.postLogin
 );
 
-authRouter.get("/refresh", authenticate, authController.getRefresh);
+// LOGOUT FROM USER ACCOUNT
 authRouter.get("/logout", authController.getLogout);
 
-authRouter.post(
-  "/password-reset-request",
-  authValidators.postPasswordResetRequest,
-  validate,
-  authController.postPasswordResetRequest
-);
-authRouter.post(
-  "/password-reset",
-  authValidators.postPasswordReset,
-  validate,
-  authController.postPasswordReset
-);
+// GET REFRESH TOKEN
+authRouter.get("/refresh", authenticate, authController.getRefresh);
+
+// PASSWORD RESET
+authRouter
+  .route("/password-reset")
+  .post(
+    authValidators.postPasswordReset,
+    validate,
+    authController.postPasswordReset
+  )
+  .put(
+    authValidators.putPasswordReset,
+    validate,
+    authController.putPasswordReset
+  );
+
+// EMAIL VERIFICATION
+authRouter
+  .route("/verify-email")
+  .all(authenticate)
+  .get(authController.getEmailVerification)
+  .post(
+    authValidators.postEmailVerification,
+    validate,
+    authController.postEmailVerification
+  );
 
 export default authRouter;

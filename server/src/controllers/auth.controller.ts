@@ -2,13 +2,16 @@ import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import { isValidObjectId } from "mongoose";
 import { authCookieOptions } from "../config/cookieOptions";
-import { passwordResetMail } from "../config/nodemailer";
+import { emailVerificationMail, passwordResetMail } from "../config/nodemailer";
 import asyncWrapper from "../helpers/asyncWrapper";
 import loadEnv from "../helpers/loadEnv";
 import { getTokenValue, verifyToken } from "../helpers/token";
 import * as authService from "../services/auth.service";
 import * as userService from "../services/user.service";
-import { PasswordResetPayload } from "../types/common.type";
+import {
+  EmailVerificationPayload,
+  PasswordResetPayload,
+} from "../types/common.type";
 
 // create a new account
 export const postRegister = asyncWrapper(async (req, res) => {
@@ -69,7 +72,7 @@ export const getLogout = asyncWrapper(async (req, res) => {
 });
 
 // request for password reset
-export const postPasswordResetRequest = asyncWrapper(async (req, res) => {
+export const postPasswordReset = asyncWrapper(async (req, res) => {
   const { email } = matchedData(req);
 
   let user = await userService
@@ -102,7 +105,7 @@ export const postPasswordResetRequest = asyncWrapper(async (req, res) => {
 });
 
 // reset password
-export const postPasswordReset = asyncWrapper(async (req, res) => {
+export const putPasswordReset = asyncWrapper(async (req, res) => {
   const { password, token } = matchedData(req);
 
   // get token data with out any validation
@@ -128,4 +131,58 @@ export const postPasswordReset = asyncWrapper(async (req, res) => {
   await user.save();
 
   return res.status(200).json({ results: { user: user.toObject() } });
+});
+
+// verify a user email
+export const postEmailVerification = asyncWrapper(async (req, res) => {
+  const { token } = matchedData(req);
+
+  // verify the token
+  const payload = verifyToken(token) as EmailVerificationPayload | null;
+
+  // check payload has a valid object id or not
+  if (!payload?.id || !isValidObjectId(payload.id) || payload.id != req.user.id)
+    throw createHttpError(400, "Invalid token!");
+
+  // check for the user
+  const user = await userService.getByProperty("_id", payload.id);
+  if (!user) throw createHttpError(404, "User not exists!");
+
+  if (user.email !== payload.email)
+    throw createHttpError(400, "Invalid token!");
+
+  // check email already verified or not
+  if (user.emailVerified) throw createHttpError(400, "Email already verified");
+
+  // update email verification status
+  user.emailVerified = true;
+  await user.save();
+
+  return res.status(200).json({ results: { user } });
+});
+
+// request for a email verification token
+export const getEmailVerification = asyncWrapper(async (req, res) => {
+  let user = await userService.getByProperty("email", req.user.email);
+  if (!user) throw createHttpError(404, "Requested user not found");
+
+  const { token, payload } = user.generateEmailVerificationToken();
+  const requestURL = `${loadEnv.EMAIL_VERFICATION_URL}?token=${token}`;
+
+  // send mail to the user
+  const response = await emailVerificationMail(
+    user.email,
+    user.username,
+    requestURL
+  );
+
+  if (response.rejected.includes(req.user.email))
+    throw createHttpError(500, "Cannot send the email verification mail.");
+
+  return res.status(200).json({
+    results: {
+      payload,
+      mailSent: true,
+    },
+  });
 });

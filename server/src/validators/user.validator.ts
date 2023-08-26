@@ -94,17 +94,6 @@ export const putUsername = checkSchema(
   ["body"]
 );
 
-export const postEmailVerification = checkSchema(
-  {
-    token: {
-      notEmpty: {
-        errorMessage: "Token is required!",
-      },
-    },
-  },
-  ["body"]
-);
-
 export const putVerifiedStatus = checkSchema(
   {
     verified_status: {

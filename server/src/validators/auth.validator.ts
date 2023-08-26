@@ -45,7 +45,7 @@ export const postLogin = checkSchema(
 );
 
 // reset password validator
-export const postPasswordReset = checkSchema(
+export const putPasswordReset = checkSchema(
   {
     password: passwordSchema,
     token: {
@@ -58,7 +58,7 @@ export const postPasswordReset = checkSchema(
 );
 
 // request for reset password validator
-export const postPasswordResetRequest = checkSchema(
+export const postPasswordReset = checkSchema(
   {
     email: {
       notEmpty: {
@@ -66,6 +66,18 @@ export const postPasswordResetRequest = checkSchema(
       },
       isEmail: {
         errorMessage: "Enter a valid email address!",
+      },
+    },
+  },
+  ["body"]
+);
+
+// verify email validator
+export const postEmailVerification = checkSchema(
+  {
+    token: {
+      notEmpty: {
+        errorMessage: "Token is required!",
       },
     },
   },

@@ -54,16 +54,6 @@ userRouter.put(
   userController.putUsername
 );
 
-// EMAIL VERIFICATION
-userRouter
-  .route("/verify-email")
-  .get(userController.getEmailVerification)
-  .post(
-    userValidator.postEmailVerification,
-    validate,
-    userController.postEmailVerification
-  );
-
 // GET & CREATE USER (ADMIN ONLY)
 userRouter
   .route("/")

@@ -1,14 +1,9 @@
 import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
-import { isValidObjectId } from "mongoose";
 import { authCookieOptions } from "../config/cookieOptions";
-import { emailVerificationMail } from "../config/nodemailer";
 import asyncWrapper from "../helpers/asyncWrapper";
-import loadEnv from "../helpers/loadEnv";
-import { verifyToken } from "../helpers/token";
 import * as userPermission from "../permissions/user";
 import * as userService from "../services/user.service";
-import { EmailVerificationPayload } from "../types/common.type";
 
 // get all users
 export const getUsers = asyncWrapper(async (req, res) => {
@@ -196,60 +191,6 @@ export const putUsername = asyncWrapper(async (req, res) => {
 
   return res.status(202).json({
     results: user.toObject(),
-  });
-});
-
-// verify a user email
-export const postEmailVerification = asyncWrapper(async (req, res) => {
-  const { token } = matchedData(req);
-
-  // verify the token
-  const payload = verifyToken(token) as EmailVerificationPayload | null;
-
-  // check payload has a valid object id or not
-  if (!payload?.id || !isValidObjectId(payload.id) || payload.id != req.user.id)
-    throw createHttpError(400, "Invalid token!");
-
-  // check for the user
-  const user = await userService.getByProperty("_id", payload.id);
-  if (!user) throw createHttpError(404, "User not exists!");
-
-  if (user.email !== payload.email)
-    throw createHttpError(400, "Invalid token!");
-
-  // check email already verified or not
-  if (user.emailVerified) throw createHttpError(400, "Email already verified");
-
-  // update email verification status
-  user.emailVerified = true;
-  await user.save();
-
-  return res.status(200).json({ results: { user } });
-});
-
-// request for a email verification token
-export const getEmailVerification = asyncWrapper(async (req, res) => {
-  let user = await userService.getByProperty("email", req.user.email);
-  if (!user) throw createHttpError(404, "Requested user not found");
-
-  const { token, payload } = user.generateEmailVerificationToken();
-  const requestURL = `${loadEnv.EMAIL_VERFICATION_URL}?token=${token}`;
-
-  // send mail to the user
-  const response = await emailVerificationMail(
-    user.email,
-    user.username,
-    requestURL
-  );
-
-  if (response.rejected.includes(req.user.email))
-    throw createHttpError(500, "Cannot send the email verification mail.");
-
-  return res.status(200).json({
-    results: {
-      payload,
-      mailSent: true,
-    },
   });
 });
 
