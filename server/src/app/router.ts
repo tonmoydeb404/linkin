@@ -12,7 +12,7 @@ const router = Router();
 
 router.use("/api/v1/users", authenticate, userRouter);
 router.use("/api/v1/layout", authenticate, layoutRouter);
-router.use("/api/v1/profiles", profileRouter);
+router.use("/api/v1/profile", profileRouter);
 router.use("/api/v1/links", linkRouter);
 router.use("/api/v1/socials", authenticate, socialRouter);
 router.use("/api/v1/auth", authRouter);
