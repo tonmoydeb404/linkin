@@ -31,7 +31,7 @@ export const postRegister = asyncWrapper(async (req, res) => {
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
   res.cookie("logged_in", true, authCookieOptions);
 
-  return res.status(201).json({ payload, token });
+  return res.status(201).json({ result: { payload, token } });
 });
 
 // login using existing account
@@ -48,7 +48,7 @@ export const postLogin = asyncWrapper(async (req, res) => {
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
   res.cookie("logged_in", true, authCookieOptions);
 
-  return res.status(200).json({ token, payload });
+  return res.status(200).json({ result: { token, payload } });
 });
 
 // get a refresh token
@@ -60,7 +60,7 @@ export const getRefresh = asyncWrapper(async (req, res) => {
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
   res.cookie("logged_in", true, authCookieOptions);
 
-  return res.status(200).json({ token, payload });
+  return res.status(200).json({ result: { token, payload } });
 });
 
 // logout user account
@@ -97,7 +97,7 @@ export const postPasswordReset = asyncWrapper(async (req, res) => {
     throw createHttpError(500, "Cannot send the email verification mail.");
 
   return res.status(200).json({
-    results: {
+    result: {
       payload: payload,
       mailSent: true,
     },
@@ -130,7 +130,7 @@ export const putPasswordReset = asyncWrapper(async (req, res) => {
   user.password = password;
   await user.save();
 
-  return res.status(200).json({ results: { user: user.toObject() } });
+  return res.status(200).json({ result: user.toObject() });
 });
 
 // request for a email verification token
@@ -152,7 +152,7 @@ export const getEmailVerification = asyncWrapper(async (req, res) => {
     throw createHttpError(500, "Cannot send the email verification mail.");
 
   return res.status(200).json({
-    results: {
+    result: {
       payload,
       mailSent: true,
     },
@@ -184,5 +184,5 @@ export const putEmailVerification = asyncWrapper(async (req, res) => {
   user.emailVerified = true;
   await user.save();
 
-  return res.status(200).json({ results: { user } });
+  return res.status(200).json({ result: user.toObject() });
 });

@@ -9,7 +9,7 @@ export const getLinks = asyncWrapper(async (req, res) => {
 
   const links = await linkService.getAllByProperty("user", id);
 
-  res.status(200).json({ results: links, count: links.length });
+  res.status(200).json({ result: links, count: links.length });
 });
 
 export const getLink = asyncWrapper(async (req, res) => {
@@ -19,7 +19,7 @@ export const getLink = asyncWrapper(async (req, res) => {
 
   if (!link) throw createHttpError(404, "Requested link not found");
 
-  res.status(200).json({ results: link });
+  res.status(200).json({ result: link });
 });
 
 export const postLink = asyncWrapper(async (req, res) => {
@@ -38,7 +38,7 @@ export const postLink = asyncWrapper(async (req, res) => {
 
   link = await link.populate("user");
 
-  return res.status(201).json({ results: link });
+  return res.status(201).json({ result: link });
 });
 
 export const patchLink = asyncWrapper(async (req, res) => {
@@ -60,7 +60,7 @@ export const patchLink = asyncWrapper(async (req, res) => {
 
   await link.save();
 
-  return res.status(200).json({ results: link });
+  return res.status(200).json({ result: link });
 });
 
 export const deleteLink = asyncWrapper(async (req, res) => {
@@ -74,7 +74,7 @@ export const deleteLink = asyncWrapper(async (req, res) => {
 
   await link.deleteOne();
 
-  res.status(200).json({ results: link._id });
+  res.status(200).json({ result: link._id });
 });
 
 export const getLinkBySlug = asyncWrapper(async (req, res) => {
@@ -94,7 +94,7 @@ export const getLinkBySlug = asyncWrapper(async (req, res) => {
   link.$inc("clicks", 1);
   await link.save();
 
-  res.status(200).json({ results: link });
+  res.status(200).json({ result: link });
 });
 
 export const putBanLink = asyncWrapper(async (req, res) => {
@@ -113,7 +113,7 @@ export const putBanLink = asyncWrapper(async (req, res) => {
   link.status = "BANNED";
   await link.save();
 
-  return res.status(200).json({ results: link.toObject() });
+  return res.status(200).json({ result: link.toObject() });
 });
 
 export const putUnbanLink = asyncWrapper(async (req, res) => {
@@ -132,11 +132,11 @@ export const putUnbanLink = asyncWrapper(async (req, res) => {
   link.status = "ACTIVE";
   await link.save();
 
-  return res.status(200).json({ results: link.toObject() });
+  return res.status(200).json({ result: link.toObject() });
 });
 
 export const getAllLinks = asyncWrapper(async (_req, res) => {
   const links = await linkService.getAll();
 
-  res.status(200).json({ results: links, count: links.length });
+  res.status(200).json({ result: links, count: links.length });
 });

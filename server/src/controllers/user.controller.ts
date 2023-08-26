@@ -11,7 +11,7 @@ export const getUsers = asyncWrapper(async (req, res) => {
 
   users = users.map((user) => user.toObject({ virtuals: true }));
 
-  res.status(200).json({ results: users, count: users.length });
+  res.status(200).json({ result: users, count: users.length });
 });
 
 // get a single user
@@ -27,7 +27,7 @@ export const getUser = asyncWrapper(async (req, res) => {
   if (!userPermission.canGet(req.user, user))
     throw createHttpError(401, "You don't have access to this resource");
 
-  return res.status(200).json({ results: user.toObject({ virtuals: true }) });
+  return res.status(200).json({ result: user.toObject({ virtuals: true }) });
 });
 
 // create a user
@@ -47,9 +47,7 @@ export const postUser = asyncWrapper(async (req, res) => {
     role: userPermission.canChangeRole(req.user) ? role : "USER",
   });
 
-  return res
-    .status(201)
-    .json({ results: { email: user.email, username: user.username } });
+  return res.status(201).json({ result: user.toObject() });
 });
 
 // update a user
@@ -72,7 +70,7 @@ export const patchUser = asyncWrapper(async (req, res) => {
   // update user
   await user.save();
 
-  return res.status(200).json({ results: user.toObject() });
+  return res.status(200).json({ result: user.toObject() });
 });
 
 // delete a user
@@ -91,7 +89,7 @@ export const deleteUser = asyncWrapper(async (req, res) => {
   // delete user
   user.deleteOne();
 
-  return res.status(200).json({ results: user_id });
+  return res.status(200).json({ result: user_id });
 });
 
 // ban a user
@@ -111,7 +109,7 @@ export const putBanUser = asyncWrapper(async (req, res) => {
   user.status = "BANNED";
   await user.save();
 
-  return res.status(200).json({ results: user.toObject() });
+  return res.status(200).json({ result: user.toObject() });
 });
 
 // unban a user
@@ -131,7 +129,7 @@ export const putUnbanUser = asyncWrapper(async (req, res) => {
   user.status = "ACTIVE";
   await user.save();
 
-  return res.status(200).json({ results: user.toObject() });
+  return res.status(200).json({ result: user.toObject() });
 });
 
 // change user role
@@ -146,7 +144,7 @@ export const putUserRole = asyncWrapper(async (req, res) => {
   user.role = role;
   await user.save();
 
-  return res.status(200).json({ results: user.toObject() });
+  return res.status(200).json({ result: user.toObject() });
 });
 
 // change user password
@@ -171,7 +169,7 @@ export const putPassword = asyncWrapper(async (req, res) => {
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
   res.cookie("logged_in", true, authCookieOptions);
 
-  return res.status(201).json({ token, payload });
+  return res.status(201).json({ result: { token, payload } });
 });
 
 // change user username
@@ -189,9 +187,7 @@ export const putUsername = asyncWrapper(async (req, res) => {
   user.username = username;
   await user.save();
 
-  return res.status(202).json({
-    results: user.toObject(),
-  });
+  return res.status(202).json({ result: user.toObject() });
 });
 
 // change user verified status
@@ -208,5 +204,5 @@ export const putVerifiedStatus = asyncWrapper(async (req, res) => {
     await user.save();
   }
 
-  return res.status(200).json({ results: user.toObject() });
+  return res.status(200).json({ result: user.toObject() });
 });

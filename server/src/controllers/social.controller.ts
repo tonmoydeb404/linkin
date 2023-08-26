@@ -8,7 +8,7 @@ export const getSocials = asyncWrapper(async (req, res) => {
   const { id } = req.user;
 
   const socials = await socialService.getAllByProperty("user", id);
-  res.status(200).json({ results: socials, count: socials.length });
+  res.status(200).json({ result: socials, count: socials.length });
 });
 
 export const getSocial = asyncWrapper(async (req, res) => {
@@ -17,7 +17,7 @@ export const getSocial = asyncWrapper(async (req, res) => {
   const social = await socialService.getByProperty("_id", social_id);
   if (!social) throw createHttpError(404, "Requested social not found");
 
-  res.status(200).json({ results: social });
+  res.status(200).json({ result: social });
 });
 
 export const postSocial = asyncWrapper(async (req, res) => {
@@ -25,7 +25,7 @@ export const postSocial = asyncWrapper(async (req, res) => {
   const { id } = req.user;
 
   const social = await socialService.create({ site, url, user: id });
-  res.status(200).json({ results: social });
+  res.status(200).json({ result: social });
 });
 
 export const patchSocial = asyncWrapper(async (req, res) => {
@@ -46,7 +46,7 @@ export const patchSocial = asyncWrapper(async (req, res) => {
   // perform update task
   await social.save();
 
-  res.status(200).json({ results: social });
+  res.status(200).json({ result: social });
 });
 
 export const deleteSocial = asyncWrapper(async (req, res) => {
@@ -64,7 +64,7 @@ export const deleteSocial = asyncWrapper(async (req, res) => {
   // perform delete social link task
   await social.deleteOne();
 
-  res.status(200).json({ results: social });
+  res.status(200).json({ result: social });
 });
 
 export const putBanSocial = asyncWrapper(async (req, res) => {
@@ -83,7 +83,7 @@ export const putBanSocial = asyncWrapper(async (req, res) => {
   social.status = "BANNED";
   await social.save();
 
-  return res.status(200).json({ results: social.toObject() });
+  return res.status(200).json({ result: social.toObject() });
 });
 
 export const putUnbanSocial = asyncWrapper(async (req, res) => {
@@ -102,10 +102,10 @@ export const putUnbanSocial = asyncWrapper(async (req, res) => {
   social.status = "ACTIVE";
   await social.save();
 
-  return res.status(200).json({ results: social.toObject() });
+  return res.status(200).json({ result: social.toObject() });
 });
 
 export const getAllSocials = asyncWrapper(async (req, res) => {
   const socials = await socialService.getAll();
-  res.status(200).json({ results: socials, count: socials.length });
+  res.status(200).json({ result: socials, count: socials.length });
 });
