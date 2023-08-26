@@ -4,7 +4,7 @@ import { ProfileResponse, ProfileUpdate } from "../types/profile.type";
 
 export const profileApi = createApi({
   reducerPath: "profileApi",
-  baseQuery: linkinBaseQuery("profiles"),
+  baseQuery: linkinBaseQuery("profile"),
   tagTypes: ["PROFILE"],
   endpoints: (builder) => ({
     getProfile: builder.query<ProfileResponse, string>({
