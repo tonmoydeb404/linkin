@@ -40,7 +40,7 @@ const SocialUserTable = () => {
   return (
     <>
       <SocialDataTable
-        data={data?.results || []}
+        data={data?.result || []}
         columns={SocialUserColumns({ handleDelete, handleUpdate })}
       />
       <DialogWrapper

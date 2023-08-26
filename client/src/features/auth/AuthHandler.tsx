@@ -15,7 +15,7 @@ const AuthHandler = ({ children }: { children: ReactElement }) => {
         const isLoggedIn = localStorage.getItem(logInKey);
         if (isLoggedIn !== "true") throw new Error("user not loggedin");
         const data = await refreshAuth(undefined).unwrap();
-        dispatch(authSignin(data.payload));
+        dispatch(authSignin(data.result.payload));
       } catch (error) {
         dispatch(authSignout());
       }

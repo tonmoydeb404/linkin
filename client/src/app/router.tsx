@@ -23,7 +23,10 @@ import AllLinks from "@/pages/dashboard/admin/AllLinks";
 import AllSocials from "@/pages/dashboard/admin/AllSocials";
 import AllUsers from "@/pages/dashboard/admin/AllUsers";
 // USER PAGES
+import VerifiedEmailOutlet from "@/common/outlet/VerifiedEmailOutlet";
+import Logout from "@/pages/auth/Logout";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import VerifyEmail from "@/pages/auth/VerifyEmail";
 import EditProfile from "@/pages/dashboard/user/EditProfile";
 import ManageLinks from "@/pages/dashboard/user/ManageLinks";
 import ManageSocials from "@/pages/dashboard/user/ManageSocials";
@@ -40,31 +43,56 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/dashboard",
-        element: <DashboardLayout />,
+        element: <PrivateOutlet />,
         children: [
           {
-            element: <PrivateOutlet />,
+            element: <VerifiedEmailOutlet />,
             children: [
-              { path: "", element: <Dashboard /> },
-              { path: "edit-profile", element: <EditProfile /> },
-              { path: "manage-links", element: <ManageLinks /> },
-              { path: "manage-socials", element: <ManageSocials /> },
-              // account routes
-              { path: "change-password", element: <ChangePassword /> },
-              { path: "change-username", element: <ChangeUsername /> },
+              {
+                path: "/dashboard",
+                element: <DashboardLayout />,
+                children: [
+                  { path: "", element: <Dashboard /> },
+                  { path: "edit-profile", element: <EditProfile /> },
+                  { path: "manage-links", element: <ManageLinks /> },
+                  { path: "manage-socials", element: <ManageSocials /> },
+                  // account routes
+                  { path: "change-password", element: <ChangePassword /> },
+                  { path: "change-username", element: <ChangeUsername /> },
+                ],
+              },
             ],
           },
           {
-            element: <AdminOutlet />,
+            path: "/verify-email",
+            element: <VerifyEmail />,
+          },
+          {
+            path: "/logout",
+            element: <Logout />,
+          },
+        ],
+      },
+      {
+        element: <AdminOutlet />,
+        children: [
+          {
+            element: <VerifiedEmailOutlet />,
             children: [
-              { path: "all-users", element: <AllUsers /> },
-              { path: "all-links", element: <AllLinks /> },
-              { path: "all-socials", element: <AllSocials /> },
+              {
+                path: "/dashboard",
+                element: <DashboardLayout />,
+                children: [
+                  { path: "all-users", element: <AllUsers /> },
+                  { path: "all-links", element: <AllLinks /> },
+                  { path: "all-socials", element: <AllSocials /> },
+                ],
+              },
             ],
           },
         ],
       },
+
       { path: "/reset-password", element: <ResetPassword /> },
       { path: "/l/:slug", element: <ShortLink /> },
       { path: "/:username", element: <Profile /> },

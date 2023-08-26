@@ -178,11 +178,11 @@ export const putEmailVerification = asyncWrapper(async (req, res) => {
     throw createHttpError(400, "Invalid token!");
 
   // check email already verified or not
-  if (user.emailVerified) throw createHttpError(400, "Email already verified");
-
-  // update email verification status
-  user.emailVerified = true;
-  await user.save();
+  if (!user.emailVerified) {
+    // update email verification status
+    user.emailVerified = true;
+    await user.save();
+  }
 
   return res.status(200).json({ result: user.toObject() });
 });

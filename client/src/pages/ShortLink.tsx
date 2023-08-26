@@ -15,7 +15,7 @@ const ShortLink = () => {
       if (!slug) return;
       try {
         const data = await getLink(slug).unwrap();
-        window.location.assign(data.results.url);
+        window.location.assign(data.result.url);
       } catch (error) {
         console.log(error);
       }

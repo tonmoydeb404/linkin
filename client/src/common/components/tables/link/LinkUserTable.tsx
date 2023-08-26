@@ -40,7 +40,7 @@ const LinkUserTable = () => {
   return (
     <>
       <LinkDataTable
-        data={data?.results || []}
+        data={data?.result || []}
         columns={LinkUserColumns({ handleDelete, handleUpdate })}
       />
       <DialogWrapper

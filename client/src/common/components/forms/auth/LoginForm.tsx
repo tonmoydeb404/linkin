@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../../../app/hooks";
 import { logInKey } from "../../../../config/localstorage";
 import { authSignin, authSignout } from "../../../../features/auth/authSlice";
 
+import { setFormError } from "@/utils/setFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import LoadingButton from "../../button/LoadingButton";
@@ -36,22 +37,11 @@ const LoginForm = () => {
   const onSubmit = async (values: LoginSchema) => {
     try {
       const data = await authLogin(values).unwrap();
-      dispatch(authSignin(data.payload));
+      dispatch(authSignin(data.result.payload));
       localStorage.setItem(logInKey, "true");
       clearErrors();
     } catch (error: any) {
-      const fields = Object.keys(values);
-      if (error?.data?.errors) {
-        Object.keys(error.data.errors).forEach((er) => {
-          if (fields.includes(er)) {
-            setError(er as keyof LoginSchema, {
-              message: error.data.errors[er],
-            });
-          } else {
-            setError("root", { message: error.data.errors[er] });
-          }
-        });
-      }
+      setFormError(error?.data?.errors, setError, Object.keys(values));
       dispatch(authSignout());
       localStorage.setItem(logInKey, "false");
     }

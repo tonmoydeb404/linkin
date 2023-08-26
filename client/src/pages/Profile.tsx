@@ -38,16 +38,16 @@ const Profile = () => {
       <>
         <Helmet>
           <title>
-            {profile.data.results.firstName} {profile.data.results.lastName} -
+            {profile.data.result.firstName} {profile.data.result.lastName} -
             LinkIn
           </title>
         </Helmet>
         <div className="w-full min-h-screen bg-slate-200 text-slate-800">
           <div className="max-w-lg mx-auto px-3 sm:px-0 py-16">
-            <ProfileCard profile={profile.data.results} className="mb-10" />
-            {profile.data.results.links ? (
+            <ProfileCard profile={profile.data.result} className="mb-10" />
+            {profile.data.result.links ? (
               <div className="flex flex-col gap-2 mb-10">
-                {profile.data.results.links.map((link) => (
+                {profile.data.result.links.map((link) => (
                   <LinkCard link={link} key={link._id} />
                 ))}
               </div>

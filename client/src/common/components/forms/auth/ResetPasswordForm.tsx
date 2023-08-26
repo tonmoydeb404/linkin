@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import * as z from "zod";
 import { useAuthPasswordResetMutation } from "../../../../api/authApi";
 import LoadingButton from "../../button/LoadingButton";
-import { Alert } from "../../ui/alert";
+import { Alert, AlertDescription } from "../../ui/alert";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
 import FormInput from "../FormInput";
@@ -43,7 +43,7 @@ type Props = {
 };
 
 const ResetPasswordForm = ({ className = "", token }: Props) => {
-  const [resetPassword] = useAuthPasswordResetMutation();
+  const [resetPassword, response] = useAuthPasswordResetMutation();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,8 +77,22 @@ const ResetPasswordForm = ({ className = "", token }: Props) => {
         className={`flex flex-col gap-2 ${className}`}
       >
         {formState.errors.root ? (
-          <Alert variant="destructive">{formState.errors.root.message}</Alert>
+          <Alert variant="destructive">
+            <AlertDescription>{formState.errors.root.message}</AlertDescription>
+          </Alert>
         ) : null}
+
+        {response.isSuccess ? (
+          <Alert>
+            <AlertDescription>
+              Password reset complete. back to{" "}
+              <Link className="text-primary" to={"/login"}>
+                login
+              </Link>
+            </AlertDescription>
+          </Alert>
+        ) : null}
+
         <FormInput name="new_password" label="New password" />
         <FormInput name="confirm_password" label="Confirm password" />
 

@@ -126,7 +126,7 @@ const UserAdminTable = () => {
   return (
     <>
       <UserDataTable
-        data={data?.results || []}
+        data={data?.result || []}
         columns={UserColumns({
           handleBan,
           handleUnban,

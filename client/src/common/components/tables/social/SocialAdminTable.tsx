@@ -89,7 +89,7 @@ const SocialAdminTable = () => {
   return (
     <>
       <SocialDataTable
-        data={data?.results || []}
+        data={data?.result || []}
         columns={SocialAdminColumns({ handleBan, handleUnban })}
       />
 

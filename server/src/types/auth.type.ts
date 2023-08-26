@@ -10,7 +10,7 @@ export type AuthPayload = {
   lastName: string;
   avatar: string | null;
   status: UserStatus;
-  emailVerfied: boolean;
+  emailVerified: boolean;
 };
 
 export type AuthRegister = Pick<IUser, "email" | "password" | "username"> &

@@ -89,7 +89,7 @@ const LinkAdminTable = () => {
   return (
     <>
       <LinkDataTable
-        data={data?.results || []}
+        data={data?.result || []}
         columns={LinkAdminColumns({ handleBan, handleUnban })}
       />
       <ConfirmDialog

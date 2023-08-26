@@ -47,7 +47,7 @@ authRouter
   .route("/verify-email")
   .all(authenticate)
   .get(authController.getEmailVerification)
-  .post(
+  .put(
     authValidators.putEmailVerification,
     validate,
     authController.putEmailVerification

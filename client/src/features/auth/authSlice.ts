@@ -1,11 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { AuthPayload } from "../../types/auth.type";
+import { AuthPayload, AuthSlice, AuthSliceUpdate } from "../../types/auth.type";
 
-const initialState: {
-  user: AuthPayload | null;
-  status: "LOADING" | "AUTHORIZED" | "UNAUTHORIZED";
-} = {
+const initialState: AuthSlice = {
   user: null,
   status: "LOADING",
 };
@@ -30,9 +27,7 @@ export const authSlice = createSlice({
       {
         payload,
       }: {
-        payload: Partial<
-          Pick<AuthPayload, "firstName" | "lastName" | "avatar" | "username">
-        >;
+        payload: AuthSliceUpdate;
       }
     ) => {
       if (state.user && state.status === "AUTHORIZED") {
@@ -40,6 +35,8 @@ export const authSlice = createSlice({
         if (payload?.firstName) state.user.firstName = payload.firstName;
         if (payload?.lastName) state.user.lastName = payload.lastName;
         if (payload?.username) state.user.username = payload.username;
+        if (payload?.emailVerified)
+          state.user.emailVerified = payload.emailVerified;
       }
     },
   },

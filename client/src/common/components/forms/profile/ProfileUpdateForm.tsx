@@ -1,3 +1,4 @@
+import { setFormError } from "@/utils/setFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -43,8 +44,7 @@ const ProfileUpdateForm = ({
       bio: profile?.bio || "",
     },
   });
-  const { handleSubmit, formState, clearErrors, setError, getValues, reset } =
-    form;
+  const { handleSubmit, formState, clearErrors, setError, reset } = form;
 
   const onSubmit = async (values: ProfileSchema) => {
     try {
@@ -57,20 +57,9 @@ const ProfileUpdateForm = ({
         }
       );
       clearErrors();
-      submitCallback(updatedProfile.results);
+      submitCallback(updatedProfile.result);
     } catch (error: any) {
-      const fields = Object.keys(getValues());
-      if (error?.data?.errors) {
-        Object.keys(error.data.errors).forEach((er) => {
-          if (fields.includes(er)) {
-            setError(er as keyof ProfileSchema, {
-              message: error.data.errors[er],
-            });
-          } else {
-            setError("root", { message: error.data.errors[er] });
-          }
-        });
-      }
+      setFormError(error?.data?.errors, setError, Object.keys(values));
     }
   };
 

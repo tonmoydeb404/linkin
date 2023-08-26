@@ -4,8 +4,13 @@ import {
   AuthLogin,
   AuthPasswordReset,
   AuthPasswordResetRequest,
+  AuthPasswordResetRequestResponse,
+  AuthPasswordResetResponse,
   AuthRegister,
   AuthResponse,
+  AuthVerifyEmail,
+  AuthVerifyEmailRequestResponse,
+  AuthVerifyEmailResponse,
 } from "../types/auth.type";
 
 export const authApi = createApi({
@@ -36,7 +41,10 @@ export const authApi = createApi({
         url: `/logout`,
       }),
     }),
-    authPasswordReset: builder.mutation<AuthResponse, AuthPasswordReset>({
+    authPasswordReset: builder.mutation<
+      AuthPasswordResetResponse,
+      AuthPasswordReset
+    >({
       query: ({ password, token }) => ({
         url: `/password-reset`,
         method: "PUT",
@@ -44,7 +52,7 @@ export const authApi = createApi({
       }),
     }),
     authPasswordResetRequest: builder.mutation<
-      AuthResponse,
+      AuthPasswordResetRequestResponse,
       AuthPasswordResetRequest
     >({
       query: ({ email }) => ({
@@ -53,6 +61,22 @@ export const authApi = createApi({
         body: { email },
       }),
     }),
+    authVerifyEmailRequest: builder.query<AuthVerifyEmailRequestResponse, void>(
+      {
+        query: () => ({
+          url: `/verify-email`,
+        }),
+      }
+    ),
+    authVerifyEmail: builder.mutation<AuthVerifyEmailResponse, AuthVerifyEmail>(
+      {
+        query: ({ token }) => ({
+          url: `/verify-email`,
+          method: "PUT",
+          body: { token },
+        }),
+      }
+    ),
   }),
 });
 
@@ -61,6 +85,9 @@ export const {
   useAuthLoginMutation,
   useLazyAuthRefreshQuery,
   useLazyAuthLogoutQuery,
+  useAuthLogoutQuery,
   useAuthPasswordResetMutation,
   useAuthPasswordResetRequestMutation,
+  useLazyAuthVerifyEmailRequestQuery,
+  useAuthVerifyEmailMutation,
 } = authApi;

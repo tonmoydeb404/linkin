@@ -55,7 +55,7 @@ const UpdateUsernameForm = ({
         success: "Username updated",
       });
       // update username in local auth state
-      dispatch(authUpdate({ username: response.results.username }));
+      dispatch(authUpdate({ username: response.result.username }));
       clearErrors();
       reset();
       submitCallback();

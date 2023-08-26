@@ -2,6 +2,7 @@ import { LinkinApiResponse } from "./linkinApi.type";
 
 export type UserRole = "ADMIN" | "USER";
 export type UserStatus = "ACTIVE" | "BANNED";
+// export type UserVerifiedStatus = "NONE" | "DEVELOPER" | "CELEBRITY";
 
 export interface IUser {
   _id: string;
@@ -9,6 +10,8 @@ export interface IUser {
   role: UserRole;
   username: string;
   status: UserStatus;
+  emailVerified: boolean;
+  // verifiedStatus: UserVerifiedStatus
 }
 
 export type UsersResponse = LinkinApiResponse<IUser[]>;

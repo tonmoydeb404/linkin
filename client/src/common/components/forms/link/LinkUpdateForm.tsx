@@ -1,3 +1,4 @@
+import { setFormError } from "@/utils/setFormError";
 import { optionalPreprocess } from "@/utils/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -59,18 +60,7 @@ const LinkUpdateForm = ({
       reset();
       submitCallback();
     } catch (error: any) {
-      const fields = Object.keys(values);
-      if (error?.data?.errors) {
-        Object.keys(error.data.errors).forEach((er) => {
-          if (fields.includes(er)) {
-            setError(er as keyof typeof values, {
-              message: error.data.errors[er],
-            });
-          } else {
-            setError("root", { message: error.data.errors[er] });
-          }
-        });
-      }
+      setFormError(error?.data?.errors, setError, Object.keys(values));
       console.log(error);
     }
   };
