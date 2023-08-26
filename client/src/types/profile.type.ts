@@ -1,3 +1,4 @@
+import { ILayout } from "./layout.type";
 import { ILink } from "./link.type";
 import { LinkinApiResponse } from "./linkinApi.type";
 import { ISocial } from "./social.type";
@@ -12,6 +13,7 @@ export interface IProfile<T = IUser | string> {
   user: T;
   links?: ILink[];
   socials?: ISocial[];
+  layout?: ILayout;
 }
 
 export type ProfileResponse = LinkinApiResponse<IProfile<IUser>>;

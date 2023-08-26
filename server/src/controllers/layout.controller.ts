@@ -21,7 +21,7 @@ export const patchLayout = asyncWrapper(async (req, res) => {
 });
 
 export const getLayout = asyncWrapper(async (req, res) => {
-  let layout = await layoutService.getByProperty("_id", req.user.id);
+  let layout = await layoutService.getByProperty("user", req.user.id);
   // if layout does not exist then create it for user
   if (!layout) layout = await layoutService.create({ user: req.user.id });
 

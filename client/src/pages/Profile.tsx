@@ -15,8 +15,20 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (username) {
-        await getProfile(username);
+      try {
+        if (!username) throw new Error("username not defined");
+        const response = await getProfile(username).unwrap();
+
+        document.documentElement.classList.add(
+          response.result.layout?.defaultTheme || ""
+        );
+        document.documentElement.dataset.style = response.result.layout?.style;
+        document.documentElement.setAttribute(
+          "style",
+          `--user-color: ${response.result.layout?.color || ""}`
+        );
+      } catch (error) {
+        console.log(error);
       }
     };
     fetchData();
@@ -42,7 +54,7 @@ const Profile = () => {
             LinkIn
           </title>
         </Helmet>
-        <div className="w-full min-h-screen bg-slate-200 text-slate-800">
+        <main className="w-full min-h-screen bg-gray-200 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
           <div className="max-w-lg mx-auto px-3 sm:px-0 py-16">
             <ProfileCard profile={profile.data.result} className="mb-10" />
             {profile.data.result.links ? (
@@ -53,7 +65,7 @@ const Profile = () => {
               </div>
             ) : null}
           </div>
-        </div>
+        </main>
       </>
     );
   }

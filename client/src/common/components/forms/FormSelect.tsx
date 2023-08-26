@@ -38,7 +38,7 @@ const FormSelect = ({
       render={({ field }) => (
         <FormItem>
           {label ? <FormLabel>{label}</FormLabel> : null}
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />

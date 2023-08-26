@@ -27,6 +27,7 @@ import VerifiedEmailOutlet from "@/common/outlet/VerifiedEmailOutlet";
 import Logout from "@/pages/auth/Logout";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import VerifyEmail from "@/pages/auth/VerifyEmail";
+import EditLayout from "@/pages/dashboard/user/EditLayout";
 import EditProfile from "@/pages/dashboard/user/EditProfile";
 import ManageLinks from "@/pages/dashboard/user/ManageLinks";
 import ManageSocials from "@/pages/dashboard/user/ManageSocials";
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
                 children: [
                   { path: "", element: <Dashboard /> },
                   { path: "edit-profile", element: <EditProfile /> },
+                  { path: "edit-layout", element: <EditLayout /> },
                   { path: "manage-links", element: <ManageLinks /> },
                   { path: "manage-socials", element: <ManageSocials /> },
                   // account routes

@@ -37,7 +37,7 @@ const ProfileCard = ({ profile, className = "" }: Props) => {
           </span>
         </div>
 
-        <h2 className="text-base font-medium opacity-90">
+        <h2 className="text-base font-medium text-gray-600 dark:text-gray-400">
           @{profile.user.username}
         </h2>
 

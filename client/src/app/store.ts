@@ -1,3 +1,4 @@
+import { layoutApi } from "@/api/layoutApi";
 import { userApi } from "@/api/userApi";
 import { sidebarSlice } from "@/features/sidebar/sidebarSlice";
 import { themeMiddleware, themeSlice } from "@/features/theme/themeSlice";
@@ -18,6 +19,7 @@ const store = configureStore({
     [profileApi.reducerPath]: profileApi.reducer,
     [socialApi.reducerPath]: socialApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [layoutApi.reducerPath]: layoutApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -26,6 +28,7 @@ const store = configureStore({
       profileApi.middleware,
       socialApi.middleware,
       userApi.middleware,
+      layoutApi.middleware,
       themeMiddleware
     ),
 });

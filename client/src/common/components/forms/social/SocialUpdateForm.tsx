@@ -1,5 +1,6 @@
 import { setFormError } from "@/utils/setFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { HiPencilAlt, HiX } from "react-icons/hi";
 import { toast } from "react-toastify";
@@ -37,8 +38,8 @@ const SocialUpdateForm = ({
   const form = useForm<SocialSchema>({
     resolver: zodResolver(socialSchema),
     defaultValues: {
-      site: social?.site || "FACEBOOK",
-      url: social?.url || "",
+      site: "FACEBOOK",
+      url: "",
     },
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
@@ -61,6 +62,10 @@ const SocialUpdateForm = ({
       setFormError(error?.data?.errors, setError, Object.keys(values));
     }
   };
+
+  useEffect(() => {
+    if (social) reset(social);
+  }, [social, reset]);
 
   return (
     <Form {...form}>

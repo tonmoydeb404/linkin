@@ -14,7 +14,7 @@ const ProfileSocials = ({ socials = [] }: Props) => {
             key={social._id}
             href={social.url}
             target="_blank"
-            className="p-2 hover:bg-black/10 inline-block rounded-full duration-200 text-[28px]"
+            className="p-2 hover:bg-black/10 dark:hover:bg-gray-100/5 inline-block rounded-full duration-200 text-[28px]"
           >
             <Icon />
           </a>

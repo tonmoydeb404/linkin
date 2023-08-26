@@ -7,12 +7,18 @@ import {
   HiRefresh,
   HiUser,
   HiUsers,
+  HiViewGridAdd,
 } from "react-icons/hi";
 
 type DashboardRoute = { title: string; path: string; Icon: IconType };
 
 export const userRoutes: DashboardRoute[] = [
   { title: "Edit Profile", path: "/dashboard/edit-profile", Icon: HiUser },
+  {
+    title: "Edit Layout",
+    path: "/dashboard/edit-layout",
+    Icon: HiViewGridAdd,
+  },
   {
     title: "Manage Socials",
     path: "/dashboard/manage-socials",
