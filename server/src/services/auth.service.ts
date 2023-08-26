@@ -70,6 +70,7 @@ export const getAuthPayload = async (id: string) => {
     username: user.username,
     status: user.status,
     emailVerified: user.emailVerified,
+    verifiedStatus: user.verifiedStatus,
   };
 
   return payload;

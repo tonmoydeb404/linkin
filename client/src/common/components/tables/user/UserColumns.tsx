@@ -7,9 +7,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/common/components/ui/dropdown-menu";
-import { IUser, UserStatus } from "@/types/user.type";
+import { IUser, UserStatus, UserVerifiedStatus } from "@/types/user.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { HiBadgeCheck, HiShieldCheck, HiXCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { Badge } from "../../ui/badge";
 
@@ -18,6 +19,9 @@ type UserColumnsProps = {
   handleUnban: (id: string) => any;
   handleMakeAdmin: (id: string) => any;
   handleMakeUser: (id: string) => any;
+  handleVerifyNone: (id: string) => any;
+  handleVerifyDeveloper: (id: string) => any;
+  handleVerifyCelebrity: (id: string) => any;
 };
 
 const UserColumns = ({
@@ -25,6 +29,9 @@ const UserColumns = ({
   handleUnban,
   handleMakeAdmin,
   handleMakeUser,
+  handleVerifyDeveloper,
+  handleVerifyNone,
+  handleVerifyCelebrity,
 }: UserColumnsProps): ColumnDef<IUser>[] => [
   {
     accessorKey: "username",
@@ -56,8 +63,45 @@ const UserColumns = ({
     },
   },
   {
+    accessorKey: "verifiedStatus",
+    header: "Verified",
+    cell: ({ getValue }) => {
+      const status = getValue<UserVerifiedStatus>();
+      return (
+        <Badge variant={"outline"}>
+          {status}
+
+          {status === "DEVELOPER" ? (
+            <HiBadgeCheck className={`text-base ml-1 text-primary`} />
+          ) : null}
+          {status === "CELEBRITY" ? (
+            <HiBadgeCheck className={`text-base ml-1 text-blue-600`} />
+          ) : null}
+        </Badge>
+      );
+    },
+  },
+  {
     accessorKey: "email",
     header: "Email",
+    cell: ({ row }) => {
+      const user = row.original;
+      return (
+        <div
+          className="flex gap-1 items-center"
+          title={
+            user.emailVerified ? `email verified` : "email is not verified"
+          }
+        >
+          {user.email}
+          {user.emailVerified ? (
+            <HiShieldCheck className="text-base text-primary" />
+          ) : (
+            <HiXCircle className="text-base text-destructive" />
+          )}
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -73,6 +117,7 @@ const UserColumns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
             <DropdownMenuSeparator />
             {user.status !== "BANNED" ? (
               <DropdownMenuItem onClick={() => handleBan(user._id)}>
@@ -89,9 +134,28 @@ const UserColumns = ({
                 Make Admin
               </DropdownMenuItem>
             ) : null}
+
             {user.role !== "USER" ? (
               <DropdownMenuItem onClick={() => handleMakeUser(user._id)}>
                 Make User
+              </DropdownMenuItem>
+            ) : null}
+
+            {user.verifiedStatus !== "CELEBRITY" ? (
+              <DropdownMenuItem onClick={() => handleVerifyCelebrity(user._id)}>
+                Verify as a Celebrity
+              </DropdownMenuItem>
+            ) : null}
+
+            {user.verifiedStatus !== "DEVELOPER" ? (
+              <DropdownMenuItem onClick={() => handleVerifyDeveloper(user._id)}>
+                Verify as a Developer
+              </DropdownMenuItem>
+            ) : null}
+
+            {user.verifiedStatus !== "NONE" ? (
+              <DropdownMenuItem onClick={() => handleVerifyNone(user._id)}>
+                Remove verified status
               </DropdownMenuItem>
             ) : null}
           </DropdownMenuContent>

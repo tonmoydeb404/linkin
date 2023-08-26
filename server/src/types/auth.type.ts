@@ -1,17 +1,13 @@
 import { IProfile } from "./profile.type";
-import { IUser, UserRole, UserStatus } from "./user.type";
+import { IUser } from "./user.type";
 
-export type AuthPayload = {
-  id: string;
-  email: string;
-  role: UserRole;
-  username: string;
-  firstName: string;
-  lastName: string;
-  avatar: string | null;
-  status: UserStatus;
-  emailVerified: boolean;
-};
+export type AuthPayload = Pick<
+  IUser,
+  "email" | "emailVerified" | "role" | "status" | "username" | "verifiedStatus"
+> &
+  Pick<IProfile, "firstName" | "lastName" | "avatar"> & {
+    id: string;
+  };
 
 export type AuthRegister = Pick<IUser, "email" | "password" | "username"> &
   Pick<IProfile, "firstName" | "lastName">;

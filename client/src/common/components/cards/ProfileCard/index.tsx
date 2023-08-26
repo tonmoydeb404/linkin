@@ -1,3 +1,4 @@
+import { HiBadgeCheck } from "react-icons/hi";
 import { IProfile } from "../../../../types/profile.type";
 import { IUser } from "../../../../types/user.type";
 import ProfileSocials from "./ProfileSocials";
@@ -16,9 +17,25 @@ const ProfileCard = ({ profile, className = "" }: Props) => {
           className="w-[160px] h-[160px] aspect-square rounded-full mb-5"
         />
 
-        <h1 className="text-3xl font-bold mb-1">
-          {profile.firstName} {profile.lastName}
-        </h1>
+        <div className="relative">
+          <h1 className="text-3xl font-bold mb-1">
+            {profile.firstName} {profile.lastName}
+          </h1>
+          <span className="absolute -right-7 top-1/2 -translate-y-1/2">
+            {profile.user.verifiedStatus === "DEVELOPER" ? (
+              <HiBadgeCheck
+                className={`text-2xl  text-primary`}
+                title="Verified as a developer"
+              />
+            ) : null}
+            {profile.user.verifiedStatus === "CELEBRITY" ? (
+              <HiBadgeCheck
+                className={`text-2xl text-blue-600`}
+                title="Verified as a celebrity"
+              />
+            ) : null}
+          </span>
+        </div>
 
         <h2 className="text-base font-medium opacity-90">
           @{profile.user.username}

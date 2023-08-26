@@ -2,6 +2,7 @@ import {
   UpdatePassword,
   UpdateUserRole,
   UpdateUsername,
+  UpdateVerifiedStatus,
   UserResponse,
   UsersResponse,
 } from "@/types/user.type";
@@ -65,6 +66,16 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["USER"],
     }),
+    verifyUser: builder.mutation<UserResponse, UpdateVerifiedStatus>({
+      query: ({ verified_status, user_id }) => ({
+        url: `/verify/${user_id}`,
+        method: "PUT",
+        body: {
+          verified_status,
+        },
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
@@ -75,4 +86,5 @@ export const {
   useUpdateUserRoleMutation,
   useUpdatePasswordMutation,
   useUpdateUsernameMutation,
+  useVerifyUserMutation,
 } = userApi;

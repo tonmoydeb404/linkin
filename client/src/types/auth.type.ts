@@ -1,18 +1,14 @@
 import { LinkinApiResponse } from "./linkinApi.type";
 import { IProfile } from "./profile.type";
-import { IUser, UserRole, UserStatus } from "./user.type";
+import { IUser } from "./user.type";
 
-export type AuthPayload = {
-  id: string;
-  email: string;
-  role: UserRole;
-  status: UserStatus;
-  username: string;
-  firstName: string;
-  lastName: string;
-  avatar: string | null;
-  emailVerified: boolean;
-};
+export type AuthPayload = Pick<
+  IUser,
+  "email" | "emailVerified" | "role" | "status" | "username" | "verifiedStatus"
+> &
+  Pick<IProfile, "firstName" | "lastName" | "avatar"> & {
+    id: string;
+  };
 
 // Auth Argument Types
 export type AuthRegister = Pick<IUser, "email" | "username"> &

@@ -2,7 +2,7 @@ import { LinkinApiResponse } from "./linkinApi.type";
 
 export type UserRole = "ADMIN" | "USER";
 export type UserStatus = "ACTIVE" | "BANNED";
-// export type UserVerifiedStatus = "NONE" | "DEVELOPER" | "CELEBRITY";
+export type UserVerifiedStatus = "NONE" | "DEVELOPER" | "CELEBRITY";
 
 export interface IUser {
   _id: string;
@@ -11,7 +11,7 @@ export interface IUser {
   username: string;
   status: UserStatus;
   emailVerified: boolean;
-  // verifiedStatus: UserVerifiedStatus
+  verifiedStatus: UserVerifiedStatus;
 }
 
 export type UsersResponse = LinkinApiResponse<IUser[]>;
@@ -27,4 +27,8 @@ export type UpdateUsername = {
 export type UpdatePassword = {
   old_password: string;
   new_password: string;
+};
+export type UpdateVerifiedStatus = {
+  user_id: string;
+  verified_status: UserVerifiedStatus;
 };
