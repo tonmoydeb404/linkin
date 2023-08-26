@@ -39,7 +39,7 @@ export const authApi = createApi({
     authPasswordReset: builder.mutation<AuthResponse, AuthPasswordReset>({
       query: ({ password, token }) => ({
         url: `/password-reset`,
-        method: "POST",
+        method: "PUT",
         body: { password, token },
       }),
     }),
@@ -48,7 +48,7 @@ export const authApi = createApi({
       AuthPasswordResetRequest
     >({
       query: ({ email }) => ({
-        url: `/password-reset-request`,
+        url: `/password-reset`,
         method: "POST",
         body: { email },
       }),
