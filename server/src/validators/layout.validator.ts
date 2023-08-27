@@ -2,7 +2,7 @@ import { checkSchema } from "express-validator";
 import { layoutStyles, layoutThemes } from "../models/Layout";
 
 export const patchLayout = checkSchema({
-  defaultTheme: {
+  theme: {
     optional: true,
     isIn: {
       options: [layoutThemes],
@@ -16,9 +16,17 @@ export const patchLayout = checkSchema({
       errorMessage: "Invalid style",
     },
   },
-  color: {
+  primaryColor: {
     optional: true,
     isHexColor: {
+      if: (value: null) => value !== null,
+      errorMessage: "Invalid color",
+    },
+  },
+  contentColor: {
+    optional: true,
+    isHexColor: {
+      if: (value: null) => value !== null,
       errorMessage: "Invalid color",
     },
   },

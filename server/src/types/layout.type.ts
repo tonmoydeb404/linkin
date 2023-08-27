@@ -6,9 +6,10 @@ export type LayoutStyle = "SQUARE" | "ROUNDED" | "CIRCULAR";
 
 export interface ILayout {
   _id: string | Types.ObjectId;
-  defaultTheme: LayoutTheme;
+  theme: LayoutTheme;
   style: LayoutStyle;
-  color: string | null;
+  primaryColor: string | null;
+  contentColor: string | null;
   user: string | IUser;
 }
 

@@ -28,7 +28,18 @@ const formSchema = z.object({
   defaultTheme: z
     .nativeEnum(LayoutThemeEnum, { invalid_type_error: "Invalid theme type" })
     .optional(),
-  color: z.string().optional(),
+  primaryColor: z
+    .string()
+    .trim()
+    .regex(/^$|^#([0-9a-f]{3}){1,2}$/i, "Invalid hex color")
+    .optional()
+    .nullable(),
+  contentColor: z
+    .string()
+    .trim()
+    .regex(/^$|^#([0-9a-f]{3}){1,2}$/i, "Invalid hex color")
+    .optional()
+    .nullable(),
   style: z
     .nativeEnum(LayoutStyleEnum, { invalid_type_error: "Invalid style type" })
     .optional(),
@@ -50,14 +61,23 @@ const LayoutUpdateForm = ({
   const form = useForm<LayoutUpdate>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      color: "",
+      contentColor: "",
+      primaryColor: "",
     },
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
 
   const onSubmit = async (values: LayoutUpdate) => {
     try {
-      const response = await toast.promise(updateLayout(values).unwrap(), {
+      // build update object
+      const update: LayoutUpdate = {
+        contentColor: values.contentColor || null,
+        primaryColor: values.primaryColor || null,
+        theme: values.theme || undefined,
+        style: values.style || undefined,
+      };
+
+      const response = await toast.promise(updateLayout(update).unwrap(), {
         error: "Error in updating layout!",
         pending: "Updating layout...",
         success: "Layout updated!",
@@ -70,12 +90,7 @@ const LayoutUpdateForm = ({
   };
 
   useEffect(() => {
-    if (data)
-      reset({
-        color: data.color,
-        defaultTheme: data.defaultTheme,
-        style: data.style,
-      });
+    if (data) reset(data);
   }, [data, reset]);
 
   return (
@@ -105,13 +120,14 @@ const LayoutUpdateForm = ({
           ))}
         </FormSelect>
 
-        <FormInput label="Theme color" name="color" />
+        <FormInput label="Primary color" name="primaryColor" />
+        <FormInput label="Content color" name="contentColor" />
 
         <div className="flex items-center gap-2 mt-10">
           <LoadingButton
             variant="default"
             type="submit"
-            disabled={formState.isSubmitting || !formState.isValid}
+            disabled={formState.isSubmitting}
             isLoading={formState.isSubmitting}
           >
             Update <HiPencilAlt className="ml-2" />

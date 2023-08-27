@@ -29,7 +29,7 @@
 .link_card_url {
   @apply inline-flex items-center justify-center w-[40px] h-[40px]  rounded-lg ml-auto opacity-0 duration-200;
   @apply bg-gray-800 text-gray-50 dark:bg-gray-700;
-  @apply hover:bg-primary hover:text-primary-foreground;
+  @apply hover:bg-[--primaryColor] hover:text-[--contentColor];
 }
 
 [data-style="CIRCULAR"] .link_card_url {

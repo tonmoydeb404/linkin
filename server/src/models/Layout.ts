@@ -6,7 +6,7 @@ export const layoutThemes: LayoutTheme[] = ["DARK", "LIGHT", "SYSTEM"];
 export const layoutStyles: LayoutStyle[] = ["CIRCULAR", "ROUNDED", "SQUARE"];
 
 const layoutSchema = new Schema<ILayout>({
-  defaultTheme: {
+  theme: {
     type: String,
     enum: layoutThemes,
     default: "SYSTEM",
@@ -18,7 +18,11 @@ const layoutSchema = new Schema<ILayout>({
     default: "ROUNDED",
     required: true,
   },
-  color: {
+  primaryColor: {
+    type: String,
+    default: null,
+  },
+  contentColor: {
     type: String,
     default: null,
   },

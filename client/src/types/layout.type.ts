@@ -17,13 +17,14 @@ export type LayoutStyle = keyof typeof LayoutStyleEnum;
 
 export interface ILayout<T = IUser | string> {
   _id: string;
-  defaultTheme: LayoutTheme;
+  theme: LayoutTheme;
   style: LayoutStyle;
-  color: string | null;
+  primaryColor: string | null;
+  contentColor: string | null;
   user: T;
 }
 
 export type LayoutResponse = LinkinApiResponse<ILayout<string>>;
 export type LayoutUpdate = Partial<
-  Pick<ILayout, "defaultTheme" | "style" | "color">
+  Pick<ILayout, "theme" | "style" | "contentColor" | "primaryColor">
 >;

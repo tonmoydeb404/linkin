@@ -5,14 +5,19 @@ import * as layoutService from "../services/layout.service";
 import { ILayout } from "../types/layout.type";
 
 export const patchLayout = asyncWrapper(async (req, res) => {
-  const { style, defaultTheme, color } = matchedData(req) as ILayout;
+  const { style, theme, contentColor, primaryColor } = matchedData(
+    req
+  ) as ILayout;
+
+  console.log(contentColor, primaryColor);
 
   let layout = await layoutService.getByProperty("user", req.user.id);
   if (!layout) throw createHttpError(404, "Requested layout not found");
 
   if (style) layout.style = style;
-  if (color) layout.color = color;
-  if (defaultTheme) layout.defaultTheme = defaultTheme;
+  if (theme) layout.theme = theme;
+  if (primaryColor || primaryColor === null) layout.primaryColor = primaryColor;
+  if (contentColor || contentColor === null) layout.contentColor = contentColor;
 
   // perform update task
   await layout.save();

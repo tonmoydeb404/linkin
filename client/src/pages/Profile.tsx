@@ -1,3 +1,4 @@
+import { ILayout } from "@/types/layout.type";
 import setDocTheme from "@/utils/setDocTheme";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
@@ -10,6 +11,22 @@ import Banned from "./errors/Banned";
 import ErrorPage from "./errors/ErrorPage";
 import NotFound from "./errors/NotFound";
 
+const updateLayout = (layout?: ILayout | null) => {
+  const root = document.documentElement;
+
+  // update theme
+  setDocTheme(layout?.theme || "SYSTEM");
+
+  // update colors
+  if (layout?.primaryColor)
+    root.style.setProperty("--primaryColor", layout.primaryColor);
+  if (layout?.contentColor)
+    root.style.setProperty("--contentColor", layout.contentColor);
+
+  // update shape style
+  root.dataset.style = layout?.style;
+};
+
 const Profile = () => {
   const { username } = useParams();
   const [getProfile, profile] = useLazyGetProfileQuery();
@@ -18,12 +35,9 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         if (!username) throw new Error("username not defined");
-        const response = await getProfile(username).unwrap();
-
+        const res = await getProfile(username).unwrap();
         // update theme according to user layout preference
-        setDocTheme(response.result.layout?.defaultTheme || "SYSTEM");
-        // update shape style according to user
-        document.documentElement.dataset.style = response.result.layout?.style;
+        updateLayout(res.result.layout);
       } catch (error) {
         console.log(error);
       }
@@ -43,6 +57,7 @@ const Profile = () => {
   }
 
   if (profile.isSuccess) {
+    const layout = profile.data.result.layout;
     return (
       <>
         <Helmet>
@@ -50,6 +65,9 @@ const Profile = () => {
             {profile.data.result.firstName} {profile.data.result.lastName} -
             LinkIn
           </title>
+          {layout?.primaryColor ? (
+            <meta name="theme-color" content={layout.primaryColor} />
+          ) : null}
         </Helmet>
         <main className="profile">
           <div className="profile_container">

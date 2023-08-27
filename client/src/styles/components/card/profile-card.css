@@ -15,7 +15,7 @@
 }
 
 .profile_card_title {
-  @apply text-3xl font-bold mb-1;
+  @apply text-2xl sm:text-3xl font-bold sm:mb-1;
 }
 
 .profile_card_subtitle {
@@ -23,11 +23,11 @@
 }
 
 .profile_card_bio {
-  @apply mt-5 max-w-md;
+  @apply mt-5 max-w-md text-[15px] sm:text-base leading-snug;
 }
 
 .profile_card_verified {
-  @apply absolute -right-7 top-1/2 -translate-y-1/2 text-2xl;
+  @apply absolute -right-7 top-1/2 -translate-y-1/2 text-xl sm:text-2xl;
 }
 
 .profile_card_verified > .developer {
@@ -45,7 +45,7 @@
 
 .profile_card_social {
   @apply p-2 inline-block rounded-lg duration-200 text-[28px];
-  @apply hover:text-primary hover:bg-black/10 dark:hover:bg-gray-800;
+  @apply hover:text-[--primaryColor] hover:bg-gray-300 dark:hover:bg-gray-800;
 }
 
 [data-style="CIRCULAR"] .profile_card_social {
