@@ -19,16 +19,16 @@ const updateLayout = (layout?: ILayout | null) => {
   setDocTheme(layout?.theme || "SYSTEM");
 
   // update colors
-  if (layout?.primaryColor)
-    root.style.setProperty(
-      "--primaryColor",
-      layout.primaryColor || primaryColor
-    );
-  if (layout?.contentColor)
-    root.style.setProperty(
-      "--contentColor",
-      layout.contentColor || contentColor
-    );
+
+  root.style.setProperty(
+    "--primaryColor",
+    layout?.primaryColor || primaryColor
+  );
+
+  root.style.setProperty(
+    "--contentColor",
+    layout?.contentColor || contentColor
+  );
 
   // update shape style
   root.dataset.style = layout?.style;
