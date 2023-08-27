@@ -9,3 +9,9 @@ export const getByProperty = (key: keyof ILayout, value: string) => {
 export const create = (data: LayoutCreate) => {
   return new Layout(data).save();
 };
+
+// filter by property and delete a layout
+export const deleteByProperty = (key: keyof ILayout, value: string) => {
+  if (key === "_id") return Layout.findByIdAndDelete(value);
+  return Layout.findOneAndDelete({ [key]: value });
+};

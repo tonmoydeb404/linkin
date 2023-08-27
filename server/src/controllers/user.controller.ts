@@ -3,6 +3,10 @@ import createHttpError from "http-errors";
 import { authCookieOptions } from "../config/cookieOptions";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as userPermission from "../permissions/user";
+import * as layoutService from "../services/layout.service";
+import * as linkService from "../services/link.service";
+import * as profileService from "../services/profile.service";
+import * as socialService from "../services/social.service";
 import * as userService from "../services/user.service";
 
 // get all users
@@ -80,6 +84,15 @@ export const deleteUser = asyncWrapper(async (req, res) => {
   let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "requested user not found");
 
+  // delete all links
+  await linkService.deleteAllByProperty("user", user_id);
+  // delete all social links
+  await socialService.deleteAllByProperty("user", user_id);
+  // delete profile
+  await profileService.deleteByProperty("user", user_id);
+  // delete layout
+  await layoutService.deleteByProperty("user", user_id);
+
   if (!userPermission.canDelete(req.user, user))
     throw createHttpError(
       401,
@@ -87,7 +100,7 @@ export const deleteUser = asyncWrapper(async (req, res) => {
     );
 
   // delete user
-  user.deleteOne();
+  await user.deleteOne();
 
   return res.status(200).json({ result: user_id });
 });

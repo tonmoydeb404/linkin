@@ -29,3 +29,9 @@ export const updateByUser = async (user: string, updates: ProfileUpdates) => {
 export const deleteById = async (id: string) => {
   return Profile.findByIdAndDelete(id);
 };
+
+// filter by property and delete a profile
+export const deleteByProperty = (key: keyof IProfile, value: string) => {
+  if (key === "_id") return Profile.findByIdAndDelete(value);
+  return Profile.findOneAndDelete({ [key]: value });
+};

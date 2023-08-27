@@ -31,3 +31,8 @@ export const updateById = async (id: string, updates: SocialUpdate) => {
 export const deleteById = async (id: string) => {
   return Social.findByIdAndDelete(id);
 };
+
+// filter social link by property and delete
+export const deleteAllByProperty = (key: keyof ISocial, value: string) => {
+  return Social.deleteMany({ [key]: value });
+};

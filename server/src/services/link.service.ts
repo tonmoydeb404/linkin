@@ -31,3 +31,8 @@ export const updateById = async (id: string, updates: LinkUpdate) => {
 export const deleteById = async (id: string) => {
   return Link.findByIdAndDelete(id);
 };
+
+// filter link by property and delete
+export const deleteAllByProperty = (key: keyof ILink, value: string) => {
+  return Link.deleteMany({ [key]: value });
+};
