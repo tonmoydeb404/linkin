@@ -1,3 +1,4 @@
+import { contentColor, primaryColor } from "@/config/defaultColors";
 import { ILayout } from "@/types/layout.type";
 import setDocTheme from "@/utils/setDocTheme";
 import { useEffect } from "react";
@@ -19,9 +20,15 @@ const updateLayout = (layout?: ILayout | null) => {
 
   // update colors
   if (layout?.primaryColor)
-    root.style.setProperty("--primaryColor", layout.primaryColor);
+    root.style.setProperty(
+      "--primaryColor",
+      layout.primaryColor || primaryColor
+    );
   if (layout?.contentColor)
-    root.style.setProperty("--contentColor", layout.contentColor);
+    root.style.setProperty(
+      "--contentColor",
+      layout.contentColor || contentColor
+    );
 
   // update shape style
   root.dataset.style = layout?.style;

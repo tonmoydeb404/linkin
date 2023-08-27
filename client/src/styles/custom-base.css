@@ -3,8 +3,3 @@
 body {
   @apply min-h-screen;
 }
-
-:root {
-  --primaryColor: hsl(var(--primary));
-  --contentColor: hsl(var(--primary-foreground));
-}

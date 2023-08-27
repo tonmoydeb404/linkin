@@ -3,6 +3,7 @@ import {
   layoutStyleOptions,
   layoutThemeOptions,
 } from "@/config/constant-values";
+import { contentColor, primaryColor } from "@/config/defaultColors";
 import {
   ILayout,
   LayoutStyle,
@@ -21,7 +22,7 @@ import * as z from "zod";
 import LoadingButton from "../../button/LoadingButton";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
-import FormInput from "../FormInput";
+import FormColor from "../FormColor";
 import FormSelect, { FormSelectItem } from "../FormSelect";
 
 const formSchema = z.object({
@@ -61,8 +62,8 @@ const LayoutUpdateForm = ({
   const form = useForm<LayoutUpdate>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contentColor: "",
-      primaryColor: "",
+      contentColor,
+      primaryColor,
     },
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
@@ -90,15 +91,21 @@ const LayoutUpdateForm = ({
   };
 
   useEffect(() => {
-    if (data) reset(data);
+    if (data)
+      reset({
+        contentColor: data.contentColor || contentColor,
+        primaryColor: data.primaryColor || primaryColor,
+        style: data.style || "",
+        theme: data.theme || "",
+      });
   }, [data, reset]);
 
   return (
     <Form {...form}>
       <form className={className} onSubmit={handleSubmit(onSubmit)}>
         <FormSelect
-          label="Default Theme"
-          name="defaultTheme"
+          label="Site Theme"
+          name="theme"
           placeholder="Select Default Theme"
         >
           {Object.keys(layoutThemeOptions).map((k) => (
@@ -120,8 +127,16 @@ const LayoutUpdateForm = ({
           ))}
         </FormSelect>
 
-        <FormInput label="Primary color" name="primaryColor" />
-        <FormInput label="Content color" name="contentColor" />
+        <FormColor
+          label="Primary color"
+          name="primaryColor"
+          defaultValue={primaryColor}
+        />
+        <FormColor
+          label="Content color"
+          name="contentColor"
+          defaultValue={contentColor}
+        />
 
         <div className="flex items-center gap-2 mt-10">
           <LoadingButton
