@@ -36,9 +36,7 @@ export const postRegister = asyncWrapper(async (req, res) => {
 
 // login using existing account
 export const postLogin = asyncWrapper(async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    throw createHttpError(400, "email and password is required");
+  const { email, password } = matchedData(req);
 
   const { payload, token } = await authService.loginWithEmail({
     email,

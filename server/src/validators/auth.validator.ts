@@ -37,8 +37,17 @@ export const postRegister = checkSchema(
 export const postLogin = checkSchema(
   {
     email: {
-      errorMessage: "Invalid email",
-      isEmail: true,
+      isEmail: {
+        errorMessage: "Invalid email",
+      },
+      notEmpty: {
+        errorMessage: "Email is required",
+      },
+    },
+    password: {
+      notEmpty: {
+        errorMessage: "Password is required",
+      },
     },
   },
   ["body"]

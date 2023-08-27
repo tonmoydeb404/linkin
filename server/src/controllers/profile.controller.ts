@@ -1,8 +1,9 @@
+import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as profileService from "../services/profile.service";
 import * as userServices from "../services/user.service";
-import { IProfile, ProfileUpdates } from "../types/profile.type";
+import { ProfileUpdates } from "../types/profile.type";
 
 export const getProfile = asyncWrapper(async (req, res) => {
   const { id } = req.user;
@@ -18,8 +19,9 @@ export const getProfile = asyncWrapper(async (req, res) => {
 
 export const patchProfile = asyncWrapper(async (req, res) => {
   const { id } = req.user;
-  const { firstName, lastName, avatar, bio } = req.body as IProfile;
-  // TODO: use express validator here
+  const { firstName, lastName, avatar, bio } = matchedData(
+    req
+  ) as ProfileUpdates;
 
   if (!firstName && !lastName && !avatar && !bio)
     throw createHttpError(400, "You have to update at least one propery");
