@@ -1,7 +1,9 @@
 import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import asyncWrapper from "../helpers/asyncWrapper";
+import * as linkServices from "../services/link.service";
 import * as profileService from "../services/profile.service";
+import * as socialServices from "../services/social.service";
 import * as userServices from "../services/user.service";
 import { ProfileUpdates } from "../types/profile.type";
 
@@ -15,6 +17,21 @@ export const getProfile = asyncWrapper(async (req, res) => {
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
   res.status(200).json({ result: profile.toObject() });
+});
+
+export const getProfileStats = asyncWrapper(async (req, res) => {
+  const { id } = req.user;
+
+  const totalLinks = (await linkServices.getAllByProperty("user", id)).length;
+  const totalSocials = (await socialServices.getAllByProperty("user", id))
+    .length;
+
+  res.status(200).json({
+    result: {
+      totalLinks,
+      totalSocials,
+    },
+  });
 });
 
 export const patchProfile = asyncWrapper(async (req, res) => {

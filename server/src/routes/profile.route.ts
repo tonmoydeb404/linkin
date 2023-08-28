@@ -16,6 +16,8 @@ profileRouter
     profileController.patchProfile
   );
 
+profileRouter.get("/stats", authenticate, profileController.getProfileStats);
+
 profileRouter.get("/:username", profileController.getUserProfile);
 
 export default profileRouter;
