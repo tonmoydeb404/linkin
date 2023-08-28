@@ -1,4 +1,5 @@
 import createHttpError from "http-errors";
+import { connection } from "../db/connectDB";
 import { AuthLogin, AuthPayload, AuthRegister } from "../types/auth.type";
 import * as layoutService from "./layout.service";
 import * as profileService from "./profile.service";
@@ -12,23 +13,43 @@ export const register = async ({
   password,
   username,
 }: AuthRegister) => {
-  const user = await userService.create({
-    email,
-    password,
-    username,
-    role: "USER",
-  });
-  // create profile for user
-  const profile = await profileService.create({
-    firstName,
-    lastName,
-    user: user.id,
-  });
-  // create layout for user
-  const layout = await layoutService.create({ user: user.id });
-  const { token, payload } = await user.generateRefreshToken();
+  const session = await connection.startSession();
+  try {
+    session.startTransaction();
 
-  return { token, user, profile, payload, layout };
+    const user = await userService.create(
+      {
+        email,
+        password,
+        username,
+        role: "USER",
+      },
+      session
+    );
+    // create profile for user
+    const profile = await profileService.create(
+      {
+        firstName,
+        lastName,
+        user: user.id,
+      },
+      session
+    );
+    // create layout for user
+    const layout = await layoutService.create({ user: user.id }, session);
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    const { token, payload } = await user.generateRefreshToken();
+
+    return { token, user, profile, payload, layout };
+  } catch (error) {
+    console.log(error);
+    await session.abortTransaction();
+    await session.endSession();
+    return false;
+  }
 };
 
 // login using email

@@ -16,12 +16,12 @@
     "@types/http-errors": "^2.0.1",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/mongoose": "^5.11.97",
-    "@types/morgan": "^1.9.4",
+    "@types/morgan": "^1.9.5",
     "@types/nodemailer": "^6.4.9",
     "@types/shortid": "^0.0.29",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "dev": "NODE_ENV=dev npx nodemon",
@@ -39,7 +39,7 @@
     "http-errors": "^2.0.0",
     "image-url-validator": "^1.0.4",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.4.2",
+    "mongoose": "^7.4.5",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.4",
     "shortid": "^2.2.16"

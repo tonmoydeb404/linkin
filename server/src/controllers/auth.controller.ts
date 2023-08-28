@@ -17,16 +17,17 @@ import {
 export const postRegister = asyncWrapper(async (req, res) => {
   const { firstName, lastName, email, password, username } = matchedData(req);
 
-  if (!email || !password || !username || !firstName || !lastName)
-    throw createHttpError(400, "Please provide valid input");
-
-  const { token, payload } = await authService.register({
+  const response = await authService.register({
     email,
     password,
     username,
     firstName,
     lastName,
   });
+
+  if (!response) throw createHttpError(500, "Registration failed");
+
+  const { token, payload } = response;
 
   res.cookie("token", token, { ...authCookieOptions, httpOnly: true });
   res.cookie("logged_in", true, authCookieOptions);

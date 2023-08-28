@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import User from "../models/User";
 import { CreateUser, IUser, UpdateUser } from "../types/user.type";
 
@@ -15,9 +16,11 @@ export const getAll = () => {
 };
 
 // create a user
-export const create = ({ email, password, username, role }: CreateUser) => {
-  const user = new User({ email, password, username, role });
-  return user.save();
+export const create = (
+  data: CreateUser,
+  session: ClientSession = undefined
+) => {
+  return new User(data).save({ session });
 };
 
 // update user by id

@@ -1,6 +1,7 @@
 import { matchedData } from "express-validator";
 import createHttpError from "http-errors";
 import { authCookieOptions } from "../config/cookieOptions";
+import { connection } from "../db/connectDB";
 import asyncWrapper from "../helpers/asyncWrapper";
 import * as userPermission from "../permissions/user";
 import * as layoutService from "../services/layout.service";
@@ -79,30 +80,38 @@ export const patchUser = asyncWrapper(async (req, res) => {
 
 // delete a user
 export const deleteUser = asyncWrapper(async (req, res) => {
-  const { user_id } = req.params;
+  const session = await connection.startSession();
+  try {
+    session.startTransaction();
 
-  let user = await userService.getByProperty("_id", user_id);
-  if (!user) throw createHttpError(404, "requested user not found");
+    const { user_id } = req.params;
 
-  // delete all links
-  await linkService.deleteAllByProperty("user", user_id);
-  // delete all social links
-  await socialService.deleteAllByProperty("user", user_id);
-  // delete profile
-  await profileService.deleteByProperty("user", user_id);
-  // delete layout
-  await layoutService.deleteByProperty("user", user_id);
+    let user = await userService.getByProperty("_id", user_id).session(session);
+    if (!user) throw createHttpError(404, "requested user not found");
 
-  if (!userPermission.canDelete(req.user, user))
-    throw createHttpError(
-      401,
-      "You don't have any access to Delete this resource"
-    );
+    // delete all links
+    await linkService.deleteAllByProperty("user", user_id).session(session);
+    // delete all social links
+    await socialService.deleteAllByProperty("user", user_id).session(session);
+    // delete profile
+    await profileService.deleteByProperty("user", user_id).session(session);
+    // delete layout
+    await layoutService.deleteByProperty("user", user_id).session(session);
 
-  // delete user
-  await user.deleteOne();
+    // delete user
+    await user.deleteOne({ session });
 
-  return res.status(200).json({ result: user_id });
+    await session.commitTransaction();
+
+    res.status(200).json({ result: user_id });
+  } catch (error) {
+    console.log(error);
+    // undo all actions
+    await session.abortTransaction();
+    throw createHttpError(500, "Cannot delete user account");
+  } finally {
+    session.endSession();
+  }
 });
 
 // ban a user

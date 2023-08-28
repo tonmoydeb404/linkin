@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import Layout from "../models/Layout";
 import { ILayout, LayoutCreate } from "../types/layout.type";
 
@@ -6,8 +7,11 @@ export const getByProperty = (key: keyof ILayout, value: string) => {
   return Layout.findOne({ [key]: value });
 };
 
-export const create = (data: LayoutCreate) => {
-  return new Layout(data).save();
+export const create = (
+  data: LayoutCreate,
+  session: ClientSession = undefined
+) => {
+  return new Layout(data).save({ session });
 };
 
 // filter by property and delete a layout

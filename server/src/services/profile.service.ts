@@ -1,9 +1,10 @@
+import { ClientSession } from "mongoose";
 import Profile from "../models/Profile";
 import { IProfile, ProfileUpdates } from "../types/profile.type";
 
 // create a profile
-export const create = (data: IProfile) => {
-  return new Profile(data).save();
+export const create = (data: IProfile, session: ClientSession = undefined) => {
+  return new Profile(data).save({ session });
 };
 
 // get all profiles
