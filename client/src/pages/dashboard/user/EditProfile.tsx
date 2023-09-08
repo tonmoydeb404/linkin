@@ -51,6 +51,7 @@ const EditProfile = () => {
             title="Add Social Link"
           >
             <ProfileCreateForm
+              className="flex flex-col gap-y-3 gap-x-5"
               submitCallback={(p) => {
                 handleUpdate(p);
                 setShowModal(false);

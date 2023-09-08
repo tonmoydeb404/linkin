@@ -1,4 +1,8 @@
-import { LayoutResponse, LayoutUpdate } from "@/types/layout.type";
+import {
+  LayoutCreate,
+  LayoutResponse,
+  LayoutUpdate,
+} from "@/types/layout.type";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { linkinBaseQuery } from "../app/settings";
 
@@ -21,7 +25,18 @@ export const layoutApi = createApi({
       }),
       invalidatesTags: ["LAYOUT"],
     }),
+    createLayout: builder.mutation<LayoutResponse, LayoutCreate>({
+      query: ({ ...body }) => ({
+        url: `/`,
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetLayoutQuery, useUpdateLayoutMutation } = layoutApi;
+export const {
+  useGetLayoutQuery,
+  useUpdateLayoutMutation,
+  useCreateLayoutMutation,
+} = layoutApi;

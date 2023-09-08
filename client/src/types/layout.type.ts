@@ -25,6 +25,10 @@ export interface ILayout<T = IUser | string> {
 }
 
 export type LayoutResponse = LinkinApiResponse<ILayout<string>>;
+export type LayoutCreate = Pick<
+  ILayout,
+  "theme" | "style" | "contentColor" | "primaryColor"
+>;
 export type LayoutUpdate = Partial<
   Pick<ILayout, "theme" | "style" | "contentColor" | "primaryColor">
 >;

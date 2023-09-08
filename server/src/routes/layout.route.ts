@@ -8,6 +8,7 @@ const layoutRouter = Router();
 layoutRouter
   .route("/")
   .get(layoutController.getLayout)
+  .post(layoutValidator.postLayout, validate, layoutController.postLayout)
   .patch(layoutValidator.patchLayout, validate, layoutController.patchLayout);
 
 export default layoutRouter;

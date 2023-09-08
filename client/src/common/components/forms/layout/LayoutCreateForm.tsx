@@ -1,4 +1,4 @@
-import { useUpdateLayoutMutation } from "@/api/layoutApi";
+import { useCreateLayoutMutation } from "@/api/layoutApi";
 import {
   layoutStyleOptions,
   layoutThemeOptions,
@@ -6,15 +6,14 @@ import {
 import { contentColor, primaryColor } from "@/config/defaultColors";
 import {
   ILayout,
+  LayoutCreate,
   LayoutStyle,
   LayoutStyleEnum,
   LayoutTheme,
   LayoutThemeEnum,
-  LayoutUpdate,
 } from "@/types/layout.type";
 import { setFormError } from "@/utils/setFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { HiPencilAlt, HiX } from "react-icons/hi";
 import { toast } from "react-toastify";
@@ -26,62 +25,52 @@ import FormColor from "../FormColor";
 import FormSelect, { FormSelectItem } from "../FormSelect";
 
 const formSchema = z.object({
-  theme: z
-    .nativeEnum(LayoutThemeEnum, { invalid_type_error: "Invalid theme type" })
-    .optional(),
+  theme: z.nativeEnum(LayoutThemeEnum, {
+    invalid_type_error: "Invalid theme type",
+  }),
   primaryColor: z
     .string()
     .trim()
     .regex(/^$|^#([0-9a-f]{3}){1,2}$/i, "Invalid hex color")
-    .optional()
     .nullable(),
   contentColor: z
     .string()
     .trim()
     .regex(/^$|^#([0-9a-f]{3}){1,2}$/i, "Invalid hex color")
-    .optional()
     .nullable(),
-  style: z
-    .nativeEnum(LayoutStyleEnum, { invalid_type_error: "Invalid style type" })
-    .optional(),
+  style: z.nativeEnum(LayoutStyleEnum, {
+    invalid_type_error: "Invalid style type",
+  }),
 });
 
 type Props = {
-  data: ILayout | null;
   className?: string;
   submitCallback?: (layout: ILayout) => any;
   cancelCallback?: () => any;
 };
-const LayoutUpdateForm = ({
-  data,
+const LayoutCreateForm = ({
   className = "",
   submitCallback = () => {},
   cancelCallback = () => {},
 }: Props) => {
-  const [updateLayout] = useUpdateLayoutMutation();
-  const form = useForm<LayoutUpdate>({
+  const [createLayout] = useCreateLayoutMutation();
+  const form = useForm<LayoutCreate>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      theme: "SYSTEM",
+      style: "ROUNDED",
       contentColor,
       primaryColor,
     },
   });
-  const { handleSubmit, formState, clearErrors, setError, reset } = form;
+  const { handleSubmit, formState, clearErrors, setError } = form;
 
-  const onSubmit = async (values: LayoutUpdate) => {
+  const onSubmit = async (values: LayoutCreate) => {
     try {
-      // build update object
-      const update: LayoutUpdate = {
-        contentColor: values.contentColor || null,
-        primaryColor: values.primaryColor || null,
-        theme: values.theme || undefined,
-        style: values.style || undefined,
-      };
-
-      const response = await toast.promise(updateLayout(update).unwrap(), {
-        error: "Error in updating layout!",
-        pending: "Updating layout...",
-        success: "Layout updated!",
+      const response = await toast.promise(createLayout(values).unwrap(), {
+        error: "Error in creating layout!",
+        pending: "Creating layout...",
+        success: "Layout created!",
       });
       clearErrors();
       submitCallback(response.result);
@@ -89,16 +78,6 @@ const LayoutUpdateForm = ({
       setFormError(error?.data?.errors, setError, Object.keys(values));
     }
   };
-
-  useEffect(() => {
-    if (data)
-      reset({
-        contentColor: data.contentColor || contentColor,
-        primaryColor: data.primaryColor || primaryColor,
-        style: data.style || "",
-        theme: data.theme || "",
-      });
-  }, [data, reset]);
 
   return (
     <Form {...form}>
@@ -142,10 +121,10 @@ const LayoutUpdateForm = ({
           <LoadingButton
             variant="default"
             type="submit"
-            disabled={formState.isSubmitting}
+            disabled={formState.isSubmitting && !formState.isValid}
             isLoading={formState.isSubmitting}
           >
-            Update <HiPencilAlt className="ml-2" />
+            Create <HiPencilAlt className="ml-2" />
           </LoadingButton>
           <Button variant="destructive" onClick={cancelCallback} type="reset">
             Cancel <HiX className="ml-2" />
@@ -156,4 +135,4 @@ const LayoutUpdateForm = ({
   );
 };
 
-export default LayoutUpdateForm;
+export default LayoutCreateForm;
