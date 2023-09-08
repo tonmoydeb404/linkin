@@ -20,8 +20,8 @@ const Sidebar = ({ className = "" }: Props) => {
   const { user } = useAppSelector(selectAuth);
 
   return (
-    <aside className={`py-10 px-2 ${className}`}>
-      <div className="flex flex-col  gap-y-0.5 w-full">
+    <aside className={`py-10 px-2 overflow-y-auto ${className}`}>
+      <div className="flex flex-col max-h-full gap-y-0.5 w-full">
         <NavLink
           end
           to={""}

@@ -84,7 +84,7 @@ export const deleteUser = asyncWrapper(async (req, res) => {
   try {
     session.startTransaction();
 
-    const { user_id } = req.params;
+    const { id: user_id } = req.user;
 
     let user = await userService.getByProperty("_id", user_id).session(session);
     if (!user) throw createHttpError(404, "requested user not found");

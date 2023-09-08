@@ -32,3 +32,6 @@ export type UpdateVerifiedStatus = {
   user_id: string;
   verified_status: UserVerifiedStatus;
 };
+export type DeleteUser = {
+  password: string;
+};

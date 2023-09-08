@@ -1,7 +1,9 @@
 import { Router } from "express";
 import * as userController from "../controllers/user.controller";
 import authorize from "../middlewares/authorize.middleware";
+import confirmPassword from "../middlewares/confirmPassword.middleware";
 import validate from "../middlewares/validate.middleware";
+import { passwordValidator } from "../validators/common.validator";
 import * as userValidator from "../validators/user.validator";
 
 const userRouter = Router();
@@ -54,7 +56,7 @@ userRouter.put(
   userController.putUsername
 );
 
-// GET & CREATE USER (ADMIN ONLY)
+// GET, CREATE & DELETE USER
 userRouter
   .route("/")
   .get(authorize(["ADMIN"]), userController.getUsers)
@@ -63,9 +65,15 @@ userRouter
     userValidator.postUser,
     validate,
     userController.postUser
+  )
+  .delete(
+    passwordValidator,
+    validate,
+    confirmPassword,
+    userController.deleteUser
   );
 
-// USER SPECIFIC GET, UPDATE, DELETE
+// USER SPECIFIC GET, UPDATE
 userRouter
   .route("/:user_id")
   .get(userValidator.getUser, validate, userController.getUser)
@@ -74,7 +82,6 @@ userRouter
     userValidator.patchUser,
     validate,
     userController.patchUser
-  )
-  .delete(userValidator.getUser, validate, userController.deleteUser);
+  );
 
 export default userRouter;

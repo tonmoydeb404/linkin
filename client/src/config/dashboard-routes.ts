@@ -5,6 +5,7 @@ import {
   HiExternalLink,
   HiLockClosed,
   HiRefresh,
+  HiTrash,
   HiUser,
   HiUsers,
   HiViewGridAdd,
@@ -60,5 +61,10 @@ export const settingRoutes: DashboardRoute[] = [
     path: "/reset-password",
     title: "Reset Password",
     Icon: HiRefresh,
+  },
+  {
+    path: "/dashboard/delete-account",
+    title: "Delete Account",
+    Icon: HiTrash,
   },
 ];

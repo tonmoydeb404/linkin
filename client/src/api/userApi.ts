@@ -1,4 +1,5 @@
 import {
+  DeleteUser,
   UpdatePassword,
   UpdateUserRole,
   UpdateUsername,
@@ -76,6 +77,16 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["USER"],
     }),
+    deleteUser: builder.mutation<UserResponse, DeleteUser>({
+      query: ({ password }) => ({
+        url: `/`,
+        method: "DELETE",
+        body: {
+          password,
+        },
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
@@ -87,4 +98,5 @@ export const {
   useUpdatePasswordMutation,
   useUpdateUsernameMutation,
   useVerifyUserMutation,
+  useDeleteUserMutation,
 } = userApi;

@@ -1,4 +1,4 @@
-import { ParamSchema } from "express-validator";
+import { ParamSchema, checkSchema } from "express-validator";
 import * as userService from "../services/user.service";
 
 export const usernameSchema: ParamSchema = {
@@ -46,3 +46,14 @@ export const emailSchema: ParamSchema = {
     },
   },
 };
+
+export const passwordValidator = checkSchema(
+  {
+    password: {
+      notEmpty: {
+        errorMessage: "Password is required!",
+      },
+    },
+  },
+  ["body"]
+);

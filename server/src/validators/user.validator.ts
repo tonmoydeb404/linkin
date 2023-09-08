@@ -85,10 +85,9 @@ export const putUsername = checkSchema(
   {
     username: usernameSchema,
     password: {
-      exists: {
+      notEmpty: {
         errorMessage: "Old password is required!",
       },
-      trim: true,
     },
   },
   ["body"]

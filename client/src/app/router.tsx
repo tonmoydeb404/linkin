@@ -27,6 +27,7 @@ import VerifiedEmailOutlet from "@/common/outlet/VerifiedEmailOutlet";
 import Logout from "@/pages/auth/Logout";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import VerifyEmail from "@/pages/auth/VerifyEmail";
+import DeleteAccount from "@/pages/dashboard/settings/DeleteAccount";
 import EditLayout from "@/pages/dashboard/user/EditLayout";
 import EditProfile from "@/pages/dashboard/user/EditProfile";
 import ManageLinks from "@/pages/dashboard/user/ManageLinks";
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
                   // account routes
                   { path: "change-password", element: <ChangePassword /> },
                   { path: "change-username", element: <ChangeUsername /> },
+                  { path: "delete-account", element: <DeleteAccount /> },
                 ],
               },
             ],
