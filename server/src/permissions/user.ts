@@ -13,6 +13,10 @@ export const canChangeRole = (authUser: AuthPayload) => {
   return authUser.role === "ADMIN";
 };
 
+export const canChangeVerifiedStatus = (authUser: AuthPayload) => {
+  return authUser.role === "ADMIN";
+};
+
 export const canUpdate = (authUser: AuthPayload, user: IUser) => {
   return authUser.id === user._id.toString();
 };

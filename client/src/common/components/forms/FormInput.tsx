@@ -11,15 +11,17 @@ import { Input, InputProps } from "../ui/input";
 type FormInputProps = {
   name: string;
   label?: string;
-} & Omit<InputProps, "name">;
+  defaultValue?: string;
+} & Omit<InputProps, "name" | "defaultValue">;
 
-const FormInput = ({ name, label, ...rest }: FormInputProps) => {
+const FormInput = ({ name, label, defaultValue, ...rest }: FormInputProps) => {
   const form = useFormContext();
 
   return (
     <FormField
       control={form.control}
       name={name}
+      defaultValue={defaultValue}
       render={({ field }) => (
         <FormItem>
           {label ? <FormLabel>{label}</FormLabel> : null}

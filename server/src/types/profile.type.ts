@@ -14,3 +14,7 @@ export interface IProfile {
 export type ProfileUpdates = Partial<
   Pick<IProfile, "avatar" | "firstName" | "lastName" | "bio">
 >;
+export type ProfileCreate = Pick<
+  IProfile,
+  "avatar" | "firstName" | "lastName" | "bio"
+>;

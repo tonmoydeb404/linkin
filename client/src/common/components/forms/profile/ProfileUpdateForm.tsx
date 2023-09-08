@@ -37,12 +37,6 @@ const ProfileUpdateForm = ({
   const [updateProfile] = useUpdateOwnProfileMutation();
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      firstName: profile?.firstName || "",
-      lastName: profile?.lastName || "",
-      avatar: profile?.avatar || "",
-      bio: profile?.bio || "",
-    },
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
 
@@ -64,20 +58,26 @@ const ProfileUpdateForm = ({
   };
 
   useEffect(() => {
-    if (profile) reset(profile);
+    if (profile)
+      reset({
+        firstName: profile?.firstName || "",
+        lastName: profile?.lastName || "",
+        avatar: profile?.avatar || "",
+        bio: profile?.bio || "",
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   return (
     <Form {...form}>
       <form className={className} onSubmit={handleSubmit(onSubmit)}>
-        <FormInput label="First Name" name="firstName" />
+        <FormInput label="First Name" name="firstName" defaultValue="" />
 
-        <FormInput label="Last Name" name="lastName" />
+        <FormInput label="Last Name" name="lastName" defaultValue="" />
 
-        <FormTextarea label="Bio" name="bio" />
+        <FormTextarea label="Bio" name="bio" defaultValue="" />
 
-        <FormInput label="Avatar" name="avatar" />
+        <FormInput label="Avatar" name="avatar" defaultValue="" />
 
         <div className="flex items-center gap-2 mt-10">
           <LoadingButton

@@ -33,7 +33,14 @@ export const postUser = checkSchema(
       optional: true,
       isIn: {
         options: [userRoles],
-        errorMessage: "Invalid roles",
+        errorMessage: "Invalid roles.",
+      },
+    },
+    verifiedStatus: {
+      optional: true,
+      isIn: {
+        options: [userVerifiedStatus],
+        errorMessage: "Invalid verified status.",
       },
     },
   },

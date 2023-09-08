@@ -40,7 +40,7 @@ export const postUser = asyncWrapper(async (req, res) => {
   if (!userPermission.canCreate(req.user))
     throw createHttpError(401, "You don't have access to create this resource");
 
-  const { email, password, username, role } = matchedData(req);
+  const { email, password, username, role, verifiedStatus } = matchedData(req);
 
   if (!email || !password || !username)
     throw createHttpError(400, "Please provide valid input");
@@ -50,6 +50,9 @@ export const postUser = asyncWrapper(async (req, res) => {
     password,
     username,
     role: userPermission.canChangeRole(req.user) ? role : "USER",
+    verifiedStatus: userPermission.canChangeVerifiedStatus(req.user)
+      ? verifiedStatus
+      : "NONE",
   });
 
   return res.status(201).json({ result: user.toObject() });

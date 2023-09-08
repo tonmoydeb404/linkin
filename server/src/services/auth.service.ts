@@ -23,6 +23,7 @@ export const register = async ({
         password,
         username,
         role: "USER",
+        verifiedStatus: "NONE",
       },
       session
     );
@@ -79,14 +80,14 @@ export const getAuthPayload = async (id: string) => {
   const user = await userService.getByProperty("_id", id);
   const profile = await profileService.getByProperty("user", id);
 
-  if (!user || !profile) throw createHttpError(400, "User not found");
+  if (!user) throw createHttpError(400, "User not found");
 
   const payload: AuthPayload = {
-    avatar: profile.avatar,
+    avatar: profile?.avatar || null,
+    firstName: profile?.firstName || null,
+    lastName: profile?.lastName || null,
     email: user.email,
-    firstName: profile.firstName,
     id: user.id,
-    lastName: profile.lastName,
     role: user.role,
     username: user.username,
     status: user.status,

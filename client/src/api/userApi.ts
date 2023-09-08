@@ -1,4 +1,5 @@
 import {
+  CreateUser,
   DeleteUser,
   UpdatePassword,
   UpdateUserRole,
@@ -87,6 +88,20 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["USER"],
     }),
+    createUser: builder.mutation<UserResponse, CreateUser>({
+      query: ({ email, password, username, role, verifiedStatus }) => ({
+        url: `/`,
+        method: "POST",
+        body: {
+          email,
+          password,
+          username,
+          role,
+          verifiedStatus,
+        },
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
@@ -99,4 +114,5 @@ export const {
   useUpdateUsernameMutation,
   useVerifyUserMutation,
   useDeleteUserMutation,
+  useCreateUserMutation,
 } = userApi;

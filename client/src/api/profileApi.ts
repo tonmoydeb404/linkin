@@ -1,6 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { linkinBaseQuery } from "../app/settings";
-import { ProfileResponse, ProfileUpdate } from "../types/profile.type";
+import {
+  ProfileCreate,
+  ProfileResponse,
+  ProfileUpdate,
+} from "../types/profile.type";
 
 export const profileApi = createApi({
   reducerPath: "profileApi",
@@ -27,6 +31,14 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ["PROFILE"],
     }),
+    createProfile: builder.mutation<ProfileResponse, ProfileCreate>({
+      query: ({ ...body }) => ({
+        url: `/`,
+        method: "POST",
+        body,
+      }),
+      // invalidatesTags: ["PROFILE"],
+    }),
   }),
 });
 
@@ -34,4 +46,5 @@ export const {
   useGetOwnProfileQuery,
   useUpdateOwnProfileMutation,
   useLazyGetProfileQuery,
+  useCreateProfileMutation,
 } = profileApi;

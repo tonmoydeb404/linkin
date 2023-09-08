@@ -5,7 +5,7 @@ import * as linkServices from "../services/link.service";
 import * as profileService from "../services/profile.service";
 import * as socialServices from "../services/social.service";
 import * as userServices from "../services/user.service";
-import { ProfileUpdates } from "../types/profile.type";
+import { ProfileCreate, ProfileUpdates } from "../types/profile.type";
 
 export const getProfile = asyncWrapper(async (req, res) => {
   const { id } = req.user;
@@ -70,4 +70,25 @@ export const getUserProfile = asyncWrapper(async (req, res) => {
   if (!profile) throw createHttpError(404, "Requested profile not found");
 
   res.status(200).json({ result: profile.toObject({ virtuals: true }) });
+});
+
+export const postProfile = asyncWrapper(async (req, res) => {
+  const { id } = req.user;
+  const { firstName, lastName, avatar, bio } = matchedData(
+    req
+  ) as ProfileCreate;
+
+  let profile = await profileService.getByProperty("user", id);
+
+  if (profile) throw createHttpError(400, "Profile alreay exists");
+
+  profile = await profileService.create({
+    firstName,
+    lastName,
+    user: id,
+    avatar,
+    bio,
+  });
+
+  return res.status(200).json({ result: profile.toObject() });
 });

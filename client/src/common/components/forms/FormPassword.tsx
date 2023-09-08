@@ -14,9 +14,15 @@ import { Input, InputProps } from "../ui/input";
 type FormPasswordProps = {
   name: string;
   label?: string;
-} & Omit<InputProps, "name" | "type">;
+  defaultValue?: string;
+} & Omit<InputProps, "name" | "type" | "defaultValue">;
 
-const FormPassword = ({ name, label, ...rest }: FormPasswordProps) => {
+const FormPassword = ({
+  name,
+  label,
+  defaultValue,
+  ...rest
+}: FormPasswordProps) => {
   const form = useFormContext();
   const [isPassword, setIsPassword] = useState(true);
 
@@ -24,6 +30,7 @@ const FormPassword = ({ name, label, ...rest }: FormPasswordProps) => {
     <FormField
       control={form.control}
       name={name}
+      defaultValue={defaultValue}
       render={({ field }) => (
         <FormItem>
           {label ? <FormLabel>{label}</FormLabel> : null}

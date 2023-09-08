@@ -9,6 +9,12 @@ const profileRouter = Router();
 profileRouter
   .route("/")
   .get(authenticate, profileController.getProfile)
+  .post(
+    authenticate,
+    profileValidator.postProfile,
+    validate,
+    profileController.postProfile
+  )
   .patch(
     authenticate,
     profileValidator.patchProfile,

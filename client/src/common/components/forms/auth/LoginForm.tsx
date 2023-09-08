@@ -14,6 +14,7 @@ import { Alert } from "../../ui/alert";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
 import FormInput from "../FormInput";
+import FormPassword from "../FormPassword";
 
 const loginSchema = z.object({
   email: z.string().email("invalid email"),
@@ -54,11 +55,10 @@ const LoginForm = () => {
           <Alert variant="destructive">{formState.errors.root.message}</Alert>
         ) : null}
         <FormInput name="email" label="Email" placeholder="your@mail.com" />
-        <FormInput
+        <FormPassword
           name="password"
           label="Password"
           placeholder="**********"
-          type="password"
         />
 
         <div className="flex items-center gap-2 mt-5">

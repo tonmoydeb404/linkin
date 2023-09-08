@@ -37,3 +37,10 @@ export type DeleteUser = {
   user_id: string;
   confirmPassword: string;
 };
+export type CreateUser = {
+  username: string;
+  email: string;
+  password: string;
+  role?: UserRole;
+  verifiedStatus?: UserVerifiedStatus;
+};

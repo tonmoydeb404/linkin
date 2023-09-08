@@ -21,3 +21,10 @@ export type ProfileResponse = LinkinApiResponse<IProfile<IUser>>;
 export type ProfileUpdate = Partial<
   Pick<IProfile, "firstName" | "lastName" | "avatar" | "bio">
 >;
+
+export type ProfileCreate = {
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  bio?: string;
+};

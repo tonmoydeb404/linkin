@@ -18,6 +18,6 @@ export interface IUser {
 // services types
 export type CreateUser = Pick<
   IUser,
-  "email" | "password" | "username" | "role"
+  "email" | "password" | "username" | "role" | "verifiedStatus"
 >;
 export type UpdateUser = Partial<IUser>;

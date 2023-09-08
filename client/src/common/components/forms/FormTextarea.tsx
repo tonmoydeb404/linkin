@@ -11,15 +11,22 @@ import { Textarea, TextareaProps } from "../ui/textarea";
 type FormTextareaProps = {
   name: string;
   label?: string;
-} & Omit<TextareaProps, "name">;
+  defaultValue?: string;
+} & Omit<TextareaProps, "name" | "defaultValue">;
 
-const FormTextarea = ({ name, label, ...rest }: FormTextareaProps) => {
+const FormTextarea = ({
+  name,
+  label,
+  defaultValue,
+  ...rest
+}: FormTextareaProps) => {
   const { control } = useFormContext();
 
   return (
     <FormField
       control={control}
       name={name}
+      defaultValue={defaultValue}
       render={({ field }) => (
         <FormItem>
           {label ? <FormLabel>{label}</FormLabel> : null}
