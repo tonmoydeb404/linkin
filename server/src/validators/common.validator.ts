@@ -47,9 +47,9 @@ export const emailSchema: ParamSchema = {
   },
 };
 
-export const passwordValidator = checkSchema(
+export const confirmPasswordValidator = checkSchema(
   {
-    password: {
+    confirmPassword: {
       notEmpty: {
         errorMessage: "Password is required!",
       },

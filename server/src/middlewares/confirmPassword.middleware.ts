@@ -9,13 +9,14 @@ const confirmPassword = async (
   next: NextFunction
 ) => {
   try {
-    const { id } = req?.user;
-    const { password } = matchedData(req);
-    if (!id) throw createHttpError(401, "Unauthorized access");
+    const { confirmPassword, user_id } = matchedData(req);
+    if (!user_id) throw createHttpError(401, "Unauthorized access");
 
-    const user = await userServices.getByProperty("_id", id).select("password");
+    const user = await userServices
+      .getByProperty("_id", user_id)
+      .select("password");
 
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await user.comparePassword(confirmPassword);
 
     if (!isMatch) throw createHttpError(401, "Authorization Error");
 

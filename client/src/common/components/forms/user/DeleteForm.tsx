@@ -1,6 +1,6 @@
 import { useDeleteUserMutation } from "@/api/userApi";
-import { useAppDispatch } from "@/app/hooks";
-import { authSignout } from "@/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { authSignout, selectAuth } from "@/features/auth/authSlice";
 import { setFormError } from "@/utils/setFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ const formSchema = z.object({
     required_error: "You have to confirm your delete account",
     invalid_type_error: "You have to confirm your delete account",
   }),
-  password: z
+  confirmPassword: z
     .string({ required_error: "Password is required!" })
     .nonempty("Password is required!"),
 });
@@ -37,24 +37,32 @@ const DeleteForm = ({
   submitCallback = () => {},
 }: Props) => {
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(selectAuth);
 
   const [deleteUser] = useDeleteUserMutation();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      password: "",
+      confirmPassword: "",
       confirm: false,
     },
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
 
   const onSubmit = async (values: FormSchema) => {
+    if (!user) return;
     try {
-      await toast.promise(deleteUser({ password: values.password }).unwrap(), {
-        error: "Error in deleting account!",
-        pending: "Deleting account...",
-        success: "Account Deleted",
-      });
+      await toast.promise(
+        deleteUser({
+          confirmPassword: values.confirmPassword,
+          user_id: user.id,
+        }).unwrap(),
+        {
+          error: "Error in deleting account!",
+          pending: "Deleting account...",
+          success: "Account Deleted",
+        }
+      );
       // update username in local auth state
       dispatch(authSignout());
       clearErrors();
@@ -77,7 +85,7 @@ const DeleteForm = ({
           </Alert>
         ) : null}
 
-        <FormPassword label="Password" name="password" />
+        <FormPassword label="Password" name="confirmPassword" />
         <FormCheckbox label="Confirm delete account" name="confirm" />
 
         <div className="flex items-center gap-2 mt-5">

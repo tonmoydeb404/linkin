@@ -46,11 +46,11 @@ export const userApi = createApi({
       invalidatesTags: ["USER"],
     }),
     updateUsername: builder.mutation<UserResponse, UpdateUsername>({
-      query: ({ password, username }) => ({
-        url: `/change-username`,
-        method: "PUT",
+      query: ({ confirmPassword, username, user_id }) => ({
+        url: `/${user_id}`,
+        method: "PATCH",
         body: {
-          password,
+          confirmPassword,
           username,
         },
       }),
@@ -78,11 +78,11 @@ export const userApi = createApi({
       invalidatesTags: ["USER"],
     }),
     deleteUser: builder.mutation<UserResponse, DeleteUser>({
-      query: ({ password }) => ({
-        url: `/`,
+      query: ({ confirmPassword, user_id }) => ({
+        url: `/${user_id}`,
         method: "DELETE",
         body: {
-          password,
+          confirmPassword,
         },
       }),
       invalidatesTags: ["USER"],

@@ -1,6 +1,6 @@
 import { useUpdateUsernameMutation } from "@/api/userApi";
-import { useAppDispatch } from "@/app/hooks";
-import { authUpdate } from "@/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { authUpdate, selectAuth } from "@/features/auth/authSlice";
 import { setFormError } from "@/utils/setFormError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import { Alert } from "../../ui/alert";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
 import FormInput from "../FormInput";
+import FormPassword from "../FormPassword";
 
 const formSchema = z.object({
   username: z
@@ -20,7 +21,7 @@ const formSchema = z.object({
       /^[a-zA-Z0-9_]+$/,
       "Username can only contain letters, numbers, and underscores."
     ),
-  password: z.string({ required_error: "Password is required!" }),
+  confirmPassword: z.string({ required_error: "Password is required!" }),
 });
 type FormSchema = z.infer<typeof formSchema>;
 
@@ -36,24 +37,29 @@ const UpdateUsernameForm = ({
   submitCallback = () => {},
 }: Props) => {
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(selectAuth);
 
   const [updateUsername] = useUpdateUsernameMutation();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      password: "",
+      confirmPassword: "",
       username: "",
     },
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
 
   const onSubmit = async (values: FormSchema) => {
+    if (!user) return;
     try {
-      const response = await toast.promise(updateUsername(values).unwrap(), {
-        error: "Error in updating username!",
-        pending: "Updating username...",
-        success: "Username updated",
-      });
+      const response = await toast.promise(
+        updateUsername({ ...values, user_id: user.id }).unwrap(),
+        {
+          error: "Error in updating username!",
+          pending: "Updating username...",
+          success: "Username updated",
+        }
+      );
       // update username in local auth state
       dispatch(authUpdate({ username: response.result.username }));
       clearErrors();
@@ -77,7 +83,7 @@ const UpdateUsernameForm = ({
         ) : null}
 
         <FormInput label="New username" name="username" />
-        <FormInput label="Password" name="password" />
+        <FormPassword label="Password" name="confirmPassword" />
 
         <div className="flex items-center gap-2 mt-5">
           <LoadingButton

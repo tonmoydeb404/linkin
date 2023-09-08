@@ -57,8 +57,7 @@ export const postUser = asyncWrapper(async (req, res) => {
 
 // update a user
 export const patchUser = asyncWrapper(async (req, res) => {
-  const { user_id } = req.params;
-  const { email, username } = matchedData(req);
+  const { email, username, user_id } = matchedData(req);
 
   let user = await userService.getByProperty("_id", user_id);
   if (!user) throw createHttpError(404, "Requested user not found");
@@ -84,7 +83,7 @@ export const deleteUser = asyncWrapper(async (req, res) => {
   try {
     session.startTransaction();
 
-    const { id: user_id } = req.user;
+    const { user_id } = matchedData(req);
 
     let user = await userService.getByProperty("_id", user_id).session(session);
     if (!user) throw createHttpError(404, "requested user not found");
@@ -192,24 +191,6 @@ export const putPassword = asyncWrapper(async (req, res) => {
   res.cookie("logged_in", true, authCookieOptions);
 
   return res.status(201).json({ result: { token, payload } });
-});
-
-// change user username
-export const putUsername = asyncWrapper(async (req, res) => {
-  const { id } = req.user;
-  const { username, password } = matchedData(req);
-
-  let user = await userService.getByProperty("_id", id).select("password");
-  if (!user) throw createHttpError(404, "Requested user not found");
-  const passwordMatched = await user.comparePassword(password);
-
-  if (!passwordMatched) throw createHttpError(401, "Password not matched");
-
-  // update user username
-  user.username = username;
-  await user.save();
-
-  return res.status(202).json({ result: user.toObject() });
 });
 
 // change user verified status

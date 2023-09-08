@@ -22,7 +22,8 @@ export type UpdateUserRole = {
 };
 export type UpdateUsername = {
   username: string;
-  password: string;
+  confirmPassword: string;
+  user_id: string;
 };
 export type UpdatePassword = {
   old_password: string;
@@ -33,5 +34,6 @@ export type UpdateVerifiedStatus = {
   verified_status: UserVerifiedStatus;
 };
 export type DeleteUser = {
-  password: string;
+  user_id: string;
+  confirmPassword: string;
 };

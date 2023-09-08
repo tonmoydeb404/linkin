@@ -3,10 +3,21 @@ import * as userController from "../controllers/user.controller";
 import authorize from "../middlewares/authorize.middleware";
 import confirmPassword from "../middlewares/confirmPassword.middleware";
 import validate from "../middlewares/validate.middleware";
-import { passwordValidator } from "../validators/common.validator";
+import { confirmPasswordValidator } from "../validators/common.validator";
 import * as userValidator from "../validators/user.validator";
 
 const userRouter = Router();
+
+// GET, CREATE USER (ADMIN ONLY)
+userRouter
+  .route("/")
+  .get(authorize(["ADMIN"]), userController.getUsers)
+  .post(
+    authorize(["ADMIN"]),
+    userValidator.postUser,
+    validate,
+    userController.postUser
+  );
 
 // VERIFY USER (ADMIN ONLY)
 userRouter.put(
@@ -48,40 +59,24 @@ userRouter.put(
   userController.putPassword
 );
 
-// UPDATE USERNAME
-userRouter.put(
-  "/change-username",
-  userValidator.putUsername,
-  validate,
-  userController.putUsername
-);
-
-// GET, CREATE & DELETE USER
-userRouter
-  .route("/")
-  .get(authorize(["ADMIN"]), userController.getUsers)
-  .post(
-    authorize(["ADMIN"]),
-    userValidator.postUser,
-    validate,
-    userController.postUser
-  )
-  .delete(
-    passwordValidator,
-    validate,
-    confirmPassword,
-    userController.deleteUser
-  );
-
-// USER SPECIFIC GET, UPDATE
+// USER SPECIFIC GET, UPDATE & DELETE (AUTHORIZED USER ONLY)
 userRouter
   .route("/:user_id")
   .get(userValidator.getUser, validate, userController.getUser)
   .patch(
     userValidator.getUser,
+    confirmPasswordValidator,
     userValidator.patchUser,
     validate,
+    confirmPassword,
     userController.patchUser
+  )
+  .delete(
+    userValidator.getUser,
+    confirmPasswordValidator,
+    validate,
+    confirmPassword,
+    userController.deleteUser
   );
 
 export default userRouter;
