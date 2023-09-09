@@ -9,7 +9,7 @@ import LoadingButton from "../../button/LoadingButton";
 import { Alert } from "../../ui/alert";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
-import FormInput from "../FormInput";
+import FormPassword from "../FormPassword";
 
 const formSchema = z
   .object({
@@ -58,11 +58,6 @@ const UpdatePasswordForm = ({
   const [updatePassword] = useUpdatePasswordMutation();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      confirm_password: "",
-      new_password: "",
-      old_password: "",
-    },
     mode: "all",
   });
   const { handleSubmit, formState, clearErrors, setError, reset } = form;
@@ -94,12 +89,20 @@ const UpdatePasswordForm = ({
           </Alert>
         ) : null}
 
-        <FormInput label="Old password" name="old_password" type="password" />
-        <FormInput label="New password" name="new_password" type="password" />
-        <FormInput
+        <FormPassword
+          label="Old password"
+          name="old_password"
+          defaultValue=""
+        />
+        <FormPassword
+          label="New password"
+          name="new_password"
+          defaultValue=""
+        />
+        <FormPassword
           label="Confirm password"
           name="confirm_password"
-          type="password"
+          defaultValue=""
         />
 
         <div className="flex items-center gap-2 mt-5">
