@@ -10,7 +10,7 @@ import LoadingButton from "../../button/LoadingButton";
 import { Alert, AlertDescription } from "../../ui/alert";
 import { Button } from "../../ui/button";
 import { Form } from "../../ui/form";
-import FormInput from "../FormInput";
+import FormPassword from "../FormPassword";
 
 const formSchema = z
   .object({
@@ -93,8 +93,8 @@ const ResetPasswordForm = ({ className = "", token }: Props) => {
           </Alert>
         ) : null}
 
-        <FormInput name="new_password" label="New password" />
-        <FormInput name="confirm_password" label="Confirm password" />
+        <FormPassword name="new_password" label="New password" />
+        <FormPassword name="confirm_password" label="Confirm password" />
 
         <div className="flex items-center gap-2 mt-5">
           <LoadingButton
